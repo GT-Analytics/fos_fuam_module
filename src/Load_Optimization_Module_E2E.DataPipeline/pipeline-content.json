@@ -84,23 +84,23 @@
             },
             "keyvault_name": {
                 "type": "string",
-                "defaultValue": "fuamkv"
+                "defaultValue": "foskv"
             },
             "keyvault_sp_tenantId_secret_name": {
                 "type": "string",
-                "defaultValue": "fuam-sp-tenant"
+                "defaultValue": "fos-sp-tenant"
             },
             "keyvault_sp_clientId_secret_name": {
                 "type": "string",
-                "defaultValue": "fuam-sp-client"
+                "defaultValue": "fos-sp-client"
             },
             "keyvault_sp_secret_secret_name": {
                 "type": "string",
-                "defaultValue": "fuam-sp-secret"
+                "defaultValue": "fos-sp-secret"
             },
             "keyvault_sp_ent_app_object_id_secret_name": {
                 "type": "string",
-                "defaultValue": "fuam-sp-enterprise-app-object-id"
+                "defaultValue": "fos-sp-enterprise-app-object-id"
             }
         }
     }

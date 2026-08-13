@@ -1,22 +1,22 @@
-workspace: "FUAM"
+workspace: "FOS"
 connections:
-  pbi_connection : fuam pbi-service-api admin
-  fabric_connection: fuam fabric-service-api admin
+  pbi_connection : fos pbi-service-api admin
+  fabric_connection: fos fabric-service-api admin
 
-fuam_lakehouse_semantic_models:
-  - FUAM_Core_SM.SemanticModel
-  - FUAM_Item_SM.SemanticModel
+fos_lakehouse_semantic_models:
+  - FOS_Core_SM.SemanticModel
+  - FOS_Item_SM.SemanticModel
 
 folders:
   - name: "Deployment"
     items:
-    - FUAM_Config_Lakehouse.Lakehouse
+    - FOS_Config_Lakehouse.Lakehouse
     - Init_FOS_Lakehouse_Tables.Notebook
   - name: "Other"
     items:
-    - FUAM_Staging_Lakehouse.Lakehouse
+    - FOS_Staging_Lakehouse.Lakehouse
     - Generate_Calendar_Table.Notebook
-    - Check_FUAM_Version.Notebook
+    - Check_FOS_Version.Notebook
   - name: "Active Items"
     items:
     - 01_Transfer_Active_Items_Unit.Notebook
@@ -54,10 +54,10 @@ folders:
     - Load_Git_Connections_E2E.DataPipeline
   - name: "Maintenance"
     items:  
-    - FUAM_Backup_Lakehouse.Lakehouse
+    - FOS_Backup_Lakehouse.Lakehouse
     - 01_FOS_Lakehouse_Backup.Notebook
     - 02_FOS_Lakehouse_Optimization.Notebook
-    - Maintenance_for_FUAM.DataPipeline
+    - Maintenance_for_FOS.DataPipeline
     - 01_Create_Snapshot_Tables_Unit.Notebook
   - name: "Capacity Metrics"
     items:  
@@ -67,16 +67,16 @@ folders:
     - Load_Capacity_Metrics_E2E.DataPipeline
   - name: "Reporting"
     items:
-    - FUAM_Core_SM.SemanticModel
-    - FUAM_Core_Report.Report
-    - FUAM_Item_SM.SemanticModel
-    - FUAM_Item_Analyzer_Report.Report
-    - FUAM_Semantic_Model_Meta_Data_Analyzer_SM.SemanticModel
-    - FUAM_Semantic_Model_Meta_Data_Analyzer_Report.Report
-    - FUAM_SQL_Endpoint_Analyzer_SM.SemanticModel
-    - FUAM_SQL_Endpoint_Analyzer_Report.Report
-    - FUAM_Gateway_Monitoring_From_Files_SM.SemanticModel
-    - FUAM_Gateway_Monitoring_From_Files_Report.Report
+    - FOS_Core_SM.SemanticModel
+    - FOS_Core_Report.Report
+    - FOS_Item_SM.SemanticModel
+    - FOS_Item_Analyzer_Report.Report
+    - FOS_Semantic_Model_Meta_Data_Analyzer_SM.SemanticModel
+    - FOS_Semantic_Model_Meta_Data_Analyzer_Report.Report
+    - FOS_SQL_Endpoint_Analyzer_SM.SemanticModel
+    - FOS_SQL_Endpoint_Analyzer_Report.Report
+    - FOS_Gateway_Monitoring_From_Files_SM.SemanticModel
+    - FOS_Gateway_Monitoring_From_Files_Report.Report
   - name: "Domains"
     items:
     - 01_Transfer_Domains_Unit.Notebook

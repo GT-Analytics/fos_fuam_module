@@ -81,7 +81,7 @@ jobs:
           $cfgPath = "cicd/repo_config.yaml"
           $capacityName = "kethfabric"
           $entraObjectId = ""
-          $projectBaseName = "FUAM"
+          $projectBaseName = "FOS"
           if (Test-Path $cfgPath) {
             $content = Get-Content $cfgPath -Raw -Encoding UTF8
             # Use double-double-quotes to include a literal double-quote in a PowerShell double-quoted string
@@ -227,7 +227,7 @@ jobs:
 
   deploy-to-fabric:
     needs: create-branch
-    uses: ./.github/workflows/deploy-fuam-from-repo.yml
+    uses: ./.github/workflows/deploy-fos-from-repo.yml
     with:
       ref: feature/${{ github.event.inputs.feature_name }}
     secrets: inherit

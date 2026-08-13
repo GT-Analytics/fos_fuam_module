@@ -1,36 +1,36 @@
-# Fabric Unified Admin Monitoring (FUAM)
+# Fabric Unified Admin Monitoring (FOS)
 
 **Solution accelerator for Fabric platform admin monitoring**
 
-![image](./media/general/fuam_cover.png)
+![image](./media/general/fos_cover.png)
 
-[Want to get a brief introduction on FUAM? - Watch the video](https://youtu.be/CmHMOsQcMGI)
+[Want to get a brief introduction on FOS? - Watch the video](https://youtu.be/CmHMOsQcMGI)
 
 > [!IMPORTANT]  
-> FUAM will support the Capacity Utilization Events mode in the future. This features takes Fabric monitoring to the next level by providing near-real time CU consumption.
+> FOS will support the Capacity Utilization Events mode in the future. This features takes Fabric monitoring to the next level by providing near-real time CU consumption.
 
 > [!CAUTION]  
-> The FUAM solution accelerator is not an official Microsoft product! It is a solution accelerator, which can help you implement a monitoring solution within Fabric. As such there is no offical support available and there is a risk that things might break. E.g. the extraction of Capacity Metrics data. This is based on the Capacity Metrics App and elements of that App could change without notice and impact FUAM.
+> The FOS solution accelerator is not an official Microsoft product! It is a solution accelerator, which can help you implement a monitoring solution within Fabric. As such there is no offical support available and there is a risk that things might break. E.g. the extraction of Capacity Metrics data. This is based on the Capacity Metrics App and elements of that App could change without notice and impact FOS.
 
 
 ## Introduction
 
-Fabric Unified Admin Monitoring (short: FUAM) is a solution to enable holistic monitoring on top of Microsoft Fabric. Today, monitoring for Fabric can be done through different reports, apps, and tools.
+Fabric Unified Admin Monitoring (short: FOS) is a solution to enable holistic monitoring on top of Microsoft Fabric. Today, monitoring for Fabric can be done through different reports, apps, and tools.
 
-FUAM aims to provide a more holistic view on top of the various information that can be extracted from Fabric, allowing its users to analyze at a very high level, but also to deep dive into specific items for more fine-grained data analysis.
-
-
-
-![image](./media/general/fuam_monitoring_map_cover.png)
-
-FUAM is completely built with Fabric capabilities, with Pipelines and Notebooks as the main tools to extract and transform data. All the data is stored in its raw format, but also in Delta Parquet, enabling the user to directly use it through Power BI Direct Lake or the Lakehouse SQL Endpoint via SQL. FUAM comes with a set of standard reports enabling a quick overview of the data, but it's intended to give users all the tools to customize or build their own reports on top of the data model. Through the openness of Fabric, it's also possible to combine it with your own data, enabling you to do the analysis you wish.
+FOS aims to provide a more holistic view on top of the various information that can be extracted from Fabric, allowing its users to analyze at a very high level, but also to deep dive into specific items for more fine-grained data analysis.
 
 
-## FUAM Content
 
-![image](./media/general/fuam_cover_flow.png)
+![image](./media/general/fos_monitoring_map_cover.png)
 
-FUAM extracts the following data from the tenant:
+FOS is completely built with Fabric capabilities, with Pipelines and Notebooks as the main tools to extract and transform data. All the data is stored in its raw format, but also in Delta Parquet, enabling the user to directly use it through Power BI Direct Lake or the Lakehouse SQL Endpoint via SQL. FOS comes with a set of standard reports enabling a quick overview of the data, but it's intended to give users all the tools to customize or build their own reports on top of the data model. Through the openness of Fabric, it's also possible to combine it with your own data, enabling you to do the analysis you wish.
+
+
+## FOS Content
+
+![image](./media/general/fos_cover_flow.png)
+
+FOS extracts the following data from the tenant:
 
 - Tenant Settings
 - Delegated Tenant Settings
@@ -47,12 +47,12 @@ FUAM extracts the following data from the tenant:
 
 ### Architecture
 
-The architecture of FUAM is built on Fabric items like Pipelines, Notebooks, Lakehouses, Semantic Models, and Power BI reports. We have built the component in a modular structure, which helps you extend FUAM with your own modules. This architectural design also makes the solution easier to maintain.
+The architecture of FOS is built on Fabric items like Pipelines, Notebooks, Lakehouses, Semantic Models, and Power BI reports. We have built the component in a modular structure, which helps you extend FOS with your own modules. This architectural design also makes the solution easier to maintain.
 
-The data ingestion logic is orchestrated and parameterizable, which allows us to use the main orchestration pipeline for initial and incremental data loads. FUAM Lakehouse is one of the core components in the architecture. All the data is transformed and persisted in a way that opens up amazing capabilities for analyzing the collected data in a semantic model with DirectLake mode.
+The data ingestion logic is orchestrated and parameterizable, which allows us to use the main orchestration pipeline for initial and incremental data loads. FOS Lakehouse is one of the core components in the architecture. All the data is transformed and persisted in a way that opens up amazing capabilities for analyzing the collected data in a semantic model with DirectLake mode.
 
 
-![image](./media/general/fuam_architecture.png)
+![image](./media/general/fos_architecture.png)
 
 ### Benefits
 - Modular building blocks
@@ -60,27 +60,27 @@ The data ingestion logic is orchestrated and parameterizable, which allows us to
 - End-to-end report experience
 - Intelligent optimization module (coming soon)
 - Long term CU utilization analysis
-- Bring your own data & enrich FUAM with your data
+- Bring your own data & enrich FOS with your data
 
 ## Setup
 
-Are you ready to try FUAM out? We have prepared two step-by-step guides to help you deploy FUAM in your workspace on your tenant:
+Are you ready to try FOS out? We have prepared two step-by-step guides to help you deploy FOS in your workspace on your tenant:
 
 
-#### [Click here to **deploy** FUAM](/monitoring/fabric-unified-admin-monitoring/how-to/How_to_deploy_FUAM.md)
+#### [Click here to **deploy** FOS](/monitoring/fabric-unified-admin-monitoring/how-to/How_to_deploy_FOS.md)
 
 
-#### [Click here to **update** FUAM](/monitoring/fabric-unified-admin-monitoring/how-to/How_to_update_FUAM.md)
+#### [Click here to **update** FOS](/monitoring/fabric-unified-admin-monitoring/how-to/How_to_update_FOS.md)
 
 ## Changelog
 
-- **FUAM [Release 2026.2.1 (latest)](/monitoring/fabric-unified-admin-monitoring/changelog/FUAM_Changelog.md)**
-- **FUAM [Release 2026.1.1](/monitoring/fabric-unified-admin-monitoring/changelog/FUAM_Changelog.md)**
-- **FUAM [Release 2025.9.1](/monitoring/fabric-unified-admin-monitoring/changelog/FUAM_Changelog.md)**
+- **FOS [Release 2026.2.1 (latest)](/monitoring/fabric-unified-admin-monitoring/changelog/FOS_Changelog.md)**
+- **FOS [Release 2026.1.1](/monitoring/fabric-unified-admin-monitoring/changelog/FOS_Changelog.md)**
+- **FOS [Release 2025.9.1](/monitoring/fabric-unified-admin-monitoring/changelog/FOS_Changelog.md)**
 
 
 ## Support
-The FUAM solution accelerator template **is not an official Microsoft service**.
+The FOS solution accelerator template **is not an official Microsoft service**.
 
 **Ideas/Suggestions:** Submit your ideas and suggestions as an issue in this repository.
 
@@ -100,18 +100,18 @@ The FUAM solution accelerator template **is not an official Microsoft service**.
 - [What is the admin monitoring workspace? (preview)](https://learn.microsoft.com/en-us/fabric/admin/monitoring-workspace)
 - [Microsoft Fabric Chargeback app (preview)](https://learn.microsoft.com/en-us/fabric/enterprise/chargeback-app)
 
-##### FUAM related videos
-- [Video - FUAM in Guy in a Cube](https://www.youtube.com/watch?v=G_-N2VMO8C0&themeRefresh=1)
-- [Video - Brief introduction to FUAM](https://youtu.be/CmHMOsQcMGI)
+##### FOS related videos
+- [Video - FOS in Guy in a Cube](https://www.youtube.com/watch?v=G_-N2VMO8C0&themeRefresh=1)
+- [Video - Brief introduction to FOS](https://youtu.be/CmHMOsQcMGI)
 
-##### Other FUAM articles
-- [Overview - FUAM](/monitoring/fabric-unified-admin-monitoring/README.md)
-- [Documentation - FUAM's Authorization & Authentication](/monitoring/fabric-unified-admin-monitoring/media/documentation/FUAM_Authorization.md)
-- [Documentation - FUAM Architecture](/monitoring/fabric-unified-admin-monitoring/media/documentation/FUAM_Architecture.md)
-- [Documentation - FUAM Lakehouse table lineage](/monitoring/fabric-unified-admin-monitoring/media/documentation/FUAM_Documentation_Lakehouse_table_lineage.pdf)
-- [Documentation - FUAM Engine level analyzer reports](/monitoring/fabric-unified-admin-monitoring/media/documentation/FUAM_Engine_Level_Analyzer_Reports.md)
-- [Documentation - FUAM Core Report](/monitoring/fabric-unified-admin-monitoring/media/documentation/FUAM_Core_Report.md)
-- [Documentation - FUAM Technical Deep Dive](/monitoring/fabric-unified-admin-monitoring/media/documentation/FUAM_Technical_Deep_Dive.md)
+##### Other FOS articles
+- [Overview - FOS](/monitoring/fabric-unified-admin-monitoring/README.md)
+- [Documentation - FOS's Authorization & Authentication](/monitoring/fabric-unified-admin-monitoring/media/documentation/FOS_Authorization.md)
+- [Documentation - FOS Architecture](/monitoring/fabric-unified-admin-monitoring/media/documentation/FOS_Architecture.md)
+- [Documentation - FOS Lakehouse table lineage](/monitoring/fabric-unified-admin-monitoring/media/documentation/FOS_Documentation_Lakehouse_table_lineage.pdf)
+- [Documentation - FOS Engine level analyzer reports](/monitoring/fabric-unified-admin-monitoring/media/documentation/FOS_Engine_Level_Analyzer_Reports.md)
+- [Documentation - FOS Core Report](/monitoring/fabric-unified-admin-monitoring/media/documentation/FOS_Core_Report.md)
+- [Documentation - FOS Technical Deep Dive](/monitoring/fabric-unified-admin-monitoring/media/documentation/FOS_Technical_Deep_Dive.md)
 
 ##### Some other Fabric Toolbox assets
 - [Overview - Fabric Cost Analysis](/monitoring/fabric-cost-analysis/README.md)
