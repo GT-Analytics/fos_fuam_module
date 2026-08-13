@@ -1,0 +1,7 @@
+find_replace:
+    - find_value: "03c965a6-f0e4-3f11-99bf-6bb8b5cd054f" # lakehouse GUID to be replaced
+      replace_value: "$items.Lakehouse.FCA.$id"
+      item_type: "Notebook"
+    - find_value: "66db2b7f-f5d7-34ab-b4ef-640bd59a9b38" # workspace GUID to be replaced
+      replace_value: "$workspace.$id"
+      item_type: "Notebook"

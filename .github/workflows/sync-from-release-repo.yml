@@ -8,6 +8,14 @@ name: Sync from FOS Release Repo
 on:
   workflow_dispatch:
     inputs:
+      module_id:
+        description: 'Module to pull from the release repository'
+        required: true
+        type: choice
+        options:
+          - admin-monitoring
+          - fabric-cost-analysis
+        default: admin-monitoring
       source_branch:
         description: 'Branch on GT-Analytics/fos_release to sync FROM (default: main)'
         required: false
@@ -26,7 +34,7 @@ on:
 
 env:
   RELEASE_REPO: GT-Analytics/fos_release
-  MODULE_ID: admin-monitoring
+  MODULE_ID: ${{ github.event.inputs.module_id }}
 
 jobs:
   sync-from-release:
@@ -110,6 +118,13 @@ jobs:
             mkdir -p "$p"
             cp -R "$SRC_DIR/." "$p/"
           done
+          docs_path="docs/modules/${MODULE_ID}"
+          release_docs="release-repo/${docs_path}"
+          rm -rf "$docs_path"
+          if [ -d "$release_docs" ]; then
+            mkdir -p "$docs_path"
+            cp -R "$release_docs/." "$docs_path/"
+          fi
 
       - name: Commit and push target branch
         id: commit

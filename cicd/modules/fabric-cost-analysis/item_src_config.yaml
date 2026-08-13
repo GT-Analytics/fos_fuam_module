@@ -1,0 +1,25 @@
+workspace: FCA
+connections:
+  azure_connection: fca azure management
+
+items:
+  - FCA.Lakehouse
+  - 01_Load_Focus.Notebook
+  - 01_Load_Calendar.Notebook
+  - 01_Load_FCAVersion.Notebook
+  - 01_Load_Dimensions.Notebook
+  - 01_Load_Focus_Fabric.Notebook
+  - 03_Optimization.Notebook
+  - 01_Load_Meters.Notebook
+  - 02_Load_DimReservation.Notebook
+  - 02_Load_Reservation.Notebook
+  - 02_Load_Reservation_Fabric.Notebook
+  - 02_Create_DataAgent.Notebook
+  - Init_FCA_Lakehouse_Tables.Notebook
+  - Update_FCA_delivery.Notebook
+  - 02_Load_Quota_Fabric.Notebook
+  - FCA_Core_SM.SemanticModel
+  - FCA_Core_Report.Report
+  - Load Quota.DataPipeline
+  - Load Reservations.DataPipeline
+  - Load FCA E2E.DataPipeline

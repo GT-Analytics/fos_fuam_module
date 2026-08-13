@@ -41,15 +41,27 @@ class ComposeReleaseTests(unittest.TestCase):
                 {
                     "workspace": "FOS",
                     "connections": {"fabric_connection": "fabric"},
-                    "fos_lakehouse_semantic_models": [],
+                    "connection_specs": {
+                        "fabric_connection": {
+                            "base_url": "https://api.fabric.microsoft.com",
+                            "audience": "https://api.fabric.microsoft.com",
+                        }
+                    },
+                    "semantic_model_lakehouses": {},
                     "folders": [{"name": module_id, "items": [item_name]}],
                 }
             ),
             encoding="utf-8",
         )
         fos_id = str(uuid.uuid3(uuid.NAMESPACE_DNS, "FOS" + item_name))
+        connection_id = str(uuid.uuid3(uuid.NAMESPACE_DNS, "FOSfabric"))
         (config_dir / "deployment_order.json").write_text(
-            json.dumps([{"name": item_name, "fos_id": fos_id}]),
+            json.dumps(
+                [
+                    {"name": "fabric", "fos_id": connection_id},
+                    {"name": item_name, "fos_id": fos_id},
+                ]
+            ),
             encoding="utf-8",
         )
         (data_dir / f"{module_id}.json").write_text("{}", encoding="utf-8")
@@ -78,9 +90,9 @@ class ComposeReleaseTests(unittest.TestCase):
 
         self.assertEqual(summary["modules"], ["first", "second"])
         order = json.loads((output / "config/deployment_order.json").read_text())
-        self.assertEqual(len(order), 2)
+        self.assertEqual(len(order), 3)
         self.assertEqual(
-            order[0]["fos_id"],
+            next(item["fos_id"] for item in order if item["name"] == "First.Notebook"),
             str(uuid.uuid3(uuid.NAMESPACE_DNS, "FOSFirst.Notebook")),
         )
 
@@ -91,6 +103,62 @@ class ComposeReleaseTests(unittest.TestCase):
 
         with self.assertRaisesRegex(CompositionError, "both provide source item"):
             compose_release(self.root, self.root / "output")
+
+    def test_merges_distinct_module_deployment_metadata(self):
+        self.add_module("first", "First.Notebook")
+        self.add_module("second", "Second.Notebook")
+        second_config_path = (
+            self.root / "config/modules/second/deployment_config.yaml"
+        )
+        second_config = yaml.safe_load(second_config_path.read_text())
+        second_config["connections"] = {"azure_connection": "azure"}
+        second_config["connection_specs"] = {
+            "azure_connection": {
+                "base_url": "https://management.azure.com",
+                "audience": "https://management.azure.com",
+            }
+        }
+        second_config["semantic_model_lakehouses"] = {
+            "Second.Notebook": "Second.Lakehouse"
+        }
+        second_config["post_deployment"] = {
+            "jobs": [{"item": "Second.Notebook"}],
+            "sql_endpoints": ["Second.Lakehouse"],
+        }
+        second_config_path.write_text(
+            yaml.safe_dump(second_config), encoding="utf-8"
+        )
+        second_order_path = self.root / "config/modules/second/deployment_order.json"
+        second_order = json.loads(second_order_path.read_text())
+        second_order.extend(
+            [
+                {
+                    "name": "azure",
+                    "fos_id": str(uuid.uuid3(uuid.NAMESPACE_DNS, "FOSazure")),
+                },
+                {
+                    "name": "Second.Lakehouse",
+                    "fos_id": str(
+                        uuid.uuid3(uuid.NAMESPACE_DNS, "FOSSecond.Lakehouse")
+                    ),
+                },
+            ]
+        )
+        second_order_path.write_text(json.dumps(second_order), encoding="utf-8")
+        self.write_release("first", "second")
+
+        output = self.root / "output"
+        compose_release(self.root, output)
+        composed = yaml.safe_load(
+            (output / "config/deployment_config.yaml").read_text()
+        )
+
+        self.assertEqual(set(composed["connections"]), {"fabric_connection", "azure_connection"})
+        self.assertEqual(
+            composed["semantic_model_lakehouses"]["Second.Notebook"],
+            "Second.Lakehouse",
+        )
+        self.assertEqual(composed["post_deployment"]["jobs"], [{"item": "Second.Notebook"}])
 
 
 if __name__ == "__main__":
