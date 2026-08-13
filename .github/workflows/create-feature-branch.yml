@@ -1,0 +1,235 @@
+name: Create Feature Branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      feature_name:
+        description: 'Name of the feature branch (without feature/ prefix)'
+        required: true
+        type: string
+
+env:
+  PYTHON_VERSION: '3.11'
+  PYTHONIOENCODING: 'utf-8'
+  PYTHONUTF8: '1'
+
+jobs:
+  create-branch:
+    runs-on: windows-latest
+    
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    outputs:
+      feature_name: ${{ github.event.inputs.feature_name }}
+      branch_name: feature/${{ github.event.inputs.feature_name }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0  # Fetch all history for all branches
+      
+      - name: Validate feature name
+        run: |
+          $featureName = "${{ github.event.inputs.feature_name }}"
+          if ([string]::IsNullOrWhiteSpace($featureName)) {
+            Write-Error "Feature name cannot be empty"
+            exit 1
+          }
+          
+          # Check if feature name contains invalid characters
+          if ($featureName -match '[^a-zA-Z0-9_-]') {
+            Write-Error "Feature name can only contain letters, numbers, underscores, and hyphens"
+            exit 1
+          }
+          
+          echo "Feature name validated: $featureName"
+      
+      - name: Create feature branch
+        run: |
+          $featureName = "${{ github.event.inputs.feature_name }}"
+          $branchName = "feature/$featureName"
+          
+          # Ensure we're on main branch
+          git checkout main
+          git pull origin main
+          
+          # Check if branch already exists
+          $branchExists = git branch -r --list "origin/$branchName"
+          if ($branchExists) {
+            Write-Error "Branch $branchName already exists"
+            exit 1
+          }
+          
+          # Create and checkout new feature branch
+          git checkout -b $branchName
+          
+          echo "Created and switched to branch: $branchName"
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Load capacity and admin group from repo_config.yaml
+        id: repo_cfg
+        shell: pwsh
+        run: |
+          $cfgPath = "cicd/repo_config.yaml"
+          $capacityName = "kethfabric"
+          $entraObjectId = ""
+          $projectBaseName = "FUAM"
+          if (Test-Path $cfgPath) {
+            $content = Get-Content $cfgPath -Raw -Encoding UTF8
+            # Use double-double-quotes to include a literal double-quote in a PowerShell double-quoted string
+            $capMatch = [regex]::Match($content, "(?m)^[\s-]*capacity:\s*['""]?(.+?)['""]?\s*$")
+            if ($capMatch.Success) { $capacityName = $capMatch.Groups[1].Value.Trim() }
+            $grpMatch = [regex]::Match($content, "(?m)^[\s-]*admin_group:\s*['""]?(.+?)['""]?\s*$")
+            if ($grpMatch.Success) { $entraObjectId = $grpMatch.Groups[1].Value.Trim() }
+            $pbMatch = [regex]::Match($content, "(?m)^[\s-]*project_base_name:\s*['""]?(.+?)['""]?\s*$")
+            if ($pbMatch.Success) { $projectBaseName = $pbMatch.Groups[1].Value.Trim() }
+          } else {
+            Write-Host "repo_config.yaml not found at $cfgPath. Using defaults."
+          }
+          "capacity_name=$capacityName" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "entra_object_id=$entraObjectId" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "project_base_name=$projectBaseName" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          Write-Host "Loaded capacity=$capacityName, admin_group=$entraObjectId, project_base_name=$projectBaseName"
+      
+      - name: Update workspace configuration
+        run: |
+          $featureName = "${{ github.event.inputs.feature_name }}"
+          $projectBaseName = "${{ steps.repo_cfg.outputs.project_base_name }}"
+          $newWorkspaceName = "$projectBaseName#$featureName"
+          $itemConfigFile = "cicd/item_src_config.yaml"
+          $repoConfigFile = "cicd/repo_config.yaml"
+          
+          Write-Host "Updating workspace configuration..."
+          Write-Host "Feature name: $featureName"
+          Write-Host "Project base name: $projectBaseName"
+          Write-Host "New workspace name: $newWorkspaceName"
+          
+          # Verify config files exist
+          if (-not (Test-Path $itemConfigFile)) {
+            Write-Error "Config file not found: $itemConfigFile"
+            exit 1
+          }
+          if (-not (Test-Path $repoConfigFile)) {
+            Write-Error "Config file not found: $repoConfigFile"
+            exit 1
+          }
+          # deployment_config.yaml no longer needs workspace mutation
+          
+          # Update item_src_config.yaml
+          Write-Host "Updating $itemConfigFile..."
+          $itemContent = Get-Content $itemConfigFile -Raw -Encoding UTF8
+          $itemPattern = "(?m)^workspace:\s*.*$"
+          $itemReplacement = "workspace: '$newWorkspaceName'"
+          $updatedItemContent = $itemContent -replace $itemPattern, $itemReplacement
+          $updatedItemContent | Set-Content $itemConfigFile -Encoding UTF8 -NoNewline
+          $writtenItemContent = Get-Content $itemConfigFile -Raw -Encoding UTF8
+          if ($writtenItemContent -match "(?m)^workspace:\s*['""']?$newWorkspaceName['""']?\s*$") {
+            Write-Host "✅ item_src_config.yaml workspace updated"
+          } else {
+            Write-Error "Failed to update workspace name in $itemConfigFile"
+            exit 1
+          }
+
+          # Update repo_config.yaml
+          Write-Host "Updating $repoConfigFile..."
+          $repoContent = Get-Content $repoConfigFile -Raw -Encoding UTF8
+          $repoPattern = "(?m)^workspace:\s*.*$"
+          $repoReplacement = "workspace: '$newWorkspaceName'"
+          $updatedRepoContent = $repoContent -replace $repoPattern, $repoReplacement
+          $updatedRepoContent | Set-Content $repoConfigFile -Encoding UTF8 -NoNewline
+          $writtenRepoContent = Get-Content $repoConfigFile -Raw -Encoding UTF8
+          if ($writtenRepoContent -match "(?m)^workspace:\s*['""']?$newWorkspaceName['""']?\s*$") {
+            Write-Host "✅ repo_config.yaml workspace updated"
+          } else {
+            Write-Error "Failed to update workspace name in $repoConfigFile"
+            exit 1
+          }
+          
+          Write-Host "Skipped deployment_config.yaml (no workspace change needed)"
+      
+      - name: Commit changes
+        run: |
+          $featureName = "${{ github.event.inputs.feature_name }}"
+          $projectBaseName = "${{ steps.repo_cfg.outputs.project_base_name }}"
+          $newWorkspaceName = "$projectBaseName#$featureName"
+          
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Check if there are any changes
+          $hasChanges = $false
+          try {
+            git diff --quiet
+            $diffExitCode = $LASTEXITCODE
+            git diff --staged --quiet
+            $stagedExitCode = $LASTEXITCODE
+            
+            if ($diffExitCode -ne 0 -or $stagedExitCode -ne 0) {
+              $hasChanges = $true
+            }
+          } catch {
+            $hasChanges = $true
+          }
+          
+          if ($hasChanges) {
+            Write-Host "Changes detected, committing..."
+            git add cicd/
+            git commit -m "feat: create feature branch '$featureName'
+            
+            - Updated workspace name to '$newWorkspaceName'
+            - Modified cicd/item_src_config.yaml and cicd/repo_config.yaml for feature development
+            
+            Generated on: $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss UTC'))"
+          } else {
+            Write-Host "No changes detected, creating empty commit..."
+            git commit --allow-empty -m "feat: create feature branch '$featureName'
+            
+            - Created feature branch for development
+            - Workspace configuration verified (cicd configs)
+            
+            Generated on: $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss UTC'))"
+          }
+      
+      - name: Push feature branch
+        run: |
+          $featureName = "${{ github.event.inputs.feature_name }}"
+          $branchName = "feature/$featureName"
+          
+          git push origin $branchName
+          Write-Host "✅ Pushed feature branch: $branchName"
+      
+      - name: Branch Creation Summary
+        run: |
+          $featureName = "${{ github.event.inputs.feature_name }}"
+          $branchName = "feature/$featureName"
+          $projectBaseName = "${{ steps.repo_cfg.outputs.project_base_name }}"
+          $newWorkspaceName = "$projectBaseName#$featureName"
+          
+          echo "## 🎉 Feature Branch Created Successfully" >> $env:GITHUB_STEP_SUMMARY
+          echo "" >> $env:GITHUB_STEP_SUMMARY
+          echo "**Feature Name**: $featureName" >> $env:GITHUB_STEP_SUMMARY
+          echo "**Branch Name**: $branchName" >> $env:GITHUB_STEP_SUMMARY
+          echo "**Config Workspace Name**: $newWorkspaceName" >> $env:GITHUB_STEP_SUMMARY
+          echo "**Created**: $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss UTC'))" >> $env:GITHUB_STEP_SUMMARY
+          echo "" >> $env:GITHUB_STEP_SUMMARY
+          echo "### Next Steps:" >> $env:GITHUB_STEP_SUMMARY
+          echo "1. Configuration files have been updated automatically" >> $env:GITHUB_STEP_SUMMARY
+          echo "2. Deployment to Microsoft Fabric will begin next" >> $env:GITHUB_STEP_SUMMARY
+          echo "3. Monitor the deployment job for completion status" >> $env:GITHUB_STEP_SUMMARY
+
+  deploy-to-fabric:
+    needs: create-branch
+    uses: ./.github/workflows/deploy-fuam-from-repo.yml
+    with:
+      ref: feature/${{ github.event.inputs.feature_name }}
+    secrets: inherit
+    permissions:
+      contents: read

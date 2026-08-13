@@ -1,0 +1,153 @@
+name: Sync from FUAM Release Repo
+
+# Pulls the config/data/scripts/src folders from a chosen branch on
+# GT-Analytics/fuam_release back into this repo as a new branch prefixed
+# with 'sync/' so it can be easily distinguished from 'feature/' branches.
+# Optionally opens a pull request against main.
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_branch:
+        description: 'Branch on GT-Analytics/fuam_release to sync FROM (default: main)'
+        required: false
+        type: string
+        default: 'main'
+      target_branch:
+        description: "Branch to create in this repo (default: 'sync/from-release-<source>-<timestamp>')"
+        required: false
+        type: string
+        default: ''
+      base_branch:
+        description: 'Base branch in this repo to branch off (default: main)'
+        required: false
+        type: string
+        default: 'main'
+
+env:
+  RELEASE_REPO: GT-Analytics/fuam_release
+  # Folders that should be pulled back from the release repo.
+  SYNC_PATHS: 'config data scripts src'
+
+jobs:
+  sync-from-release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout source repo (this repo)
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.event.inputs.base_branch }}
+          fetch-depth: 0
+
+      - name: Checkout release repo at requested branch
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.RELEASE_REPO }}
+          token: ${{ secrets.RELEASE_REPO_TOKEN }}
+          ref: ${{ github.event.inputs.source_branch }}
+          path: release-repo
+          fetch-depth: 1
+
+      - name: Determine target branch name
+        id: branch
+        run: |
+          set -euo pipefail
+          SRC="${{ github.event.inputs.source_branch }}"
+          TARGET="${{ github.event.inputs.target_branch }}"
+          BASE="${{ github.event.inputs.base_branch }}"
+
+          TARGET="$(echo \"$TARGET\" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+          BASE="$(echo \"$BASE\" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+          if [ -z "$BASE" ]; then BASE=main; fi
+
+          if [ -z "$TARGET" ]; then
+            # Sanitize the source branch name for use inside a ref (replace '/' with '-').
+            SAFE_SRC=$(echo "$SRC" | tr '/' '-' | tr -c 'A-Za-z0-9._-' '-')
+            TS=$(date -u +%Y%m%d-%H%M%S)
+            TARGET="sync/from-release-${SAFE_SRC}-${TS}"
+          fi
+
+          # Reject characters that are invalid in git refs.
+          if echo "$TARGET" | grep -qE '[[:space:]~^:?*\[\\]|\.\.|@\{|^/|/$|//|\.lock$|^-'; then
+            echo "Invalid target branch name: '$TARGET'" >&2
+            exit 1
+          fi
+
+          if git ls-remote --exit-code --heads origin "$TARGET" >/dev/null 2>&1; then
+            echo "Target branch '$TARGET' already exists on this repo. Aborting." >&2
+            exit 1
+          fi
+
+          echo "target=$TARGET"           >> "$GITHUB_OUTPUT"
+          echo "base=$BASE"               >> "$GITHUB_OUTPUT"
+          echo "Target branch will be: $TARGET (base: $BASE)"
+
+      - name: Create target branch from base
+        run: |
+          set -euo pipefail
+          TARGET="${{ steps.branch.outputs.target }}"
+          BASE="${{ steps.branch.outputs.base }}"
+          git checkout "$BASE"
+          git pull --ff-only origin "$BASE"
+          git checkout -b "$TARGET"
+
+      - name: Overlay synced folders from release repo
+        run: |
+          set -euo pipefail
+          for p in $SYNC_PATHS; do
+            SRC_DIR="release-repo/$p"
+            if [ ! -d "$SRC_DIR" ]; then
+              echo "Warning: '$p' does not exist on release branch, skipping." >&2
+              continue
+            fi
+            echo "Syncing $p"
+            # Remove the existing folder in this repo so deletions on the release side propagate,
+            # then copy the release version in.
+            rm -rf "$p"
+            mkdir -p "$p"
+            cp -R "$SRC_DIR/." "$p/"
+          done
+
+      - name: Commit and push target branch
+        id: commit
+        run: |
+          set -euo pipefail
+          TARGET="${{ steps.branch.outputs.target }}"
+          SRC="${{ github.event.inputs.source_branch }}"
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No differences between ${SRC} and base branch; nothing to sync."
+            echo "changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          RELEASE_SHA=$(git -C release-repo rev-parse HEAD)
+          git commit -m "Sync from ${RELEASE_REPO}@${SRC}" \
+                     -m "Source branch: ${SRC}" \
+                     -m "Source commit: ${RELEASE_SHA}" \
+                     -m "Synced folders: ${SYNC_PATHS}"
+          git push origin "$TARGET"
+          echo "changes=true" >> "$GITHUB_OUTPUT"
+          echo "release_sha=$RELEASE_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Summary
+        run: |
+          {
+            echo "### FUAM release sync-back"
+            echo ""
+            echo "- Release repo:   \`${RELEASE_REPO}\`"
+            echo "- Source branch:  \`${{ github.event.inputs.source_branch }}\`"
+            echo "- Target branch:  \`${{ steps.branch.outputs.target }}\`"
+            echo "- Base branch:    \`${{ steps.branch.outputs.base }}\`"
+            echo "- Folders synced: \`${SYNC_PATHS}\`"
+            echo "- Changes pushed: \`${{ steps.commit.outputs.changes }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

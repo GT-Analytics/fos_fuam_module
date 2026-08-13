@@ -1,0 +1,157 @@
+name: Sync to FUAM Release Repo
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_branch:
+        description: 'Exact branch name to create in the release repo (no prefix will be added)'
+        required: true
+        type: string
+
+env:
+  RELEASE_REPO: GT-Analytics/fuam_release
+  # Folders in this repo that should be published to the release repo.
+  SYNC_PATHS: 'config data scripts src'
+
+jobs:
+  sync-release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Read FUAM version
+        id: version
+        run: |
+          set -euo pipefail
+          VERSION=$(jq -r '.current_fuam_version' data/current_fuam_version.json)
+          if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
+            VERSION="unknown"
+          fi
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "short_sha=$SHORT_SHA" >> "$GITHUB_OUTPUT"
+          echo "Version: $VERSION  Commit: $SHORT_SHA"
+
+      - name: Stage folders to publish
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/payload"
+          for p in $SYNC_PATHS; do
+            if [ -d "$p" ]; then
+              echo "Staging $p"
+              cp -R "$p" "$RUNNER_TEMP/payload/"
+            else
+              echo "Warning: '$p' does not exist in source repo, skipping." >&2
+            fi
+          done
+          ls -la "$RUNNER_TEMP/payload"
+
+      - name: Checkout release repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.RELEASE_REPO }}
+          token: ${{ secrets.RELEASE_REPO_TOKEN }}
+          path: release-repo
+          fetch-depth: 0
+
+      - name: Validate release branch name
+        id: branch
+        run: |
+          set -euo pipefail
+          BRANCH="${{ github.event.inputs.release_branch }}"
+
+          # Trim surrounding whitespace.
+          BRANCH="$(echo "$BRANCH" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+
+          if [ -z "$BRANCH" ]; then
+            echo "release_branch input cannot be empty." >&2
+            exit 1
+          fi
+
+          # Reject characters that are invalid in git refs or shell-unsafe.
+          if echo "$BRANCH" | grep -qE '[[:space:]~^:?*\[\\]|\.\.|@\{|^/|/$|//|\.lock$|^-'; then
+            echo "Invalid branch name: '$BRANCH'" >&2
+            exit 1
+          fi
+
+          cd release-repo
+          if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
+            echo "Branch '$BRANCH' already exists on ${RELEASE_REPO}. Aborting." >&2
+            exit 1
+          fi
+
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+          echo "Release branch will be: $BRANCH"
+
+      - name: Populate release branch content
+        run: |
+          set -euo pipefail
+          BRANCH="${{ steps.branch.outputs.branch }}"
+
+          cd release-repo
+
+          # Base the new branch off the release repo's default branch so history is preserved.
+          DEFAULT_BRANCH=$(git remote show origin | sed -n 's/.*HEAD branch: //p')
+          if [ -z "$DEFAULT_BRANCH" ]; then
+            DEFAULT_BRANCH=main
+          fi
+          echo "Basing new branch on default branch: $DEFAULT_BRANCH"
+          git checkout "$DEFAULT_BRANCH"
+          git checkout -b "$BRANCH"
+
+          # Remove all tracked content (except .git) so the release branch reflects only the synced payload.
+          # Preserve top-level dotfiles like .github if you want to keep them; here we replace everything.
+          git rm -rf . >/dev/null 2>&1 || true
+          # Also clean any untracked leftovers.
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+
+          # Copy the staged payload folders in.
+          cp -R "$RUNNER_TEMP/payload/." .
+
+          ls -la
+
+      - name: Commit and push release branch
+        run: |
+          set -euo pipefail
+          BRANCH="${{ steps.branch.outputs.branch }}"
+          VERSION="${{ steps.version.outputs.version }}"
+          SHORT_SHA="${{ steps.version.outputs.short_sha }}"
+          SRC_REPO="${GITHUB_REPOSITORY}"
+          SRC_SHA="${GITHUB_SHA}"
+
+          cd release-repo
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to publish; skipping push."
+            exit 0
+          fi
+
+          git commit -m "Release v${VERSION} from ${SRC_REPO}@${SHORT_SHA}" \
+                     -m "Source repository: ${SRC_REPO}" \
+                     -m "Source commit: ${SRC_SHA}" \
+                     -m "Synced folders: ${SYNC_PATHS}"
+
+          git push origin "$BRANCH"
+          echo "Pushed branch '$BRANCH' to ${RELEASE_REPO}."
+
+      - name: Summary
+        run: |
+          {
+            echo "### FUAM release sync"
+            echo ""
+            echo "- Source: \`${GITHUB_REPOSITORY}@${GITHUB_SHA}\`"
+            echo "- Version: \`${{ steps.version.outputs.version }}\`"
+            echo "- Release repo: \`${RELEASE_REPO}\`"
+            echo "- Release branch: \`${{ steps.branch.outputs.branch }}\`"
+            echo "- Folders synced: \`${SYNC_PATHS}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
