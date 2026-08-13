@@ -3,7 +3,7 @@
     "version": "4.0",
     "datasetReference": {
         "byConnection": {
-            "connectionString": "Data Source=powerbi://api.powerbi.com/v1.0/myorg/FOS_Version_2026_5_1;initial catalog=FOS_Item_SM;integrated security=ClaimsToken;semanticmodelid=1e138291-b676-3859-874b-682cc4827157"
+            "connectionString": "Data Source=powerbi://api.powerbi.com/v1.0/myorg/FOS#FOS_V_0_5;initial catalog=FOS_Item_SM;integrated security=ClaimsToken;semanticmodelid=1e138291-b676-3859-874b-682cc4827157"
         }
     }
 }
