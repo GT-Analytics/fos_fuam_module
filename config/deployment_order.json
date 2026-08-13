@@ -12,7 +12,7 @@
         "fuam_id": "e665127a-bc6f-3487-b0ce-d3b2141df298"
     },
     {
-        "name": "FUAM_Lakehouse.Lakehouse",
+        "name": "FOS_Lakehouse.Lakehouse",
         "fuam_id": "6cff634b-88f7-3505-bed2-c03a36776a8b"
     },
     {
@@ -28,7 +28,7 @@
         "fuam_id": "8f6dadb3-5b32-369c-a4e7-33f03853fc28"
     },
     {
-        "name": "Init_FUAM_Lakehouse_Tables.Notebook",
+        "name": "Init_FOS_Lakehouse_Tables.Notebook",
         "fuam_id": "98564ef7-ef80-3544-8026-25c44036ff8c"
     },
     {
@@ -116,11 +116,11 @@
         "fuam_id": "8522e61c-5940-353d-92d3-c1f594a3c681"
     },
     {
-        "name": "01_FUAM_Lakehouse_Backup.Notebook",
+        "name": "01_FOS_Lakehouse_Backup.Notebook",
         "fuam_id": "606ed91b-795c-37fa-97b3-0b04bb70a70f"
     },
     {
-        "name": "02_FUAM_Lakehouse_Optimization.Notebook",
+        "name": "02_FOS_Lakehouse_Optimization.Notebook",
         "fuam_id": "39b3fdc5-651d-354d-acde-b3121a2c3c25"
     },
     {

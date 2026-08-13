@@ -7,7 +7,7 @@ To update FUAM (Fabric Unified Admin Monitoring) to the latest version, follow t
 **Important:**
 
 - FUAM updates **overwrite all FUAM-provided items** based on the item name.
-- FUAM updates **do not** affect your collected data within the `FUAM_Lakehouse`; only the metadata will be overwritten.
+- FUAM updates **do not** affect your collected data within the `FOS_Lakehouse`; only the metadata will be overwritten.
 - If you **have made custom changes to pipelines, notebooks, semantic models, and reports**, please **create a backup or rename your custom items**.
 - **Recommended:** Take a screenshot of your current pipeline parameters in `Load_FUAM_Data_E2E` before the update.
 - **Recommended:** Back up your workspace items (e.g., using Git) before the update.

@@ -89,7 +89,7 @@ FUAM implements a modern data platform architecture with clear separation of con
 ┌─────────────────────────────────────────────────────────────────────┐
 │                    Storage Layer (Lakehouses)                       │
 ├─────────────────────────────────────────────────────────────────────┤
-│  FUAM_Lakehouse:                                                    │
+│  FOS_Lakehouse:                                                    │
 │    • Files/bronze/* (Raw JSON/API responses)                        │
 │    • Tables/* (Delta tables - Gold layer)                           │
 │  FUAM_Staging_Lakehouse: Temporary processing                       │
@@ -119,7 +119,7 @@ FUAM implements a modern data platform architecture with clear separation of con
 
 #### Lakehouse Components
 
-**1. FUAM_Lakehouse (Primary Data Store)**
+**1. FOS_Lakehouse (Primary Data Store)**
 - **Purpose:** Central repository for all monitoring data
 - **Structure:**
   - `Files/bronze/`: Raw API responses (JSON format)
@@ -272,7 +272,7 @@ API/Source → Bronze (Raw JSON) → Silver (Transformed DataFrame) → Gold (De
 - Raw API responses stored as JSON files
 - No transformation applied
 - Enables data replay and audit trails
-- Location: `FUAM_Lakehouse/Files/bronze/{module_name}/`
+- Location: `FOS_Lakehouse/Files/bronze/{module_name}/`
 
 **Silver Layer:**
 - In-memory Spark DataFrames
@@ -285,7 +285,7 @@ API/Source → Bronze (Raw JSON) → Silver (Transformed DataFrame) → Gold (De
 - Delta tables optimized for analytics
 - Partitioned by date where applicable
 - Indexed for common query patterns
-- Location: `FUAM_Lakehouse/Tables/`
+- Location: `FOS_Lakehouse/Tables/`
 
 ---
 
@@ -415,7 +415,7 @@ FUAM leverages Delta Lake for all structured data storage, providing ACID transa
 **Key Delta Features Used:**
 
 1. **Schema Evolution:**
-    - The FUAM_Lakehouse tables supports dynamic schemas
+    - The FOS_Lakehouse tables supports dynamic schemas
 
 
 2. **Merge Operations:**
@@ -535,7 +535,7 @@ Each data ingestion notebook follows a standardized structure:
 Module: Capacities
 Strategy: REPLACE
 Source: Fabric Admin API - /capacities
-Target: FUAM_Lakehouse.capacities
+Target: FOS_Lakehouse.capacities
 """
 
 # Cell 2: Parameters
@@ -609,7 +609,7 @@ if missing:
 **Pattern 3: Idempotent Operations**
 ```python
 # Ensure operations can be safely re-run
-if spark._jsparkSession.catalog().tableExists('FUAM_Lakehouse', gold_table_name):
+if spark._jsparkSession.catalog().tableExists('FOS_Lakehouse', gold_table_name):
     # Table exists - use merge/update logic
     merge_to_table(silver_df, gold_table_name)
 else:
@@ -709,7 +709,7 @@ CALCULATE(
       {
         "name": "DatabaseQuery",
         "kind": "m",
-        "expression": "let\n    Source = Lakehouse(\"FUAM_Lakehouse\")\nin\n    Source"
+        "expression": "let\n    Source = Lakehouse(\"FOS_Lakehouse\")\nin\n    Source"
       }
     ]
   }
@@ -780,7 +780,7 @@ FUAM uses the `Deploy_FUAM.ipynb` notebook for automated deployment and updates.
      ↓
 6. Creates/validates cloud connections (if first deployment)
      ↓
-7. Creates lakehouses (FUAM_Lakehouse, FUAM_Staging_Lakehouse, etc.)
+7. Creates lakehouses (FOS_Lakehouse, FUAM_Staging_Lakehouse, etc.)
      ↓
 8. Uploads table_definitions.snappy.parquet to FUAM_Config_Lakehouse
      ↓
@@ -792,7 +792,7 @@ FUAM uses the `Deploy_FUAM.ipynb` notebook for automated deployment and updates.
      ↓
 10. Organizes items into folders based on deployment_config.yaml
      ↓
-11. Runs Init_FUAM_Lakehouse_Tables notebook
+11. Runs Init_FOS_Lakehouse_Tables notebook
      ↓
 12. Deployment complete
 ```
@@ -827,11 +827,11 @@ folders:
 ```json
 {
   "order": [
-    "FUAM_Lakehouse.Lakehouse",
+    "FOS_Lakehouse.Lakehouse",
     "FUAM_Staging_Lakehouse.Lakehouse",
     "FUAM_Config_Lakehouse.Lakehouse",
     "FUAM_Backup_Lakehouse.Lakehouse",
-    "Init_FUAM_Lakehouse_Tables.Notebook",
+    "Init_FOS_Lakehouse_Tables.Notebook",
     "01_Transfer_Capacities_Unit.Notebook",
     "Load_Capacities_E2E.DataPipeline",
     "FUAM_Core_SM.SemanticModel",
@@ -901,9 +901,9 @@ The deployment notebook intelligently handles both scenarios:
 **Purpose:** Housekeeping and optimization tasks
 
 
-**Optimization Notebook for FUAM_Lakehouse:**
+**Optimization Notebook for FOS_Lakehouse:**
 
-`02_FUAM_Lakehouse_Optimization` notebook runs OPTIMIZE and VACUUM commands
+`02_FOS_Lakehouse_Optimization` notebook runs OPTIMIZE and VACUUM commands
 
 **Schedule Recommendation:** Weekly, off-peak hours
 
@@ -978,7 +978,7 @@ if anonymize_files:
 ## Extensibility & Customization
 
 
-We recommend to create a new workspace with an empty Lakehouse, where you can shortcut the FUAM_Lakehouse data. The new workspace is a great candidate to put your additional logic, customizations on top of FUAM.
+We recommend to create a new workspace with an empty Lakehouse, where you can shortcut the FOS_Lakehouse data. The new workspace is a great candidate to put your additional logic, customizations on top of FUAM.
 This approach prevents that the update mechanism of FUAM overwrites or deletes your custom logic.
 
 ### Adding Custom Modules

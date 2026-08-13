@@ -4,7 +4,7 @@
 
 FUAM's architecture is **based on Fabric items** such as pipelines, notebooks, lakehouses, semantic models, and Power BI reports. We designed the component to be modular, allowing you to extend FUAM with your own modules. This architectural design also makes the solution easier to maintain.
 
-The **data ingestion** logic is orchestrated and parameterizable, allowing you to use the main orchestration pipeline for initial and incremental data loads. **FUAM_Lakehouse** is one of the core components of the architecture. All data is transformed and stored persistently, opening up powerful possibilities for analyzing the collected data in a semantic model in DirectLake mode.
+The **data ingestion** logic is orchestrated and parameterizable, allowing you to use the main orchestration pipeline for initial and incremental data loads. **FOS_Lakehouse** is one of the core components of the architecture. All data is transformed and stored persistently, opening up powerful possibilities for analyzing the collected data in a semantic model in DirectLake mode.
 
 ![image](/monitoring/fabric-unified-admin-monitoring/media/general/fuam_architecture.png)
 
@@ -14,19 +14,19 @@ FUAM is designed to be modular. FUAM aims for a medallion architecture (Bronze, 
 
 |Lakehouse|Description|
 |--|--|
-|FUAM_Lakehouse|Main data storage. Stores all FUAM data in Delta parquet tables.|
+|FOS_Lakehouse|Main data storage. Stores all FUAM data in Delta parquet tables.|
 |FUAM_Staging_Lakehouse|Intermediate storage for processing. No long-term storage of data.|
 |FUAM_Config_Lakehouse|Used for deployment of FUAM.|
 |FUAM_Backup_Lakehouse|Used for backup of raw and/or parquet files.|
 
-You can find the detailed documentation of **FUAM_Lakehouse** tables, data lineage, and its purpose here:  
+You can find the detailed documentation of **FOS_Lakehouse** tables, data lineage, and its purpose here:
 [FUAM Lakehouse table documentation](/monitoring/fabric-unified-admin-monitoring/media/documentation/FUAM_Documentation_Lakehouse_table_lineage.pdf).
 
 ## Modules (Pipelines)
 
 FUAM is based on a modular approach. Each module contains the end-to-end logic for data ingestion (from the source to the lakehouse table). Each module is orchestrated in a central orchestration pipeline, which significantly simplifies scheduling.
 
-|Module| Description | Item name| Populated tables in FUAM_Lakehouse |
+|Module| Description | Item name| Populated tables in FOS_Lakehouse |
 |--|--|--|--|
 |Capacities|Collects capacities and their properties.|Load_Capacities_E2E|capacities, capacity_users|
 |Workspaces|Collects existing workspaces. Personal workspaces are **not** in scope.|Load_Workspaces_E2E|workspaces|
@@ -58,7 +58,7 @@ Currently, there are two semantic models within the FUAM solution accelerator:
 ![image](/monitoring/fabric-unified-admin-monitoring/media/general/fuam_report_data_lineage.png)
 
 The main semantic model of FUAM is **FUAM_Core_SM**.  
-This contains all the business logic on top of the gold layer (FUAM_Lakehouse delta tables).
+This contains all the business logic on top of the gold layer (FOS_Lakehouse delta tables).
 
 #### Data model
 
@@ -122,7 +122,7 @@ In case you want to implement your custom requirements, we recommend following t
 
 1. Create a new workspace.
 2. Create a new Lakehouse.
-3. Shortcut the tables and files from FUAM_Lakehouse to your own lakehouse.
+3. Shortcut the tables and files from FOS_Lakehouse to your own lakehouse.
 4. Build your own items and logic.
 
 Cloning a semantic model from FUAM:

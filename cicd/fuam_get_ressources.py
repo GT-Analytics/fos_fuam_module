@@ -26,7 +26,7 @@ src_workspace_name = config['workspace']
 src_pbi_connection = config['connections']['pbi_connection']
 src_fabric_connection = config['connections']['fabric_connection']
 items = config['items']
-#items = ['FUAM_Lakehouse.Lakehouse', 'FUAM_Staging_Lakehouse.Lakehouse', 'Generate_Calendar_Table.Notebook']
+#items = ['FOS_Lakehouse.Lakehouse', 'FUAM_Staging_Lakehouse.Lakehouse', 'Generate_Calendar_Table.Notebook']
 item_inventory = []
 
 namespace = uuid.NAMESPACE_DNS

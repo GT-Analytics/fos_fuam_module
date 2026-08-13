@@ -126,7 +126,7 @@ We recommend to create a new Capacity Metrics App (with automatically deployed w
 
 > **Info:** The **Load_FUAM_Data_E2E** is the main end-to-end orchestration pipeline of FUAM. It contains/triggers all other sub-pipelines (FUAM modules), which are implemented in the solution. 
 
-> The sub-pipelines download all the required data via APIs and the referenced Notebooks will transform/write the data to the final FUAM_Lakehouse delta tables.
+> The sub-pipelines download all the required data via APIs and the referenced Notebooks will transform/write the data to the final FOS_Lakehouse delta tables.
 
 - Navigate to your FUAM Workspace
 - Search for the item 'Load_FUAM_Data_E2E'
@@ -149,12 +149,12 @@ The Pipeline has different parameters, which are controlling the data load flow:
 |optional_keyvault_sp_ clientId_secret_name|**Optional**: If you have configured a key vault and its secrets, enter the name of the clientId secret name. Otherwise, simply leave this field blank. In this case, the Load_Inventory module will use the Notebook owner's identity.|empty or string|
 |optional_keyvault_sp_ secret_secret_name|**Optional**: If you have configured a key vault and its secrets, enter the name of the service principal's secret secret name. Otherwise, simply leave this field blank. In this case, the Load_Inventory module will use the Notebook owner's identity.|empty or string|
 |activity_anonymize_tables|If **true**, the Load_Activities module enables anonymization of activities Lakehouse table for the recently loaded activity logs. <br><br> **_Important:_** The anonymization logic will has the "UserId" and "UserKey" columns. <br><br> **_Tip:_** Use it in combination of the parameter **activity_anonymize_after_days = 0** to anonymize the currently loaded activity log values. |true or false|
-|activity_anonymize_after_days|Default is **0**. If value is higher than 0 (zero) and the parameter **activity_anonymize_tables** is **true** the Load_Activities module will anonymize (hash with md5) the **activities** Lakehouse table columns ("UserId" and "UserKey") before the given day. <br><br> _**Example A:**_ Let's assume you stored 190 days of activity logs in FUAM_Lakehouse. You set the parameter activity_anonymize_after_days to **90**. In this case the last 90 days of activities data will **not** be anonymized, the rest days from d-91 and d-190 will be anonymized.   |Integer range between **0** and **365**|
-|activity_anonymize_files|If **true**, the Load_Activities module will delete all the raw historical activity JSON files in FUAM_Lakehouse/Files/history/actities folder. <br> <br> If **false**, the logic will keep the raw activity JSON files and populates it after every pipeline execution.|true or false|
+|activity_anonymize_after_days|Default is **0**. If value is higher than 0 (zero) and the parameter **activity_anonymize_tables** is **true** the Load_Activities module will anonymize (hash with md5) the **activities** Lakehouse table columns ("UserId" and "UserKey") before the given day. <br><br> _**Example A:**_ Let's assume you stored 190 days of activity logs in FOS_Lakehouse. You set the parameter activity_anonymize_after_days to **90**. In this case the last 90 days of activities data will **not** be anonymized, the rest days from d-91 and d-190 will be anonymized.   |Integer range between **0** and **365**|
+|activity_anonymize_files|If **true**, the Load_Activities module will delete all the raw historical activity JSON files in FOS_Lakehouse/Files/history/actities folder. <br> <br> If **false**, the logic will keep the raw activity JSON files and populates it after every pipeline execution.|true or false|
 |om_top_n_semantic_models_per_capacity|This Parameter determines for how many semantic models per capacity the Optimization module is automatically executed|Integer. It is recommended to start with a small number to check runtime and later increase|
 
 
-- Run the Pipeline once. This will initially load the data into FUAM_Lakehouse
+- Run the Pipeline once. This will initially load the data into FOS_Lakehouse
 
     ![](/monitoring/fabric-unified-admin-monitoring/media/deployment/FUAM_basic_deployment_process_5_1.png)
 
@@ -246,7 +246,7 @@ You have deployed and configured FUAM.
     - If there is no workspace description on the whole tenant. In this case just add one workspace description. This will fix the error
     - In case there are no regular scheduled refreshes on the tenant, the execution for capacity refreshables can fail. This should be resolved by creating a scheduled refresh and running it multiple times
     - In case the are no delegated tenant settings set in one of the capacities, the extraction step will fail. You can remove this step if it is not needed in your tenant
-    - Try to run the "Init_FUAM_Lakehouse_Tables" notebook to automatically create missing columns
+    - Try to run the "Init_FOS_Lakehouse_Tables" notebook to automatically create missing columns
 
 - Deployment in case of Private Link (possible with additional manual steps)
     - In some cases the deployment notebook can't download the required content from the repository.
