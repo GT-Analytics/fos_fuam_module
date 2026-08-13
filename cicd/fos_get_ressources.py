@@ -19,7 +19,6 @@ with open(config_path, 'r') as file:
 #print(config)
 
 perform_export = True
-read_from_inventory = False
 
 deployment_workspace_name = "FOS"
 src_workspace_name = config['workspace']
@@ -139,34 +138,21 @@ if os.path.exists(tmp_path) and perform_export:
 os.makedirs(tmp_path, exist_ok=True)
 all_guids = set()
 
-if not read_from_inventory:
+for item in items:
+    print(item)
+    guids = []
+    item_id = run_fab_command(f"get {src_workspace_name}.Workspace/{item} -q id", silently_continue=True, capture_output=True)
+    if not item.endswith('.Lakehouse') and not item.endswith(".Environment"):
+        if perform_export:
+            run_fab_command(  f"export {src_workspace_name}.Workspace/{item} -o {tmp_path} -f ", silently_continue=False)
+        guids = process_file(os.path.join(tmp_path, item))
+        add_item_to_inventory(item, item_id, guids)
+        all_guids.update(guids)
 
-    for item in items:
-        print(item)
-        guids = []
-        item_id = run_fab_command(f"get {src_workspace_name}.Workspace/{item} -q id", silently_continue=True, capture_output=True)
-        if not item.endswith('.Lakehouse') and not item.endswith(".Environment"):
-            if perform_export:
-                run_fab_command(  f"export {src_workspace_name}.Workspace/{item} -o {tmp_path} -f ", silently_continue=False)
-            guids = process_file(os.path.join(tmp_path, item))
-            add_item_to_inventory(item, item_id, guids)
-            all_guids.update(guids)
+    else:
+        add_item_to_inventory(item, item_id, [])
 
-        else:
-            add_item_to_inventory(item, item_id, [])
-
-    print(item_inventory)
-    # write item_inventory to a JSON file
-    item_inventory_path = os.path.join(base_path, 'config', 'item_inventory.json')  
-    with open(item_inventory_path, 'w') as json_file:
-        json.dump(item_inventory, json_file, indent=4)
-else:
-    item_inventory_path = os.path.join(base_path, 'config', 'item_inventory.json')
-    with open(item_inventory_path, 'r') as json_file:
-        item_inventory = json.load(json_file)
-        for item in item_inventory:
-            guids = process_file(os.path.join(tmp_path, item['name']))
-            all_guids.update(guids)
+print(item_inventory)
 
     
 missing_guids = []

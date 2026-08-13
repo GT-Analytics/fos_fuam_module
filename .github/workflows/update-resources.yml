@@ -104,7 +104,7 @@ jobs:
           git commit -m "chore: update FOS resources from source workspace
           
           - Updated src folder with latest exports
-          - Updated config files (item_inventory.json, deployment_order.json)
+          - Updated deployment_order.json
           - Processed by fos_get_ressources.py script
           
           Generated on: $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss UTC'))"
