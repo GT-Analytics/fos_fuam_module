@@ -1,0 +1,221 @@
+name: Deploy FOS from Repo
+
+on:
+  workflow_dispatch:
+    # No inputs required - uses current branch configuration
+  workflow_call:
+    # Allow this workflow to be called by other workflows
+    inputs:
+      ref:
+        description: 'Git reference (branch, tag, or commit SHA) to checkout'
+        required: false
+        type: string
+        default: ''
+  #push:
+  #  branches:
+  #    - 'feature/*'
+  #    - main
+  #    - develop
+    # Optional: trigger on push to feature branches
+
+env:
+  PYTHON_VERSION: '3.11'
+  PYTHONIOENCODING: 'utf-8'
+  PYTHONUTF8: '1'
+
+jobs:
+  deploy-fos:
+    runs-on: windows-latest
+    
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ inputs.ref || github.ref }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Load configuration from repo_config.yaml
+        id: repo_cfg
+        shell: pwsh
+        run: |
+          $cfgPath = "cicd/repo_config.yaml"
+          $workspaceName = ""
+          $capacityName = "kethfabric"
+          $entraObjectId = ""
+          
+          if (Test-Path $cfgPath) {
+            $content = Get-Content $cfgPath -Raw -Encoding UTF8
+            # Use double-double-quotes to include a literal double-quote in a PowerShell double-quoted string
+            $workspaceMatch = [regex]::Match($content, "(?m)^[\s-]*workspace:\s*['""]?(.+?)['""]?\s*$")
+            if ($workspaceMatch.Success) { $workspaceName = $workspaceMatch.Groups[1].Value.Trim() }
+            $capMatch = [regex]::Match($content, "(?m)^[\s-]*capacity:\s*['""]?(.+?)['""]?\s*$")
+            if ($capMatch.Success) { $capacityName = $capMatch.Groups[1].Value.Trim() }
+            $grpMatch = [regex]::Match($content, "(?m)^[\s-]*admin_group:\s*['""]?(.+?)['""]?\s*$")
+            if ($grpMatch.Success) { $entraObjectId = $grpMatch.Groups[1].Value.Trim() }
+          } else {
+            Write-Error "repo_config.yaml not found at $cfgPath. Cannot proceed without configuration."
+            exit 1
+          }
+          
+          if ([string]::IsNullOrWhiteSpace($workspaceName)) {
+            Write-Error "No workspace name found in $cfgPath. Cannot proceed without target workspace."
+            exit 1
+          }
+          
+          "workspace_name=$workspaceName" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "capacity_name=$capacityName" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "entra_object_id=$entraObjectId" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          Write-Host "Loaded workspace=$workspaceName, capacity=$capacityName, admin_group=$entraObjectId"
+      
+      - name: Install Microsoft Fabric CLI
+        run: |
+          # Install Fabric CLI via pip
+          pip install ms-fabric-cli
+      
+      - name: Authenticate with Microsoft Fabric
+        run: |
+          # Configure Fabric CLI authentication
+          # You'll need to set up service principal authentication
+          fab auth login -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+        env:
+          FAB_SPN_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          FAB_SPN_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          FAB_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      
+      - name: Create Microsoft Fabric Workspace
+        run: |
+          $workspaceName = "${{ steps.repo_cfg.outputs.workspace_name }}"
+          $capacityName = "${{ steps.repo_cfg.outputs.capacity_name }}"
+          
+          Write-Host "Creating Microsoft Fabric workspace: $workspaceName"
+          Write-Host "Using capacity: $capacityName"
+          
+          # Run fab create and capture output and exit code
+          $output = ""
+          $exitCode = 0
+          
+          try {
+            $output = fab create "$workspaceName.Workspace" -P capacityname=$capacityName 2>&1
+            $exitCode = $LASTEXITCODE
+          } catch {
+            $output = $_.Exception.Message
+            $exitCode = 1
+          }
+          
+          # Check if workspace already exists
+          if ($output -match "WorkspaceNameAlreadyExists" -or $output -match "already exists") {
+            Write-Host "✅ Workspace '$workspaceName' already exists - continuing with deployment"
+            exit 0  # Explicitly set success exit code
+          } elseif ($exitCode -eq 0) {
+            Write-Host "✅ Workspace '$workspaceName' created successfully!"
+          } else {
+            Write-Host "⚠️ Failed to create workspace '$workspaceName'"
+            Write-Host "Output: $output"
+            Write-Host "Exit code: $exitCode"
+            Write-Host "Attempting to continue with deployment to existing workspace..."
+            exit 0  # Continue with deployment even if creation failed
+          }
+        env:
+          FAB_SPN_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          FAB_SPN_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          FAB_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      
+      - name: Configure Workspace Group Access
+        run: |
+          $workspaceName = "${{ steps.repo_cfg.outputs.workspace_name }}"
+          $entraObjectId = "${{ steps.repo_cfg.outputs.entra_object_id }}"
+          
+          # Use Entra Object ID from repository variable if not in config
+          if ([string]::IsNullOrWhiteSpace($entraObjectId)) {
+            $entraObjectId = "${{ vars.ENTRA_OBJECT_ID }}"
+          }
+          
+          if (-not [string]::IsNullOrWhiteSpace($entraObjectId)) {
+            Write-Host "Configuring group access for workspace: $workspaceName"
+            Write-Host "Setting admin access for Entra Object ID: $entraObjectId"
+            
+            try {
+              # Set group admin access using Fabric CLI
+              fab acl set "$workspaceName.Workspace" -I $entraObjectId -R admin -f
+              Write-Host "✅ Group admin access configured successfully!"
+            } catch {
+              Write-Host "⚠️ Failed to configure group access for workspace '$workspaceName'"
+              Write-Host "Error: $($_.Exception.Message)"
+              Write-Host "Please configure group access manually in Microsoft Fabric portal"
+            }
+          } else {
+            Write-Host "⚠️ No Entra Object ID provided - skipping group access configuration"
+            Write-Host "Please set ENTRA_OBJECT_ID repository variable or add admin_group in cicd/repo_config.yaml"
+          }
+        env:
+          FAB_SPN_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          FAB_SPN_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          FAB_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      
+      - name: Deploy FOS via Python script
+        shell: pwsh
+        run: |
+          $workspaceName = "${{ steps.repo_cfg.outputs.workspace_name }}"
+          $currentBranch = git branch --show-current
+          Write-Host "Starting Python deployment using deploy_fos.py"
+          Write-Host "Target workspace: $workspaceName"
+          Write-Host "Current branch: $currentBranch"
+
+          # Ensure Python dependencies (if any future requirements added)
+          if (Test-Path "requirements.txt") { pip install -r requirements.txt }
+
+          # Run deployment script
+          try {
+            python cicd/deploy_fos.py
+            Write-Host "✅ Python deployment script completed successfully"
+          } catch {
+            Write-Host "❌ Python deployment failed"
+            Write-Host "Error: $($_.Exception.Message)"
+            exit 1
+          }
+        env:
+          FAB_SPN_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          FAB_SPN_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          FAB_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      
+      - name: Deployment Summary
+        run: |
+          $workspaceName = "${{ steps.repo_cfg.outputs.workspace_name }}"
+          $capacityName = "${{ steps.repo_cfg.outputs.capacity_name }}"
+          $entraObjectId = "${{ steps.repo_cfg.outputs.entra_object_id }}"
+          $currentBranch = git branch --show-current
+          
+          # Use Entra Object ID from repository variable if not in config
+          if ([string]::IsNullOrWhiteSpace($entraObjectId)) {
+            $entraObjectId = "${{ vars.ENTRA_OBJECT_ID }}"
+          }
+          
+          echo "## 🚀 FOS Deployment Completed" >> $env:GITHUB_STEP_SUMMARY
+          echo "" >> $env:GITHUB_STEP_SUMMARY
+          echo "**Source Branch**: $currentBranch" >> $env:GITHUB_STEP_SUMMARY
+          echo "**Target Workspace**: $workspaceName" >> $env:GITHUB_STEP_SUMMARY
+          echo "**Fabric Capacity**: $capacityName" >> $env:GITHUB_STEP_SUMMARY
+          if (-not [string]::IsNullOrWhiteSpace($entraObjectId)) {
+            echo "**Group Access**: Admin access configured for $entraObjectId" >> $env:GITHUB_STEP_SUMMARY
+          } else {
+            echo "**Group Access**: Not configured (no Entra Object ID provided)" >> $env:GITHUB_STEP_SUMMARY
+          }
+          echo "**Deployed At**: $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss UTC'))" >> $env:GITHUB_STEP_SUMMARY
+          echo "" >> $env:GITHUB_STEP_SUMMARY
+          echo "### Deployment Details:" >> $env:GITHUB_STEP_SUMMARY
+          echo "- Workspace '$workspaceName' was prepared and configured" >> $env:GITHUB_STEP_SUMMARY
+          echo "- FOS components deployed from branch '$currentBranch'" >> $env:GITHUB_STEP_SUMMARY
+          echo "- Configuration sourced from cicd/repo_config.yaml" >> $env:GITHUB_STEP_SUMMARY
+          if (-not [string]::IsNullOrWhiteSpace($entraObjectId)) {
+            echo "- Group admin access verified and configured" >> $env:GITHUB_STEP_SUMMARY
+          }
+          echo "" >> $env:GITHUB_STEP_SUMMARY
+          echo "✅ **Deployment successful!** Your FOS instance is ready for use."

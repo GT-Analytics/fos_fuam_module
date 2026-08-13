@@ -56,4 +56,4 @@ Thumbs.db
 tmp/
 temp/
 scripts/refresh_sms.py
-cicd/deploy_fuam_old.py
+cicd/deploy_fos_old.py

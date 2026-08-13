@@ -1,4 +1,4 @@
-name: Sync to FUAM Release Repo
+name: Sync to FOS Release Repo
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
         type: string
 
 env:
-  RELEASE_REPO: GT-Analytics/fuam_release
+  RELEASE_REPO: GT-Analytics/fos_release
   # Folders in this repo that should be published to the release repo.
   SYNC_PATHS: 'config data scripts src'
 
@@ -26,11 +26,11 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Read FUAM version
+      - name: Read FOS version
         id: version
         run: |
           set -euo pipefail
-          VERSION=$(jq -r '.current_fuam_version' data/current_fuam_version.json)
+          VERSION=$(jq -r '.current_fos_version' data/current_fos_version.json)
           if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
             VERSION="unknown"
           fi
@@ -147,7 +147,7 @@ jobs:
       - name: Summary
         run: |
           {
-            echo "### FUAM release sync"
+            echo "### FOS release sync"
             echo ""
             echo "- Source: \`${GITHUB_REPOSITORY}@${GITHUB_SHA}\`"
             echo "- Version: \`${{ steps.version.outputs.version }}\`"

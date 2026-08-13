@@ -4,7 +4,7 @@ import os
 
 def update_workspace_config(feature_name):
     """Update the workspace configuration with the new feature branch name."""
-    new_workspace_name = f'fuam_feature_branch_{feature_name}'
+    new_workspace_name = f'fos_feature_branch_{feature_name}'
     config_file = 'config/item_src_config.yaml'
     
     print(f'Updating workspace to: {new_workspace_name}')

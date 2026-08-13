@@ -1,4 +1,4 @@
-name: Update FUAM Resources
+name: Update FOS Resources
 
 on:
   workflow_dispatch:  # Manual trigger
@@ -10,7 +10,7 @@ on:
   #  paths:
   #    - 'config/item_src_config.yaml'
   #    - 'config/deployment_config.yaml'
-  #    - 'cicd/fuam_get_ressources.py'
+  #    - 'cicd/fos_get_ressources.py'
 
 env:
   PYTHON_VERSION: '3.11'
@@ -58,10 +58,10 @@ jobs:
           FAB_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
       
-      - name: Run FUAM Get Resources Script
+      - name: Run FOS Get Resources Script
         run: |
           cd cicd
-          python fuam_get_ressources.py
+          python fos_get_ressources.py
         env:
           # Add any environment variables your script might need
           PYTHONPATH: ${{ github.workspace }}
@@ -101,11 +101,11 @@ jobs:
         if: steps.check_changes.outputs.changes == 'true'
         run: |
           git add src/ config/
-          git commit -m "chore: update FUAM resources from source workspace
+          git commit -m "chore: update FOS resources from source workspace
           
           - Updated src folder with latest exports
           - Updated config files (item_inventory.json, deployment_order.json)
-          - Processed by fuam_get_ressources.py script
+          - Processed by fos_get_ressources.py script
           
           Generated on: $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss UTC'))"
           
@@ -114,7 +114,7 @@ jobs:
             
       - name: Summary
         run: |
-          echo "## 📊 FUAM Resource Update Summary" >> $env:GITHUB_STEP_SUMMARY
+          echo "## 📊 FOS Resource Update Summary" >> $env:GITHUB_STEP_SUMMARY
           echo "" >> $env:GITHUB_STEP_SUMMARY
           echo "**Execution Time**: $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss UTC'))" >> $env:GITHUB_STEP_SUMMARY
           echo "**Changes Detected**: ${{ steps.check_changes.outputs.changes }}" >> $env:GITHUB_STEP_SUMMARY

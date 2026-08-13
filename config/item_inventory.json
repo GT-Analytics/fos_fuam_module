@@ -1,44 +1,44 @@
 [
     {
-        "name": "FUAM.Workspace",
+        "name": "FOS.Workspace",
         "original_id": "07c2011e-e75c-437b-81e3-a91910de08be",
-        "fuam_id": "88c8d9fa-2c24-3fad-8f46-b36431c7ba1d",
+        "fos_id": "88c8d9fa-2c24-3fad-8f46-b36431c7ba1d",
         "related_items": []
     },
     {
-        "name": "fuam pbi-service-api admin",
+        "name": "fos pbi-service-api admin",
         "original_id": "3345091d-bb11-463c-a384-7971da807eee",
-        "fuam_id": "09f68371-365e-3501-a70d-6291901f4ba5",
+        "fos_id": "09f68371-365e-3501-a70d-6291901f4ba5",
         "related_items": []
     },
     {
-        "name": "fuam fabric-service-api admin",
+        "name": "fos fabric-service-api admin",
         "original_id": "644f217a-8761-4f19-b1b7-a40bfe0ec2af",
-        "fuam_id": "e665127a-bc6f-3487-b0ce-d3b2141df298",
+        "fos_id": "e665127a-bc6f-3487-b0ce-d3b2141df298",
         "related_items": []
     },
     {
         "name": "FOS_Lakehouse.Lakehouse",
         "original_id": "4446f988-9ba6-43e9-ba4d-8dbe5630f56b",
-        "fuam_id": "6cff634b-88f7-3505-bed2-c03a36776a8b",
+        "fos_id": "6cff634b-88f7-3505-bed2-c03a36776a8b",
         "related_items": []
     },
     {
-        "name": "FUAM_Staging_Lakehouse.Lakehouse",
+        "name": "FOS_Staging_Lakehouse.Lakehouse",
         "original_id": "764aa1a9-80bf-4a29-bb67-e680595624d3",
-        "fuam_id": "75f030b6-7261-36bc-8852-bcc82a69eb85",
+        "fos_id": "75f030b6-7261-36bc-8852-bcc82a69eb85",
         "related_items": []
     },
     {
-        "name": "FUAM_Config_Lakehouse.Lakehouse",
+        "name": "FOS_Config_Lakehouse.Lakehouse",
         "original_id": "80cee3e4-ef6a-4080-8129-2e1db29e8abd",
-        "fuam_id": "5aa75ae1-bfc2-3f9a-b39e-b549e30e96f1",
+        "fos_id": "5aa75ae1-bfc2-3f9a-b39e-b549e30e96f1",
         "related_items": []
     },
     {
         "name": "Generate_Calendar_Table.Notebook",
         "original_id": "c2a42ce3-fa2a-401a-afb4-0a81f5537528",
-        "fuam_id": "8f6dadb3-5b32-369c-a4e7-33f03853fc28",
+        "fos_id": "8f6dadb3-5b32-369c-a4e7-33f03853fc28",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -47,13 +47,13 @@
     {
         "name": "Init_FOS_Lakehouse_Tables.Notebook",
         "original_id": "9897bec2-3c49-4f57-af9a-3d927602d7a9",
-        "fuam_id": "98564ef7-ef80-3544-8026-25c44036ff8c",
+        "fos_id": "98564ef7-ef80-3544-8026-25c44036ff8c",
         "related_items": []
     },
     {
-        "name": "Check_FUAM_Version.Notebook",
+        "name": "Check_FOS_Version.Notebook",
         "original_id": "50654191-3eb0-4625-a4d8-abec65d3e448",
-        "fuam_id": "be52418c-fdb7-3a4b-b043-7ed8d866e919",
+        "fos_id": "be52418c-fdb7-3a4b-b043-7ed8d866e919",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -62,7 +62,7 @@
     {
         "name": "01_Transfer_Active_Items_Unit.Notebook",
         "original_id": "946a2a4a-0ad2-41aa-b3b4-8b962ab8cf00",
-        "fuam_id": "9484d28e-31dc-3609-a333-c13a6b7e996b",
+        "fos_id": "9484d28e-31dc-3609-a333-c13a6b7e996b",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -71,7 +71,7 @@
     {
         "name": "Load_Items_E2E.DataPipeline",
         "original_id": "35d697d1-7764-42ce-b8e0-438215bf8454",
-        "fuam_id": "bf6b036c-f4cf-3064-a41d-7161ebc97e06",
+        "fos_id": "bf6b036c-f4cf-3064-a41d-7161ebc97e06",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b",
@@ -82,7 +82,7 @@
     {
         "name": "02_Transfer_Activities_Unit.Notebook",
         "original_id": "97b45ab9-24d4-418c-a3e2-5b4204044a36",
-        "fuam_id": "43b1d7de-4129-3678-90e3-d2a3214f687a",
+        "fos_id": "43b1d7de-4129-3678-90e3-d2a3214f687a",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -91,7 +91,7 @@
     {
         "name": "03_Aggregate_Activities_Unit.Notebook",
         "original_id": "750a1047-cf1b-4b9e-b13d-93f4f37a69c3",
-        "fuam_id": "4ce6d4e5-87f5-3b68-810a-b41139f7e0d7",
+        "fos_id": "4ce6d4e5-87f5-3b68-810a-b41139f7e0d7",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -100,7 +100,7 @@
     {
         "name": "Load_Activities_E2E.DataPipeline",
         "original_id": "aab657da-bfc1-4ebf-87b7-3fc88050bff0",
-        "fuam_id": "b6d26e22-ab2b-36de-aa35-7a7be49c0d16",
+        "fos_id": "b6d26e22-ab2b-36de-aa35-7a7be49c0d16",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "3345091d-bb11-463c-a384-7971da807eee",
@@ -112,7 +112,7 @@
     {
         "name": "01_Transfer_Capacities_Unit.Notebook",
         "original_id": "05c0dfe4-cb74-4ed8-ba2a-761e8abec004",
-        "fuam_id": "3a2584a0-8a24-385e-bca2-b7e22ce5cdc2",
+        "fos_id": "3a2584a0-8a24-385e-bca2-b7e22ce5cdc2",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -121,7 +121,7 @@
     {
         "name": "Load_Capacities_E2E.DataPipeline",
         "original_id": "dc7b78ba-1e04-4d6a-824e-a105c5ab17fe",
-        "fuam_id": "bbc79b56-f08d-32e9-8a05-bc54587d743b",
+        "fos_id": "bbc79b56-f08d-32e9-8a05-bc54587d743b",
         "related_items": [
             "05c0dfe4-cb74-4ed8-ba2a-761e8abec004",
             "07c2011e-e75c-437b-81e3-a91910de08be",
@@ -132,7 +132,7 @@
     {
         "name": "01_Transfer_Capacity_Refreshables_Unit.Notebook",
         "original_id": "c09914b7-fb55-4371-8511-ba0817650dc2",
-        "fuam_id": "1911097c-906e-3b0b-b5e0-00b2a2557eda",
+        "fos_id": "1911097c-906e-3b0b-b5e0-00b2a2557eda",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -141,7 +141,7 @@
     {
         "name": "Load_Capacity_Refreshables_E2E.DataPipeline",
         "original_id": "d1886354-0e31-4753-b1af-caafa1466ccd",
-        "fuam_id": "1424bf87-e7cc-3e4d-9cff-b57cd1804641",
+        "fos_id": "1424bf87-e7cc-3e4d-9cff-b57cd1804641",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "3345091d-bb11-463c-a384-7971da807eee",
@@ -152,7 +152,7 @@
     {
         "name": "02_Transfer_Workspaces_Unit.Notebook",
         "original_id": "703bba20-0e9f-454c-a214-fab91cbfc6c9",
-        "fuam_id": "ecdb8730-08f9-3d4c-a74d-e13ef4dad801",
+        "fos_id": "ecdb8730-08f9-3d4c-a74d-e13ef4dad801",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -161,7 +161,7 @@
     {
         "name": "Load_PBI_Workspaces_E2E.DataPipeline",
         "original_id": "ebe2f623-b7d9-4917-bf3a-a44f10f8df3f",
-        "fuam_id": "c27a06eb-f788-3126-97c6-84da599eaab5",
+        "fos_id": "c27a06eb-f788-3126-97c6-84da599eaab5",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "3345091d-bb11-463c-a384-7971da807eee",
@@ -173,7 +173,7 @@
     {
         "name": "01_Transfer_Incremental_Inventory_Unit.Notebook",
         "original_id": "742ec29e-100d-47ac-b9c0-9ae3cbaffd2c",
-        "fuam_id": "d52678e8-1cbd-346f-8349-a7c5a3ca37be",
+        "fos_id": "d52678e8-1cbd-346f-8349-a7c5a3ca37be",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -182,7 +182,7 @@
     {
         "name": "Load_Inventory_E2E.DataPipeline",
         "original_id": "5337d104-fecf-4f64-8a88-7ec579872c46",
-        "fuam_id": "2e071f9f-715e-3419-8f12-b7f4dfcd854a",
+        "fos_id": "2e071f9f-715e-3419-8f12-b7f4dfcd854a",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "742ec29e-100d-47ac-b9c0-9ae3cbaffd2c"
@@ -191,7 +191,7 @@
     {
         "name": "01_Transfer_Delegated_Tenant_Settings_Overrides_Unit.Notebook",
         "original_id": "df98e5fd-4429-4610-9b96-dd1b0ca49024",
-        "fuam_id": "04bb6182-a6b1-3e8c-b42f-950b23fcc3f6",
+        "fos_id": "04bb6182-a6b1-3e8c-b42f-950b23fcc3f6",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -200,7 +200,7 @@
     {
         "name": "01_Transfer_Tenant_Admin_Settings_Unit.Notebook",
         "original_id": "a2a02d5a-e1b9-4137-8504-68fcb6c19ccc",
-        "fuam_id": "69f8eb8d-7635-37cf-9e75-a39ba3ce1075",
+        "fos_id": "69f8eb8d-7635-37cf-9e75-a39ba3ce1075",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -209,7 +209,7 @@
     {
         "name": "Load_Tenant_Settings_E2E.DataPipeline",
         "original_id": "a3084b1d-cf8a-4a25-99e5-e53d3b69a7f5",
-        "fuam_id": "d7ede29f-f3f9-35c3-a81d-12d10ae16269",
+        "fos_id": "d7ede29f-f3f9-35c3-a81d-12d10ae16269",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b",
@@ -220,7 +220,7 @@
     {
         "name": "Load_Delegated_Tenant_Settings_Overrides_E2E.DataPipeline",
         "original_id": "a06b950d-e384-4882-9ff8-e1db2c1013e9",
-        "fuam_id": "8c1a405e-5a90-35c6-bcc4-88ffde924597",
+        "fos_id": "8c1a405e-5a90-35c6-bcc4-88ffde924597",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b",
@@ -231,7 +231,7 @@
     {
         "name": "01_Transfer_Git_Connections_Unit.Notebook",
         "original_id": "71ed82da-3e30-4aa7-9260-ea53a72eab0f",
-        "fuam_id": "eb83c20b-5433-329a-894b-5bb39c3f9031",
+        "fos_id": "eb83c20b-5433-329a-894b-5bb39c3f9031",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -240,7 +240,7 @@
     {
         "name": "Load_Git_Connections_E2E.DataPipeline",
         "original_id": "34082ee3-0673-4aad-a6eb-b6bac6b2ed06",
-        "fuam_id": "5ecbec01-016b-3033-94d8-2dcb3e41e02a",
+        "fos_id": "5ecbec01-016b-3033-94d8-2dcb3e41e02a",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b",
@@ -249,15 +249,15 @@
         ]
     },
     {
-        "name": "FUAM_Backup_Lakehouse.Lakehouse",
+        "name": "FOS_Backup_Lakehouse.Lakehouse",
         "original_id": "b94e737e-ab66-4ed1-97d8-3c0c307e684b",
-        "fuam_id": "8522e61c-5940-353d-92d3-c1f594a3c681",
+        "fos_id": "8522e61c-5940-353d-92d3-c1f594a3c681",
         "related_items": []
     },
     {
         "name": "01_FOS_Lakehouse_Backup.Notebook",
         "original_id": "e4db3ec5-51db-4c0b-81bd-b933219e70ef",
-        "fuam_id": "606ed91b-795c-37fa-97b3-0b04bb70a70f",
+        "fos_id": "606ed91b-795c-37fa-97b3-0b04bb70a70f",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "b94e737e-ab66-4ed1-97d8-3c0c307e684b"
@@ -266,16 +266,16 @@
     {
         "name": "02_FOS_Lakehouse_Optimization.Notebook",
         "original_id": "401dcfd7-084f-41e0-b32b-812f0ef41801",
-        "fuam_id": "39b3fdc5-651d-354d-acde-b3121a2c3c25",
+        "fos_id": "39b3fdc5-651d-354d-acde-b3121a2c3c25",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
         ]
     },
     {
-        "name": "Maintenance_for_FUAM.DataPipeline",
+        "name": "Maintenance_for_FOS.DataPipeline",
         "original_id": "6dd72a1d-4a0c-4697-af8b-889fe5019f89",
-        "fuam_id": "cde03ac2-86ea-3102-8b62-451a5b9c5b7b",
+        "fos_id": "cde03ac2-86ea-3102-8b62-451a5b9c5b7b",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "401dcfd7-084f-41e0-b32b-812f0ef41801",
@@ -285,7 +285,7 @@
     {
         "name": "01_Create_Snapshot_Tables_Unit.Notebook",
         "original_id": "077e5092-91bb-4981-a7cf-26423745c073",
-        "fuam_id": "853a3141-14ff-31a4-a97a-9e6bb3056fa0",
+        "fos_id": "853a3141-14ff-31a4-a97a-9e6bb3056fa0",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -294,7 +294,7 @@
     {
         "name": "01_Transfer_Domains_Unit.Notebook",
         "original_id": "ea14a927-ccdb-49d5-8f00-e713ccf0138f",
-        "fuam_id": "6dae6a75-82a4-3cdd-889a-d22132550bc7",
+        "fos_id": "6dae6a75-82a4-3cdd-889a-d22132550bc7",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -303,7 +303,7 @@
     {
         "name": "Load_Domains_E2E.DataPipeline",
         "original_id": "2bf014b5-d3f1-4db5-b04b-bfb799ad1054",
-        "fuam_id": "801070ba-e25e-3617-af3a-94acc6d580a0",
+        "fos_id": "801070ba-e25e-3617-af3a-94acc6d580a0",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b",
@@ -314,7 +314,7 @@
     {
         "name": "01_Transfer_WidelyShared_OrganizationLinks_Unit.Notebook",
         "original_id": "5ed5b496-3f47-4ec4-afde-1ab080bec92c",
-        "fuam_id": "074a86df-d371-3b5d-8172-2e1b576bcc42",
+        "fos_id": "074a86df-d371-3b5d-8172-2e1b576bcc42",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -323,7 +323,7 @@
     {
         "name": "01_Transfer_WidelyShared_PublishedToWeb_Unit.Notebook",
         "original_id": "4e3d60cf-1679-43ac-abb5-3ac7c091c1b1",
-        "fuam_id": "0691fca3-d327-3584-b190-c419f8cf09a8",
+        "fos_id": "0691fca3-d327-3584-b190-c419f8cf09a8",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -332,7 +332,7 @@
     {
         "name": "Load_WidelyShared_OrganizationLinks_E2E.DataPipeline",
         "original_id": "b6dece84-e245-4b39-855b-e70e936eec6f",
-        "fuam_id": "c021e625-601b-367b-a1c0-ad61f018b3bd",
+        "fos_id": "c021e625-601b-367b-a1c0-ad61f018b3bd",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "3345091d-bb11-463c-a384-7971da807eee",
@@ -343,7 +343,7 @@
     {
         "name": "Load_WidelyShared_PublishedToWeb_E2E.DataPipeline",
         "original_id": "593e1e53-3ac0-4ad9-827b-ce3ddfa0129c",
-        "fuam_id": "87104edd-1254-3e6a-8bb5-7f960c415eee",
+        "fos_id": "87104edd-1254-3e6a-8bb5-7f960c415eee",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "3345091d-bb11-463c-a384-7971da807eee",
@@ -354,7 +354,7 @@
     {
         "name": "01_Transfer_CapacityMetricData_Timepoints_Unit.Notebook",
         "original_id": "6508dee2-7875-4129-9726-c0856a5d75e6",
-        "fuam_id": "0483c441-2a52-3d47-886c-c92d889965bd",
+        "fos_id": "0483c441-2a52-3d47-886c-c92d889965bd",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -363,7 +363,7 @@
     {
         "name": "02_Transfer_CapacityMetricData_ItemKind_Unit.Notebook",
         "original_id": "bc44cd5a-5f50-48c2-affd-76803eae13cb",
-        "fuam_id": "8f4db3b0-9262-3ade-9d61-1fdddb091586",
+        "fos_id": "8f4db3b0-9262-3ade-9d61-1fdddb091586",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -372,7 +372,7 @@
     {
         "name": "03_Transfer_CapacityMetricData_ItemOperation_Unit.Notebook",
         "original_id": "f257c529-6e1d-4bb9-893c-553f18994491",
-        "fuam_id": "f7c9cc03-7453-3624-b3f6-24f0e47577b0",
+        "fos_id": "f7c9cc03-7453-3624-b3f6-24f0e47577b0",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -381,7 +381,7 @@
     {
         "name": "Load_Capacity_Metrics_E2E.DataPipeline",
         "original_id": "ce82c618-4da8-40d0-9e31-a1c8ce9f6545",
-        "fuam_id": "0c455dc0-51fe-33b8-8b36-401a002dfab4",
+        "fos_id": "0c455dc0-51fe-33b8-8b36-401a002dfab4",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "2d4511ba-4364-4468-9171-d5f39c19f66e",
@@ -394,7 +394,7 @@
     {
         "name": "01_Tags_Unit.Notebook",
         "original_id": "577acecd-da63-49bd-94e2-363dcc9ebe2f",
-        "fuam_id": "a2948d7f-30bf-3653-8aad-266b643951d5",
+        "fos_id": "a2948d7f-30bf-3653-8aad-266b643951d5",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -403,7 +403,7 @@
     {
         "name": "Load_Tags_E2E.DataPipeline",
         "original_id": "ee299d40-0a80-4465-b15e-0143ce225c0b",
-        "fuam_id": "df3d796d-f02d-3baa-98ed-17ae09708fb2",
+        "fos_id": "df3d796d-f02d-3baa-98ed-17ae09708fb2",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b",
@@ -414,7 +414,7 @@
     {
         "name": "01_Run_Optimization_Module_for_SM_Unit.Notebook",
         "original_id": "c70603bb-6b28-4120-8216-f5e2eb0e8f3f",
-        "fuam_id": "21b2b2fb-85df-3fd8-ac8c-5fca5aa8b830",
+        "fos_id": "21b2b2fb-85df-3fd8-ac8c-5fca5aa8b830",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "4446f988-9ba6-43e9-ba4d-8dbe5630f56b"
@@ -423,16 +423,16 @@
     {
         "name": "Load_Optimization_Module_E2E.DataPipeline",
         "original_id": "6ece7467-a901-4fd9-89f8-f768d07e1d11",
-        "fuam_id": "313c5fed-5b0b-3cc9-a5ef-4a636962c50c",
+        "fos_id": "313c5fed-5b0b-3cc9-a5ef-4a636962c50c",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "c70603bb-6b28-4120-8216-f5e2eb0e8f3f"
         ]
     },
     {
-        "name": "Load_FUAM_Data_E2E.DataPipeline",
+        "name": "Load_FOS_Data_E2E.DataPipeline",
         "original_id": "d08c6ca8-570e-4344-98c6-f225cfb18d50",
-        "fuam_id": "ad02d6fe-ab95-3fd4-ab53-c010c0a41921",
+        "fos_id": "ad02d6fe-ab95-3fd4-ab53-c010c0a41921",
         "related_items": [
             "07c2011e-e75c-437b-81e3-a91910de08be",
             "2bf014b5-d3f1-4db5-b04b-bfb799ad1054",
@@ -457,63 +457,63 @@
         ]
     },
     {
-        "name": "FUAM_Item_SM.SemanticModel",
+        "name": "FOS_Item_SM.SemanticModel",
         "original_id": "5355ca58-3a60-4d5b-9441-e0803f34d3b6",
-        "fuam_id": "86d4b769-b3d6-39cd-9d26-4cb3b3db57bd",
+        "fos_id": "86d4b769-b3d6-39cd-9d26-4cb3b3db57bd",
         "related_items": []
     },
     {
-        "name": "FUAM_Item_Analyzer_Report.Report",
+        "name": "FOS_Item_Analyzer_Report.Report",
         "original_id": "2e3ec64d-c821-4e17-b2c4-95eddcae3692",
-        "fuam_id": "41a9ccda-72ca-36b4-bbf6-c3d607014485",
+        "fos_id": "41a9ccda-72ca-36b4-bbf6-c3d607014485",
         "related_items": []
     },
     {
-        "name": "FUAM_Core_SM.SemanticModel",
+        "name": "FOS_Core_SM.SemanticModel",
         "original_id": "943f2394-d8dd-4311-a03f-af39dc7c93d4",
-        "fuam_id": "ca492c80-b5a6-3a6f-afa9-437b3cb137ed",
+        "fos_id": "ca492c80-b5a6-3a6f-afa9-437b3cb137ed",
         "related_items": []
     },
     {
-        "name": "FUAM_Core_Report.Report",
+        "name": "FOS_Core_Report.Report",
         "original_id": "04aad38b-9377-4bc5-bdb0-bfb2e064142c",
-        "fuam_id": "5778cde4-30aa-3036-96c9-531850aa1dd5",
+        "fos_id": "5778cde4-30aa-3036-96c9-531850aa1dd5",
         "related_items": []
     },
     {
-        "name": "FUAM_Semantic_Model_Meta_Data_Analyzer_SM.SemanticModel",
+        "name": "FOS_Semantic_Model_Meta_Data_Analyzer_SM.SemanticModel",
         "original_id": "fa725f14-4b1a-4886-a8ec-a76d81b3ca12",
-        "fuam_id": "9dcff0c7-3130-3d3d-9bdf-50c0b28ccc50",
+        "fos_id": "9dcff0c7-3130-3d3d-9bdf-50c0b28ccc50",
         "related_items": []
     },
     {
-        "name": "FUAM_Semantic_Model_Meta_Data_Analyzer_Report.Report",
+        "name": "FOS_Semantic_Model_Meta_Data_Analyzer_Report.Report",
         "original_id": "51f30522-df41-4c58-b71e-5b54c6a92e8b",
-        "fuam_id": "150f5447-d468-38be-8c68-039fcceaa1a0",
+        "fos_id": "150f5447-d468-38be-8c68-039fcceaa1a0",
         "related_items": []
     },
     {
-        "name": "FUAM_SQL_Endpoint_Analyzer_SM.SemanticModel",
+        "name": "FOS_SQL_Endpoint_Analyzer_SM.SemanticModel",
         "original_id": "e92641eb-fee6-423c-92ab-afa74912cd28",
-        "fuam_id": "edca53fc-3c5e-3bae-a64a-4d08db919fb1",
+        "fos_id": "edca53fc-3c5e-3bae-a64a-4d08db919fb1",
         "related_items": []
     },
     {
-        "name": "FUAM_SQL_Endpoint_Analyzer_Report.Report",
+        "name": "FOS_SQL_Endpoint_Analyzer_Report.Report",
         "original_id": "a5e28519-ad65-4e56-baa8-f2e31d63a6ec",
-        "fuam_id": "59809179-8e80-3ddc-8dd7-6cab108e3678",
+        "fos_id": "59809179-8e80-3ddc-8dd7-6cab108e3678",
         "related_items": []
     },
     {
-        "name": "FUAM_Gateway_Monitoring_From_Files_SM.SemanticModel",
+        "name": "FOS_Gateway_Monitoring_From_Files_SM.SemanticModel",
         "original_id": "c163eefc-30c3-4f8d-a95a-e106fb062fab",
-        "fuam_id": "f96b94aa-466d-35f9-851f-cde9111b0f17",
+        "fos_id": "f96b94aa-466d-35f9-851f-cde9111b0f17",
         "related_items": []
     },
     {
-        "name": "FUAM_Gateway_Monitoring_From_Files_Report.Report",
+        "name": "FOS_Gateway_Monitoring_From_Files_Report.Report",
         "original_id": "2ccd2695-f246-478e-8694-7dddef16cc7d",
-        "fuam_id": "3695cd0e-da7e-3b40-ad28-5bd1bcd33eb6",
+        "fos_id": "3695cd0e-da7e-3b40-ad28-5bd1bcd33eb6",
         "related_items": []
     }
 ]

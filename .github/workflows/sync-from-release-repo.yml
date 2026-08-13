@@ -1,7 +1,7 @@
-name: Sync from FUAM Release Repo
+name: Sync from FOS Release Repo
 
 # Pulls the config/data/scripts/src folders from a chosen branch on
-# GT-Analytics/fuam_release back into this repo as a new branch prefixed
+# GT-Analytics/fos_release back into this repo as a new branch prefixed
 # with 'sync/' so it can be easily distinguished from 'feature/' branches.
 # Optionally opens a pull request against main.
 
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       source_branch:
-        description: 'Branch on GT-Analytics/fuam_release to sync FROM (default: main)'
+        description: 'Branch on GT-Analytics/fos_release to sync FROM (default: main)'
         required: false
         type: string
         default: 'main'
@@ -25,7 +25,7 @@ on:
         default: 'main'
 
 env:
-  RELEASE_REPO: GT-Analytics/fuam_release
+  RELEASE_REPO: GT-Analytics/fos_release
   # Folders that should be pulled back from the release repo.
   SYNC_PATHS: 'config data scripts src'
 
@@ -142,7 +142,7 @@ jobs:
       - name: Summary
         run: |
           {
-            echo "### FUAM release sync-back"
+            echo "### FOS release sync-back"
             echo ""
             echo "- Release repo:   \`${RELEASE_REPO}\`"
             echo "- Source branch:  \`${{ github.event.inputs.source_branch }}\`"
