@@ -1,4 +1,4 @@
-workspace: 'FUAM_Version_2026_5_1'
-project_base_name: 'FUAM'
+workspace: 'FOS'
+project_base_name: 'FOS'
 capacity: 'kethfabric'
 admin_group: 'c158950c-cc5a-4c0b-9e8d-f880a2a00a97'
