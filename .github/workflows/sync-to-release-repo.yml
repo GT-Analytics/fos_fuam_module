@@ -42,7 +42,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/payload"
-          for root in cicd config data src; do
+          for root in config data src; do
             p="${root}/modules/${MODULE_ID}"
             if [ ! -d "$p" ]; then
               echo "Required module path '$p' does not exist." >&2
@@ -108,7 +108,7 @@ jobs:
           git checkout -b "$BRANCH"
 
           # Replace only this module. Other modules and release-owned files remain untouched.
-          for root in cicd config data src; do
+          for root in config data src; do
             rm -rf "${root}/modules/${MODULE_ID}"
           done
 

@@ -1,6 +1,6 @@
 name: Sync from FOS Release Repo
 
-# Pulls one module's cicd/config/data/src namespaces from a chosen branch on
+# Pulls one module's config/data/src namespaces from a chosen branch on
 # GT-Analytics/fos_release back into this repo as a new branch prefixed
 # with 'sync/' so it can be easily distinguished from 'feature/' branches.
 # Optionally opens a pull request against main.
@@ -98,7 +98,7 @@ jobs:
       - name: Overlay synced folders from release repo
         run: |
           set -euo pipefail
-          for root in cicd config data src; do
+          for root in config data src; do
             p="${root}/modules/${MODULE_ID}"
             SRC_DIR="release-repo/$p"
             if [ ! -d "$SRC_DIR" ]; then

@@ -10,7 +10,7 @@ on:
   #  paths:
   #    - 'cicd/modules/admin-monitoring/item_src_config.yaml'
   #    - 'config/modules/admin-monitoring/deployment_config.yaml'
-  #    - 'cicd/modules/admin-monitoring/fos_get_ressources.py'
+  #    - 'cicd/export_module.py'
 
 env:
   PYTHON_VERSION: '3.11'
@@ -60,8 +60,7 @@ jobs:
       
       - name: Run FOS Get Resources Script
         run: |
-          cd cicd/modules/admin-monitoring
-          python fos_get_ressources.py
+          python cicd/export_module.py --module admin-monitoring
         env:
           # Add any environment variables your script might need
           PYTHONPATH: ${{ github.workspace }}
@@ -105,7 +104,7 @@ jobs:
           
           - Updated src folder with latest exports
           - Updated admin-monitoring module sources and deployment_order.json
-          - Processed by fos_get_ressources.py script
+          - Processed by export_module.py
           
           Generated on: $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss UTC'))"
           

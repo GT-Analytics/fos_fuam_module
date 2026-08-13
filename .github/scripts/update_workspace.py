@@ -1,11 +1,11 @@
+import argparse
 import yaml
-import sys
-import os
+from pathlib import Path
 
-def update_workspace_config(feature_name):
+def update_workspace_config(feature_name, module_id):
     """Update the workspace configuration with the new feature branch name."""
     new_workspace_name = f'fos_feature_branch_{feature_name}'
-    config_file = 'config/item_src_config.yaml'
+    config_file = Path('cicd') / 'modules' / module_id / 'item_src_config.yaml'
     
     print(f'Updating workspace to: {new_workspace_name}')
     
@@ -37,12 +37,11 @@ def update_workspace_config(feature_name):
         return False
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python update_workspace.py <feature_name>")
-        sys.exit(1)
-    
-    feature_name = sys.argv[1]
-    success = update_workspace_config(feature_name)
-    
+    parser = argparse.ArgumentParser(description="Update a module development workspace")
+    parser.add_argument("feature_name")
+    parser.add_argument("--module", required=True)
+    args = parser.parse_args()
+    success = update_workspace_config(args.feature_name, args.module)
+
     if not success:
-        sys.exit(1)
+        raise SystemExit(1)

@@ -1,3 +1,4 @@
+import argparse
 import uuid
 import os
 import json
@@ -8,11 +9,21 @@ import hashlib
 import stat, errno
 import yaml
 
-module_cicd_dir = os.path.dirname(os.path.abspath(__file__))
-module_id = os.path.basename(module_cicd_dir)
-base_path = os.path.abspath(os.path.join(module_cicd_dir, '..', '..', '..'))
+parser = argparse.ArgumentParser(description="Export one FOS module from Fabric")
+parser.add_argument("--module", required=True, help="Module ID under cicd/modules")
+args = parser.parse_args()
+
+module_id = args.module
+if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", module_id):
+    parser.error("--module must be a lowercase kebab-case identifier")
+
+base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+module_cicd_dir = os.path.join(base_path, 'cicd', 'modules', module_id)
 config_dir = os.path.join(base_path, 'config', 'modules', module_id)
 config_path = os.path.join(module_cicd_dir, 'item_src_config.yaml')
+
+if not os.path.isfile(config_path):
+    parser.error(f"module configuration not found: {config_path}")
 
 with open(config_path, 'r') as file:
         config = yaml.safe_load(file)

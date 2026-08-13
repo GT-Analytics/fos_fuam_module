@@ -9,7 +9,6 @@ Replace `<module-id>` with a stable lowercase identifier:
 ```text
 cicd/modules/<module-id>/
   item_src_config.yaml
-  fos_get_ressources.py
 config/modules/<module-id>/
   module.yaml
   deployment_config.yaml
@@ -27,6 +26,12 @@ The release repository owns these shared files:
 cicd/release/
 config/release.yaml
 scripts/Deploy_FOS.ipynb
+```
+
+Module development repositories also contain the shared exporter:
+
+```text
+cicd/export_module.py
 ```
 
 ## Release configuration
@@ -66,13 +71,18 @@ The module ID must not be included in UUID generation. Fabric item names must th
 Set `MODULE_ID` in both module sync workflows. Synchronization replaces only these paths in the destination repository:
 
 ```text
-cicd/modules/<module-id>
 config/modules/<module-id>
 data/modules/<module-id>
 src/modules/<module-id>
 ```
 
-Other modules and release-owned files are not modified.
+The exporter and `item_src_config.yaml` remain development-only and are not synchronized. Other modules and release-owned files are not modified.
+
+Refresh a module's exported Fabric items with:
+
+```powershell
+python cicd/export_module.py --module <module-id>
+```
 
 `current_fos_version.json` is module release metadata and is not copied into the temporary deployment payload. Other data filenames must be unique across modules unless their contents are identical.
 
