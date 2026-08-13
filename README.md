@@ -112,6 +112,7 @@ The FOS solution accelerator template **is not an official Microsoft service**.
 - [Documentation - FOS Engine level analyzer reports](/monitoring/fabric-unified-admin-monitoring/media/documentation/FOS_Engine_Level_Analyzer_Reports.md)
 - [Documentation - FOS Core Report](/monitoring/fabric-unified-admin-monitoring/media/documentation/FOS_Core_Report.md)
 - [Documentation - FOS Technical Deep Dive](/monitoring/fabric-unified-admin-monitoring/media/documentation/FOS_Technical_Deep_Dive.md)
+- [Development - Add a FOS module](how-to/How_to_add_FOS_Module.md)
 
 ##### Some other Fabric Toolbox assets
 - [Overview - Fabric Cost Analysis](/monitoring/fabric-cost-analysis/README.md)

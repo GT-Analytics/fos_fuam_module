@@ -8,9 +8,9 @@ on:
   #  branches:
   #    - main
   #  paths:
-  #    - 'config/item_src_config.yaml'
-  #    - 'config/deployment_config.yaml'
-  #    - 'cicd/fos_get_ressources.py'
+  #    - 'cicd/modules/admin-monitoring/item_src_config.yaml'
+  #    - 'config/modules/admin-monitoring/deployment_config.yaml'
+  #    - 'cicd/modules/admin-monitoring/fos_get_ressources.py'
 
 env:
   PYTHON_VERSION: '3.11'
@@ -60,7 +60,7 @@ jobs:
       
       - name: Run FOS Get Resources Script
         run: |
-          cd cicd
+          cd cicd/modules/admin-monitoring
           python fos_get_ressources.py
         env:
           # Add any environment variables your script might need
@@ -100,11 +100,11 @@ jobs:
       - name: Commit and push changes
         if: steps.check_changes.outputs.changes == 'true'
         run: |
-          git add src/ config/
+          git add src/modules/admin-monitoring/ config/modules/admin-monitoring/
           git commit -m "chore: update FOS resources from source workspace
           
           - Updated src folder with latest exports
-          - Updated deployment_order.json
+          - Updated admin-monitoring module sources and deployment_order.json
           - Processed by fos_get_ressources.py script
           
           Generated on: $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss UTC'))"

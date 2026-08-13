@@ -1,0 +1,179 @@
+{
+    "properties": {
+        "activities": [
+            {
+                "name": "01_Transfer_CapacityMetricData_Unit",
+                "type": "TridentNotebook",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "notebookId": "566de09d-e22b-344c-abce-926d9711a9ee",
+                    "workspaceId": "66db2b7f-f5d7-34ab-b4ef-640bd59a9b38",
+                    "parameters": {
+                        "metric_days_in_scope": {
+                            "value": {
+                                "value": "@pipeline().parameters.metric_days_in_scope",
+                                "type": "Expression"
+                            },
+                            "type": "int"
+                        },
+                        "metric_workspace": {
+                            "value": {
+                                "value": "@pipeline().parameters.metric_workspace",
+                                "type": "Expression"
+                            },
+                            "type": "string"
+                        },
+                        "metric_dataset": {
+                            "value": {
+                                "value": "@pipeline().parameters.metric_dataset",
+                                "type": "Expression"
+                            },
+                            "type": "string"
+                        },
+                        "display_data": {
+                            "value": {
+                                "value": "@pipeline().parameters.display_data",
+                                "type": "Expression"
+                            },
+                            "type": "bool"
+                        }
+                    },
+                    "sessionTag": "fos"
+                }
+            },
+            {
+                "name": "02_Transfer_CapacityMetricData_Unit",
+                "type": "TridentNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "01_Transfer_CapacityMetricData_Unit",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "notebookId": "6fdbea7b-ccc3-3932-8bc9-3e086e2f9002",
+                    "workspaceId": "66db2b7f-f5d7-34ab-b4ef-640bd59a9b38",
+                    "parameters": {
+                        "metric_days_in_scope": {
+                            "value": {
+                                "value": "@pipeline().parameters.metric_days_in_scope",
+                                "type": "Expression"
+                            },
+                            "type": "int"
+                        },
+                        "metric_workspace": {
+                            "value": {
+                                "value": "@pipeline().parameters.metric_workspace",
+                                "type": "Expression"
+                            },
+                            "type": "string"
+                        },
+                        "metric_dataset": {
+                            "value": {
+                                "value": "@pipeline().parameters.metric_dataset",
+                                "type": "Expression"
+                            },
+                            "type": "string"
+                        },
+                        "display_data": {
+                            "value": {
+                                "value": "@pipeline().parameters.display_data",
+                                "type": "Expression"
+                            },
+                            "type": "bool"
+                        }
+                    },
+                    "sessionTag": "fos"
+                }
+            },
+            {
+                "name": "03_Transfer_CapacityMetricData_Unit",
+                "type": "TridentNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "02_Transfer_CapacityMetricData_Unit",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "notebookId": "8e0ef3d3-4385-36a6-85ed-0a7aab9b28b9",
+                    "workspaceId": "66db2b7f-f5d7-34ab-b4ef-640bd59a9b38",
+                    "parameters": {
+                        "metric_days_in_scope": {
+                            "value": {
+                                "value": "@pipeline().parameters.metric_days_in_scope",
+                                "type": "Expression"
+                            },
+                            "type": "int"
+                        },
+                        "metric_workspace": {
+                            "value": {
+                                "value": "@pipeline().parameters.metric_workspace",
+                                "type": "Expression"
+                            },
+                            "type": "string"
+                        },
+                        "metric_dataset": {
+                            "value": {
+                                "value": "@pipeline().parameters.metric_dataset",
+                                "type": "Expression"
+                            },
+                            "type": "string"
+                        },
+                        "display_data": {
+                            "value": {
+                                "value": "@pipeline().parameters.display_data",
+                                "type": "Expression"
+                            },
+                            "type": "bool"
+                        }
+                    },
+                    "sessionTag": "fos"
+                }
+            }
+        ],
+        "parameters": {
+            "metric_days_in_scope": {
+                "type": "int",
+                "defaultValue": 2
+            },
+            "metric_workspace": {
+                "type": "string",
+                "defaultValue": "5edcbd6e-b4d3-4625-ae22-a4d524221f78"
+            },
+            "metric_dataset": {
+                "type": "string",
+                "defaultValue": "2d4511ba-4364-4468-9171-d5f39c19f66e"
+            },
+            "display_data": {
+                "type": "bool",
+                "defaultValue": true
+            }
+        }
+    }
+}

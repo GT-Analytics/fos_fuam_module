@@ -1,0 +1,107 @@
+{
+    "properties": {
+        "activities": [
+            {
+                "name": "01_Run_Optimization_Module_for_SM_Unit Beta",
+                "type": "TridentNotebook",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "notebookId": "a41168f0-6727-3991-b030-81c0a93dbb36",
+                    "workspaceId": "66db2b7f-f5d7-34ab-b4ef-640bd59a9b38",
+                    "parameters": {
+                        "display_data": {
+                            "value": {
+                                "value": "@pipeline().parameters.display_data",
+                                "type": "Expression"
+                            },
+                            "type": "bool"
+                        },
+                        "top_n_semantic_models_per_capacity": {
+                            "value": {
+                                "value": "@pipeline().parameters.top_n_semantic_models_per_capacity",
+                                "type": "Expression"
+                            },
+                            "type": "int"
+                        },
+                        "keyvault_name": {
+                            "value": {
+                                "value": "@pipeline().parameters.keyvault_name",
+                                "type": "Expression"
+                            },
+                            "type": "string"
+                        },
+                        "keyvault_sp_tenantId_secret_name": {
+                            "value": {
+                                "value": "@pipeline().parameters.keyvault_sp_tenantId_secret_name",
+                                "type": "Expression"
+                            },
+                            "type": "string"
+                        },
+                        "keyvault_sp_clientId_secret_name": {
+                            "value": {
+                                "value": "@pipeline().parameters.keyvault_sp_clientId_secret_name",
+                                "type": "Expression"
+                            },
+                            "type": "string"
+                        },
+                        "keyvault_sp_secret_secret_name": {
+                            "value": {
+                                "value": "@pipeline().parameters.keyvault_sp_secret_secret_name",
+                                "type": "Expression"
+                            },
+                            "type": "string"
+                        },
+                        "keyvault_sp_ent_app_object_id_secret_name": {
+                            "value": {
+                                "value": "@pipeline().parameters.keyvault_sp_ent_app_object_id_secret_name",
+                                "type": "Expression"
+                            },
+                            "type": "string"
+                        },
+                        "_inlineInstallationEnabled": {
+                            "value": "True",
+                            "type": "bool"
+                        }
+                    }
+                }
+            }
+        ],
+        "parameters": {
+            "display_data": {
+                "type": "bool",
+                "defaultValue": false
+            },
+            "top_n_semantic_models_per_capacity": {
+                "type": "string",
+                "defaultValue": "5"
+            },
+            "keyvault_name": {
+                "type": "string",
+                "defaultValue": "foskv"
+            },
+            "keyvault_sp_tenantId_secret_name": {
+                "type": "string",
+                "defaultValue": "fos-sp-tenant"
+            },
+            "keyvault_sp_clientId_secret_name": {
+                "type": "string",
+                "defaultValue": "fos-sp-client"
+            },
+            "keyvault_sp_secret_secret_name": {
+                "type": "string",
+                "defaultValue": "fos-sp-secret"
+            },
+            "keyvault_sp_ent_app_object_id_secret_name": {
+                "type": "string",
+                "defaultValue": "fos-sp-enterprise-app-object-id"
+            }
+        }
+    }
+}

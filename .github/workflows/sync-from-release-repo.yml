@@ -1,6 +1,6 @@
 name: Sync from FOS Release Repo
 
-# Pulls the config/data/scripts/src folders from a chosen branch on
+# Pulls one module's cicd/config/data/src namespaces from a chosen branch on
 # GT-Analytics/fos_release back into this repo as a new branch prefixed
 # with 'sync/' so it can be easily distinguished from 'feature/' branches.
 # Optionally opens a pull request against main.
@@ -26,8 +26,7 @@ on:
 
 env:
   RELEASE_REPO: GT-Analytics/fos_release
-  # Folders that should be pulled back from the release repo.
-  SYNC_PATHS: 'config data scripts src'
+  MODULE_ID: admin-monitoring
 
 jobs:
   sync-from-release:
@@ -99,15 +98,14 @@ jobs:
       - name: Overlay synced folders from release repo
         run: |
           set -euo pipefail
-          for p in $SYNC_PATHS; do
+          for root in cicd config data src; do
+            p="${root}/modules/${MODULE_ID}"
             SRC_DIR="release-repo/$p"
             if [ ! -d "$SRC_DIR" ]; then
-              echo "Warning: '$p' does not exist on release branch, skipping." >&2
-              continue
+              echo "Required module path '$p' does not exist on release branch." >&2
+              exit 1
             fi
             echo "Syncing $p"
-            # Remove the existing folder in this repo so deletions on the release side propagate,
-            # then copy the release version in.
             rm -rf "$p"
             mkdir -p "$p"
             cp -R "$SRC_DIR/." "$p/"
@@ -134,7 +132,7 @@ jobs:
           git commit -m "Sync from ${RELEASE_REPO}@${SRC}" \
                      -m "Source branch: ${SRC}" \
                      -m "Source commit: ${RELEASE_SHA}" \
-                     -m "Synced folders: ${SYNC_PATHS}"
+                     -m "Module: ${MODULE_ID}"
           git push origin "$TARGET"
           echo "changes=true" >> "$GITHUB_OUTPUT"
           echo "release_sha=$RELEASE_SHA" >> "$GITHUB_OUTPUT"
@@ -148,6 +146,6 @@ jobs:
             echo "- Source branch:  \`${{ github.event.inputs.source_branch }}\`"
             echo "- Target branch:  \`${{ steps.branch.outputs.target }}\`"
             echo "- Base branch:    \`${{ steps.branch.outputs.base }}\`"
-            echo "- Folders synced: \`${SYNC_PATHS}\`"
+            echo "- Module:        \`${MODULE_ID}\`"
             echo "- Changes pushed: \`${{ steps.commit.outputs.changes }}\`"
           } >> "$GITHUB_STEP_SUMMARY"

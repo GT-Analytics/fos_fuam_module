@@ -256,7 +256,7 @@ You have deployed and configured FOS.
         3) Manually create a zip file (src.zip) for the src folder. The zip should have the src folder the only folder contained like this:
         ![image](/monitoring/fabric-unified-admin-monitoring/media/deployment/FOS_deployment_process_with_private_link_limitation.png)
         4) After that upload these into the structure you see in the first screenshot
-            - monitoring/fabric-unified-admin-monitoring/config/deployment_order.json
+            - config/modules/admin-monitoring/deployment_order.json
             - monitoring/fabric-unified-admin-monitoring/config/item_config.yaml
             - monitoring/fabric-unified-admin-monitoring/data/table_definitions.snappy.parquet
 src.zip

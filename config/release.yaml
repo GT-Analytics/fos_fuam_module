@@ -1,0 +1,10 @@
+schema_version: 1
+
+release:
+  name: FOS
+  version: 2026.5.1
+
+modules:
+  - id: admin-monitoring
+    enabled: true
+    order: 10

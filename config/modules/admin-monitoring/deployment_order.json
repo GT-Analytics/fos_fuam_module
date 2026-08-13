@@ -1,0 +1,234 @@
+[
+    {
+        "name": "FOS.Workspace",
+        "fos_id": "66db2b7f-f5d7-34ab-b4ef-640bd59a9b38"
+    },
+    {
+        "name": "fos pbi-service-api admin",
+        "fos_id": "2f972248-5703-3316-8a1b-742ac3611631"
+    },
+    {
+        "name": "fos fabric-service-api admin",
+        "fos_id": "c59bc6c1-79b8-3af7-a7ed-1007ac82e2b9"
+    },
+    {
+        "name": "FOS_Lakehouse.Lakehouse",
+        "fos_id": "169b8e49-1247-331d-a665-aaa4afed18cc"
+    },
+    {
+        "name": "FOS_Staging_Lakehouse.Lakehouse",
+        "fos_id": "e8bbcefe-70dd-3d01-b1c6-57f50318f10d"
+    },
+    {
+        "name": "FOS_Config_Lakehouse.Lakehouse",
+        "fos_id": "5e6a967b-f5e6-393d-85f7-b310493d1a79"
+    },
+    {
+        "name": "Generate_Calendar_Table.Notebook",
+        "fos_id": "8e8775c0-f6ed-34c4-b052-5ba5d441d378"
+    },
+    {
+        "name": "Init_FOS_Lakehouse_Tables.Notebook",
+        "fos_id": "97c28aeb-4c14-364e-96d8-5e687960f6c2"
+    },
+    {
+        "name": "Check_FOS_Version.Notebook",
+        "fos_id": "1242858b-ec12-3853-895a-ba3563222893"
+    },
+    {
+        "name": "01_Transfer_Active_Items_Unit.Notebook",
+        "fos_id": "30ec71db-d3a7-3dd9-9f50-2e9abe622fea"
+    },
+    {
+        "name": "Load_Items_E2E.DataPipeline",
+        "fos_id": "a8a353b4-22a8-324d-b048-c1853c20827f"
+    },
+    {
+        "name": "02_Transfer_Activities_Unit.Notebook",
+        "fos_id": "7ca27e31-ad7c-3687-9956-59fd3cec0be0"
+    },
+    {
+        "name": "03_Aggregate_Activities_Unit.Notebook",
+        "fos_id": "3e76fe70-fd98-327d-aaaf-09fe879b1113"
+    },
+    {
+        "name": "Load_Activities_E2E.DataPipeline",
+        "fos_id": "253b3d0c-0917-37f1-b9e6-532ad66cfcbc"
+    },
+    {
+        "name": "01_Transfer_Capacities_Unit.Notebook",
+        "fos_id": "99c82aae-30fb-33ae-ab47-312704b74407"
+    },
+    {
+        "name": "Load_Capacities_E2E.DataPipeline",
+        "fos_id": "422dcdf4-04ad-301f-8da7-469ad36e8c74"
+    },
+    {
+        "name": "01_Transfer_Capacity_Refreshables_Unit.Notebook",
+        "fos_id": "396256c9-ae7b-31e5-b208-b4e5e906af89"
+    },
+    {
+        "name": "Load_Capacity_Refreshables_E2E.DataPipeline",
+        "fos_id": "4cfc1003-5133-3700-9fb5-fb4f154f43e1"
+    },
+    {
+        "name": "02_Transfer_Workspaces_Unit.Notebook",
+        "fos_id": "4c8333ae-05f3-391b-9fc0-89f128605d55"
+    },
+    {
+        "name": "Load_PBI_Workspaces_E2E.DataPipeline",
+        "fos_id": "7fecf25b-c39b-3f04-afa5-fe7d74c0cef6"
+    },
+    {
+        "name": "01_Transfer_Incremental_Inventory_Unit.Notebook",
+        "fos_id": "75e000dd-f29a-383f-9f0b-4ecda082a787"
+    },
+    {
+        "name": "Load_Inventory_E2E.DataPipeline",
+        "fos_id": "8f598b08-f2fa-32fe-be1c-6cf8ea9d2bab"
+    },
+    {
+        "name": "01_Transfer_Delegated_Tenant_Settings_Overrides_Unit.Notebook",
+        "fos_id": "791556c0-2dc8-3a41-9f88-00fbb158a7e7"
+    },
+    {
+        "name": "01_Transfer_Tenant_Admin_Settings_Unit.Notebook",
+        "fos_id": "db1aeadf-db06-3f1a-8b0e-d2e25d8fdb9b"
+    },
+    {
+        "name": "Load_Tenant_Settings_E2E.DataPipeline",
+        "fos_id": "03ad15fb-6c7f-313f-a981-0f2a6333a434"
+    },
+    {
+        "name": "Load_Delegated_Tenant_Settings_Overrides_E2E.DataPipeline",
+        "fos_id": "cf76b625-e2bb-35ab-b9ea-9f705e23aaba"
+    },
+    {
+        "name": "01_Transfer_Git_Connections_Unit.Notebook",
+        "fos_id": "81969b67-1d7d-3301-9589-a423b7faebd9"
+    },
+    {
+        "name": "Load_Git_Connections_E2E.DataPipeline",
+        "fos_id": "365c7c49-5758-3352-894d-b934c291c7de"
+    },
+    {
+        "name": "FOS_Backup_Lakehouse.Lakehouse",
+        "fos_id": "4785231b-9b82-3400-b88f-fb4b12af898d"
+    },
+    {
+        "name": "01_FOS_Lakehouse_Backup.Notebook",
+        "fos_id": "6b1fd1b4-ecd0-3d7b-b809-5d6f925cd8b8"
+    },
+    {
+        "name": "02_FOS_Lakehouse_Optimization.Notebook",
+        "fos_id": "04c1f2e1-aa87-3b2c-9007-da0b08634022"
+    },
+    {
+        "name": "Maintenance_for_FOS.DataPipeline",
+        "fos_id": "97b0bfd9-80a6-31c5-9724-e43c5ac230d4"
+    },
+    {
+        "name": "01_Create_Snapshot_Tables_Unit.Notebook",
+        "fos_id": "40c16ab6-8a45-3adf-b56b-b2194d9ca6ea"
+    },
+    {
+        "name": "01_Transfer_Domains_Unit.Notebook",
+        "fos_id": "55b6e7ad-c15c-39e2-845a-33a9dfda2b73"
+    },
+    {
+        "name": "Load_Domains_E2E.DataPipeline",
+        "fos_id": "95c94a83-3023-3a7b-8399-a6db0af87c1f"
+    },
+    {
+        "name": "01_Transfer_WidelyShared_OrganizationLinks_Unit.Notebook",
+        "fos_id": "9ada8ad2-5c95-3eef-bb77-5d5b8d85ae1e"
+    },
+    {
+        "name": "01_Transfer_WidelyShared_PublishedToWeb_Unit.Notebook",
+        "fos_id": "88f64698-cf8d-3dd1-b302-dcc39ddba51a"
+    },
+    {
+        "name": "Load_WidelyShared_OrganizationLinks_E2E.DataPipeline",
+        "fos_id": "c10baa4c-98b6-313b-9557-f2eea310fa8b"
+    },
+    {
+        "name": "Load_WidelyShared_PublishedToWeb_E2E.DataPipeline",
+        "fos_id": "87274c81-d249-39e9-9407-40ec21598166"
+    },
+    {
+        "name": "01_Transfer_CapacityMetricData_Timepoints_Unit.Notebook",
+        "fos_id": "566de09d-e22b-344c-abce-926d9711a9ee"
+    },
+    {
+        "name": "02_Transfer_CapacityMetricData_ItemKind_Unit.Notebook",
+        "fos_id": "6fdbea7b-ccc3-3932-8bc9-3e086e2f9002"
+    },
+    {
+        "name": "03_Transfer_CapacityMetricData_ItemOperation_Unit.Notebook",
+        "fos_id": "8e0ef3d3-4385-36a6-85ed-0a7aab9b28b9"
+    },
+    {
+        "name": "Load_Capacity_Metrics_E2E.DataPipeline",
+        "fos_id": "1ece8f23-c454-3431-b8d5-3771b680b676"
+    },
+    {
+        "name": "01_Tags_Unit.Notebook",
+        "fos_id": "e4f6c28c-40a5-3b60-8db5-a12e685ab746"
+    },
+    {
+        "name": "Load_Tags_E2E.DataPipeline",
+        "fos_id": "3e362a9e-651f-305a-93f2-45ef6f7a4aee"
+    },
+    {
+        "name": "01_Run_Optimization_Module_for_SM_Unit.Notebook",
+        "fos_id": "a41168f0-6727-3991-b030-81c0a93dbb36"
+    },
+    {
+        "name": "Load_Optimization_Module_E2E.DataPipeline",
+        "fos_id": "3baac3c9-cca2-30f3-8f5a-f476c7d323ea"
+    },
+    {
+        "name": "Load_FOS_Data_E2E.DataPipeline",
+        "fos_id": "18f74d55-4ae8-31a1-be03-e420859a2561"
+    },
+    {
+        "name": "FOS_Item_SM.SemanticModel",
+        "fos_id": "1e138291-b676-3859-874b-682cc4827157"
+    },
+    {
+        "name": "FOS_Item_Analyzer_Report.Report",
+        "fos_id": "ef3061cb-43ba-32f8-b715-39e71a40ab5d"
+    },
+    {
+        "name": "FOS_Core_SM.SemanticModel",
+        "fos_id": "f931dbc8-e86c-3bd6-8a7f-bbe245ae3273"
+    },
+    {
+        "name": "FOS_Core_Report.Report",
+        "fos_id": "091522ae-0c99-3845-a829-c9e08a2c98e7"
+    },
+    {
+        "name": "FOS_Semantic_Model_Meta_Data_Analyzer_SM.SemanticModel",
+        "fos_id": "1732801a-5f56-30a1-aa86-21ed50c69da3"
+    },
+    {
+        "name": "FOS_Semantic_Model_Meta_Data_Analyzer_Report.Report",
+        "fos_id": "fcf45de3-4cba-3bc7-a3cf-b32e440d72ec"
+    },
+    {
+        "name": "FOS_SQL_Endpoint_Analyzer_SM.SemanticModel",
+        "fos_id": "2d2a648f-7cef-352e-a81b-1fa5188ae0eb"
+    },
+    {
+        "name": "FOS_SQL_Endpoint_Analyzer_Report.Report",
+        "fos_id": "79f36972-2f8b-3c33-9754-acc1c6ec4079"
+    },
+    {
+        "name": "FOS_Gateway_Monitoring_From_Files_SM.SemanticModel",
+        "fos_id": "f7d77e06-1ff6-393e-a747-b7fb6f4bbf44"
+    },
+    {
+        "name": "FOS_Gateway_Monitoring_From_Files_Report.Report",
+        "fos_id": "e0087656-4286-3679-9d9b-b1945ecee095"
+    }
+]

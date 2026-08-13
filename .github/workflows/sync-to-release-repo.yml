@@ -10,8 +10,7 @@ on:
 
 env:
   RELEASE_REPO: GT-Analytics/fos_release
-  # Folders in this repo that should be published to the release repo.
-  SYNC_PATHS: 'config data scripts src'
+  MODULE_ID: admin-monitoring
 
 jobs:
   sync-release:
@@ -30,7 +29,7 @@ jobs:
         id: version
         run: |
           set -euo pipefail
-          VERSION=$(jq -r '.current_fos_version' data/current_fos_version.json)
+          VERSION=$(jq -r '.current_fos_version' "data/modules/${MODULE_ID}/current_fos_version.json")
           if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
             VERSION="unknown"
           fi
@@ -43,13 +42,15 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/payload"
-          for p in $SYNC_PATHS; do
-            if [ -d "$p" ]; then
-              echo "Staging $p"
-              cp -R "$p" "$RUNNER_TEMP/payload/"
-            else
-              echo "Warning: '$p' does not exist in source repo, skipping." >&2
+          for root in cicd config data src; do
+            p="${root}/modules/${MODULE_ID}"
+            if [ ! -d "$p" ]; then
+              echo "Required module path '$p' does not exist." >&2
+              exit 1
             fi
+            echo "Staging $p"
+            mkdir -p "$RUNNER_TEMP/payload/${root}/modules"
+            cp -R "$p" "$RUNNER_TEMP/payload/${root}/modules/"
           done
           ls -la "$RUNNER_TEMP/payload"
 
@@ -106,13 +107,11 @@ jobs:
           git checkout "$DEFAULT_BRANCH"
           git checkout -b "$BRANCH"
 
-          # Remove all tracked content (except .git) so the release branch reflects only the synced payload.
-          # Preserve top-level dotfiles like .github if you want to keep them; here we replace everything.
-          git rm -rf . >/dev/null 2>&1 || true
-          # Also clean any untracked leftovers.
-          find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+          # Replace only this module. Other modules and release-owned files remain untouched.
+          for root in cicd config data src; do
+            rm -rf "${root}/modules/${MODULE_ID}"
+          done
 
-          # Copy the staged payload folders in.
           cp -R "$RUNNER_TEMP/payload/." .
 
           ls -la
@@ -139,7 +138,7 @@ jobs:
           git commit -m "Release v${VERSION} from ${SRC_REPO}@${SHORT_SHA}" \
                      -m "Source repository: ${SRC_REPO}" \
                      -m "Source commit: ${SRC_SHA}" \
-                     -m "Synced folders: ${SYNC_PATHS}"
+                     -m "Module: ${MODULE_ID}"
 
           git push origin "$BRANCH"
           echo "Pushed branch '$BRANCH' to ${RELEASE_REPO}."
@@ -153,5 +152,5 @@ jobs:
             echo "- Version: \`${{ steps.version.outputs.version }}\`"
             echo "- Release repo: \`${RELEASE_REPO}\`"
             echo "- Release branch: \`${{ steps.branch.outputs.branch }}\`"
-            echo "- Folders synced: \`${SYNC_PATHS}\`"
+            echo "- Module: \`${MODULE_ID}\`"
           } >> "$GITHUB_STEP_SUMMARY"
