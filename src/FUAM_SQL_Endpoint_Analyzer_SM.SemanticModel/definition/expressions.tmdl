@@ -6,7 +6,7 @@ expression sqlEndpointUrl = "tda4ha7r35du5fvotnklauu6ui-m4enoksxdyquzjt4ibwzqj4g
 	annotation PBI_ResultType = Text
 
 /// It can be the name of a Warehouse database or the name of your Lakehouse
-expression sqlEndpointItemName = "FUAM_Lakehouse" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+expression sqlEndpointItemName = "FOS_Lakehouse" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
 	lineageTag: c38b0941-395d-4500-8398-a62e437f2081
 
 	annotation PBI_NavigationStepName = Navigation

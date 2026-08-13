@@ -11,7 +11,7 @@ folders:
   - name: "Deployment"
     items:
     - FUAM_Config_Lakehouse.Lakehouse
-    - Init_FUAM_Lakehouse_Tables.Notebook
+    - Init_FOS_Lakehouse_Tables.Notebook
   - name: "Other"
     items:
     - FUAM_Staging_Lakehouse.Lakehouse
@@ -55,8 +55,8 @@ folders:
   - name: "Maintenance"
     items:  
     - FUAM_Backup_Lakehouse.Lakehouse
-    - 01_FUAM_Lakehouse_Backup.Notebook
-    - 02_FUAM_Lakehouse_Optimization.Notebook
+    - 01_FOS_Lakehouse_Backup.Notebook
+    - 02_FOS_Lakehouse_Optimization.Notebook
     - Maintenance_for_FUAM.DataPipeline
     - 01_Create_Snapshot_Tables_Unit.Notebook
   - name: "Capacity Metrics"

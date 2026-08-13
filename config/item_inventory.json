@@ -18,7 +18,7 @@
         "related_items": []
     },
     {
-        "name": "FUAM_Lakehouse.Lakehouse",
+        "name": "FOS_Lakehouse.Lakehouse",
         "original_id": "4446f988-9ba6-43e9-ba4d-8dbe5630f56b",
         "fuam_id": "6cff634b-88f7-3505-bed2-c03a36776a8b",
         "related_items": []
@@ -45,7 +45,7 @@
         ]
     },
     {
-        "name": "Init_FUAM_Lakehouse_Tables.Notebook",
+        "name": "Init_FOS_Lakehouse_Tables.Notebook",
         "original_id": "9897bec2-3c49-4f57-af9a-3d927602d7a9",
         "fuam_id": "98564ef7-ef80-3544-8026-25c44036ff8c",
         "related_items": []
@@ -255,7 +255,7 @@
         "related_items": []
     },
     {
-        "name": "01_FUAM_Lakehouse_Backup.Notebook",
+        "name": "01_FOS_Lakehouse_Backup.Notebook",
         "original_id": "e4db3ec5-51db-4c0b-81bd-b933219e70ef",
         "fuam_id": "606ed91b-795c-37fa-97b3-0b04bb70a70f",
         "related_items": [
@@ -264,7 +264,7 @@
         ]
     },
     {
-        "name": "02_FUAM_Lakehouse_Optimization.Notebook",
+        "name": "02_FOS_Lakehouse_Optimization.Notebook",
         "original_id": "401dcfd7-084f-41e0-b32b-812f0ef41801",
         "fuam_id": "39b3fdc5-651d-354d-acde-b3121a2c3c25",
         "related_items": [

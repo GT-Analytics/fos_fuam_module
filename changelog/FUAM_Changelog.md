@@ -72,11 +72,11 @@ Link: [Click here to update FUAM](/monitoring/fabric-unified-admin-monitoring/ho
 ### ✅ Fixes
 
 - **Data consistency (CapacityId Upper case issue)**
-     - Fixed an issue, which caused inconsistency in FUAM_Lakehouse tables, where CapacityId is included
+     - Fixed an issue, which caused inconsistency in FOS_Lakehouse tables, where CapacityId is included
      - Download and run the newest Deploy_FUAM Notebook, which will fix the data issues.
 
 - **Historic audit log files:**
-    - Fixed an issue, which disabled to store the raw audit log jsons in `FUAM_Lakehouse/Files/history/` subfolder
+    - Fixed an issue, which disabled to store the raw audit log jsons in `FOS_Lakehouse/Files/history/` subfolder
 
 
 Best Regards!
@@ -164,7 +164,7 @@ Date: 2025-08-25
 
 
 - **Notebook updates**:
-    - Fixed the notebook logic of the IsCurrentMonth column (FUAM_Lakehouse.calendar.IsCurrentMonth) within the `Generate_Calendar_Table` notebook
+    - Fixed the notebook logic of the IsCurrentMonth column (FOS_Lakehouse.calendar.IsCurrentMonth) within the `Generate_Calendar_Table` notebook
     - Updated notebooks to support the latest version (v44) of Capacity Metrics
 
 

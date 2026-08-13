@@ -4,12 +4,12 @@ connections:
   fabric_connection: fuam fabric-service-api admin
 
 items:
-  - FUAM_Lakehouse.Lakehouse
+  - FOS_Lakehouse.Lakehouse
   - FUAM_Staging_Lakehouse.Lakehouse
   - FUAM_Config_Lakehouse.Lakehouse
 
   - Generate_Calendar_Table.Notebook
-  - Init_FUAM_Lakehouse_Tables.Notebook
+  - Init_FOS_Lakehouse_Tables.Notebook
   - Check_FUAM_Version.Notebook
 
   - 01_Transfer_Active_Items_Unit.Notebook
@@ -40,8 +40,8 @@ items:
   - Load_Git_Connections_E2E.DataPipeline
 
   - FUAM_Backup_Lakehouse.Lakehouse
-  - 01_FUAM_Lakehouse_Backup.Notebook
-  - 02_FUAM_Lakehouse_Optimization.Notebook
+  - 01_FOS_Lakehouse_Backup.Notebook
+  - 02_FOS_Lakehouse_Optimization.Notebook
   - Maintenance_for_FUAM.DataPipeline
   - 01_Create_Snapshot_Tables_Unit.Notebook
 

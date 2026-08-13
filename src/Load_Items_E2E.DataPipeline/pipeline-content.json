@@ -89,7 +89,7 @@
                         "datasetSettings": {
                             "annotations": [],
                             "linkedService": {
-                                "name": "FUAM_Lakehouse",
+                                "name": "FOS_Lakehouse",
                                 "properties": {
                                     "annotations": [],
                                     "type": "Lakehouse",
@@ -129,7 +129,7 @@
                     "datasetSettings": {
                         "annotations": [],
                         "linkedService": {
-                            "name": "FUAM_Lakehouse",
+                            "name": "FOS_Lakehouse",
                             "properties": {
                                 "annotations": [],
                                 "type": "Lakehouse",
