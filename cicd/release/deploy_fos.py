@@ -62,9 +62,11 @@ capacity_name = repo_cfg.get("capacity")
 # Override via repo_config.yaml (key: deploy_lakehouse). Default matches the
 # lakehouse used in existing airgapped deployments.
 temp_lakehouse_name = repo_cfg.get("deploy_lakehouse", "LH_Temp")
-selected_module = os.environ.get("FOS_MODULE_ID") or None
-if selected_module and selected_module.lower() == "all":
-    selected_module = None
+selected_modules = (
+    os.environ.get("FOS_MODULE_IDS")
+    or os.environ.get("FOS_MODULE_ID")
+    or None
+)
 
 # ---------------------------------------------------------------------------
 # fab CLI helpers
@@ -260,7 +262,7 @@ def upload_deployment_files():
         summary = compose_release(
             REPO_ROOT,
             payload_dir,
-            selected_modules=[selected_module] if selected_module else None,
+            selected_modules=selected_modules,
         )
         print(
             f"        Composed modules: {', '.join(summary['modules'])} "

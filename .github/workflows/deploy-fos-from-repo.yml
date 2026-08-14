@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       module_id:
-        description: 'Module to deploy, or all enabled modules'
+        description: 'Module deployment scope'
         required: true
         type: choice
         options:
-          - all
           - admin-monitoring
           - cost-analysis
+          - all
         default: all
   workflow_call:
     # Allow this workflow to be called by other workflows
@@ -20,8 +20,13 @@ on:
         required: false
         type: string
         default: ''
+      module_ids:
+        description: 'Modules to deploy; empty or all deploys every enabled module'
+        required: false
+        type: string
+        default: ''
       module_id:
-        description: 'Module to deploy; empty or all deploys every enabled module'
+        description: 'Deprecated single-module input retained for compatibility'
         required: false
         type: string
         default: ''
@@ -36,7 +41,7 @@ env:
   PYTHON_VERSION: '3.11'
   PYTHONIOENCODING: 'utf-8'
   PYTHONUTF8: '1'
-  SELECTED_MODULE: ${{ inputs.module_id || github.event.inputs.module_id || 'all' }}
+  SELECTED_MODULES: ${{ inputs.module_ids || inputs.module_id || github.event.inputs.module_id || 'all' }}
 
 jobs:
   deploy-fos:
@@ -197,7 +202,7 @@ jobs:
             exit 1
           }
         env:
-          FOS_MODULE_ID: ${{ env.SELECTED_MODULE }}
+          FOS_MODULE_IDS: ${{ env.SELECTED_MODULES }}
           FAB_SPN_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           FAB_SPN_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           FAB_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
@@ -219,7 +224,7 @@ jobs:
           echo "**Source Branch**: $currentBranch" >> $env:GITHUB_STEP_SUMMARY
           echo "**Target Workspace**: $workspaceName" >> $env:GITHUB_STEP_SUMMARY
           echo "**Fabric Capacity**: $capacityName" >> $env:GITHUB_STEP_SUMMARY
-          echo "**Module Selection**: ${{ env.SELECTED_MODULE }}" >> $env:GITHUB_STEP_SUMMARY
+          echo "**Module Selection**: ${{ env.SELECTED_MODULES }}" >> $env:GITHUB_STEP_SUMMARY
           if (-not [string]::IsNullOrWhiteSpace($entraObjectId)) {
             echo "**Group Access**: Admin access configured for $entraObjectId" >> $env:GITHUB_STEP_SUMMARY
           } else {

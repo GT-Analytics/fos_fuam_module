@@ -8,12 +8,13 @@ on:
         required: true
         type: string
       module_id:
-        description: 'Module being developed on this branch'
+        description: 'Module deployment scope'
         required: true
         type: choice
         options:
           - admin-monitoring
           - cost-analysis
+          - all
         default: admin-monitoring
 
 env:
@@ -32,6 +33,7 @@ jobs:
     outputs:
       feature_name: ${{ github.event.inputs.feature_name }}
       branch_name: feature/${{ github.event.inputs.feature_name }}
+      module_id: ${{ github.event.inputs.module_id }}
     
     steps:
       - name: Checkout repository
@@ -55,7 +57,7 @@ jobs:
           }
           
           echo "Feature name validated: $featureName"
-      
+
       - name: Create or update feature branch
         id: branch_mode
         run: |
@@ -115,8 +117,6 @@ jobs:
           $featureName = "${{ github.event.inputs.feature_name }}"
           $projectBaseName = "${{ steps.repo_cfg.outputs.project_base_name }}"
           $newWorkspaceName = "$projectBaseName#$featureName"
-          $moduleId = "${{ github.event.inputs.module_id }}"
-          $itemConfigFile = "cicd/modules/$moduleId/item_src_config.yaml"
           $repoConfigFile = "cicd/release/repo_config.yaml"
           
           Write-Host "Updating workspace configuration..."
@@ -124,30 +124,36 @@ jobs:
           Write-Host "Project base name: $projectBaseName"
           Write-Host "New workspace name: $newWorkspaceName"
           
-          # Verify config files exist
-          if (-not (Test-Path $itemConfigFile)) {
-            Write-Error "Config file not found: $itemConfigFile"
-            exit 1
+          $moduleSelection = "${{ github.event.inputs.module_id }}"
+          if ($moduleSelection -eq 'all') {
+            $moduleIds = @(Get-ChildItem "cicd/modules" -Directory | Select-Object -ExpandProperty Name)
+          } else {
+            $moduleIds = @($moduleSelection.Split(','))
           }
+
           if (-not (Test-Path $repoConfigFile)) {
             Write-Error "Config file not found: $repoConfigFile"
             exit 1
           }
-          # deployment_config.yaml no longer needs workspace mutation
-          
-          # Update item_src_config.yaml
-          Write-Host "Updating $itemConfigFile..."
-          $itemContent = Get-Content $itemConfigFile -Raw -Encoding UTF8
-          $itemPattern = "(?m)^workspace:\s*.*$"
-          $itemReplacement = "workspace: '$newWorkspaceName'"
-          $updatedItemContent = $itemContent -replace $itemPattern, $itemReplacement
-          $updatedItemContent | Set-Content $itemConfigFile -Encoding UTF8 -NoNewline
-          $writtenItemContent = Get-Content $itemConfigFile -Raw -Encoding UTF8
-          if ($writtenItemContent -match "(?m)^workspace:\s*['""']?$newWorkspaceName['""']?\s*$") {
-            Write-Host "✅ item_src_config.yaml workspace updated"
-          } else {
-            Write-Error "Failed to update workspace name in $itemConfigFile"
-            exit 1
+
+          foreach ($moduleId in $moduleIds) {
+            $itemConfigFile = "cicd/modules/$moduleId/item_src_config.yaml"
+            if (-not (Test-Path $itemConfigFile)) {
+              Write-Error "Config file not found: $itemConfigFile"
+              exit 1
+            }
+            Write-Host "Updating $itemConfigFile..."
+            $itemContent = Get-Content $itemConfigFile -Raw -Encoding UTF8
+            $itemPattern = "(?m)^workspace:\s*.*$"
+            $itemReplacement = "workspace: '$newWorkspaceName'"
+            $updatedItemContent = $itemContent -replace $itemPattern, $itemReplacement
+            $updatedItemContent | Set-Content $itemConfigFile -Encoding UTF8 -NoNewline
+            $writtenItemContent = Get-Content $itemConfigFile -Raw -Encoding UTF8
+            if ($writtenItemContent -notmatch "(?m)^workspace:\s*['""']?$newWorkspaceName['""']?\s*$") {
+              Write-Error "Failed to update workspace name in $itemConfigFile"
+              exit 1
+            }
+            Write-Host "Updated workspace for module: $moduleId"
           }
 
           # Update repo_config.yaml
@@ -227,7 +233,7 @@ jobs:
           echo "**Feature Name**: $featureName" >> $env:GITHUB_STEP_SUMMARY
           echo "**Branch Name**: $branchName" >> $env:GITHUB_STEP_SUMMARY
           echo "**Branch Mode**: $branchMode" >> $env:GITHUB_STEP_SUMMARY
-          echo "**Module**: ${{ github.event.inputs.module_id }}" >> $env:GITHUB_STEP_SUMMARY
+          echo "**Module Scope**: ${{ github.event.inputs.module_id }}" >> $env:GITHUB_STEP_SUMMARY
           echo "**Config Workspace Name**: $newWorkspaceName" >> $env:GITHUB_STEP_SUMMARY
           echo "**Created**: $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss UTC'))" >> $env:GITHUB_STEP_SUMMARY
           echo "" >> $env:GITHUB_STEP_SUMMARY
@@ -241,7 +247,7 @@ jobs:
     uses: ./.github/workflows/deploy-fos-from-repo.yml
     with:
       ref: feature/${{ github.event.inputs.feature_name }}
-      module_id: ${{ github.event.inputs.module_id }}
+      module_ids: ${{ needs.create-branch.outputs.module_id }}
     secrets: inherit
     permissions:
       contents: read
