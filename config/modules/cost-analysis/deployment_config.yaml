@@ -22,36 +22,38 @@ post_deployment:
     - FOS_Lakehouse.Lakehouse
 
 folders:
-  - name: Deployment
-    items:
-      - Init_Cost_Analysis_Lakehouse_Tables.Notebook
-      - Update_Cost_Analysis_delivery.Notebook
-  - name: Cost_Analysis Data Load
-    items:
-      - 01_Load_Calendar.Notebook
-      - 01_Load_Dimensions.Notebook
-      - 01_Load_Focus_Fabric.Notebook
-      - 01_Load_Cost_AnalysisVersion.Notebook
-      - 01_Load_Focus.Notebook
-      - 01_Load_Meters.Notebook
-  - name: Data Agent
-    items:
-      - 02_Create_DataAgent.Notebook
-      - Cost_Analysis_Agent.DataAgent
-  - name: Reservations
-    items:
-      - 02_Load_DimReservation.Notebook
-      - 02_Load_Reservation_Fabric.Notebook
-      - 02_Load_Reservation.Notebook
-      - Load Reservations.DataPipeline
-  - name: Quotas
-    items:
-      - 02_Load_Quota_Fabric.Notebook
-      - Load Quota.DataPipeline
-  - name: Maintenance
-    items:
-      - 03_Optimization.Notebook
-  - name: Reporting
-    items:
-      - Cost_Analysis_Core_Report.Report
-      - Cost_Analysis_Core_SM.SemanticModel
+  - name: Cost Analysis
+    folders:
+      - name: Deployment
+        items:
+          - Init_Cost_Analysis_Lakehouse_Tables.Notebook
+          - Update_Cost_Analysis_delivery.Notebook
+      - name: Data Load
+        items:
+          - 01_Load_Calendar.Notebook
+          - 01_Load_Dimensions.Notebook
+          - 01_Load_Focus_Fabric.Notebook
+          - 01_Load_Cost_AnalysisVersion.Notebook
+          - 01_Load_Focus.Notebook
+          - 01_Load_Meters.Notebook
+      - name: Data Agent
+        items:
+          - 02_Create_DataAgent.Notebook
+          - Cost_Analysis_Agent.DataAgent
+      - name: Reservations
+        items:
+          - 02_Load_DimReservation.Notebook
+          - 02_Load_Reservation_Fabric.Notebook
+          - 02_Load_Reservation.Notebook
+          - Load Reservations.DataPipeline
+      - name: Quotas
+        items:
+          - 02_Load_Quota_Fabric.Notebook
+          - Load Quota.DataPipeline
+      - name: Maintenance
+        items:
+          - 03_Optimization.Notebook
+      - name: Reporting
+        items:
+          - Cost_Analysis_Core_Report.Report
+          - Cost_Analysis_Core_SM.SemanticModel

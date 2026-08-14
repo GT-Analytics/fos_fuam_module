@@ -27,95 +27,93 @@ post_deployment:
     - FOS_Lakehouse.Lakehouse
 
 folders:
-  - name: "Deployment"
-    items:
-    - FOS_Config_Lakehouse.Lakehouse
-    - Init_FOS_Lakehouse_Tables.Notebook
-  - name: "Other"
-    items:
-    - FOS_Staging_Lakehouse.Lakehouse
-    - Generate_Calendar_Table.Notebook
-    - Check_FOS_Version.Notebook
-  - name: "Active Items"
-    items:
-    - 01_Transfer_Active_Items_Unit.Notebook
-    - Load_Items_E2E.DataPipeline
-  - name: "Activities"
-    items:
-    - 02_Transfer_Activities_Unit.Notebook
-    - 03_Aggregate_Activities_Unit.Notebook
-    - Load_Activities_E2E.DataPipeline
-  - name: "Capacities"
-    items:
-    - 01_Transfer_Capacities_Unit.Notebook
-    - Load_Capacities_E2E.DataPipeline
-  - name: "Capacity Refreshables"
-    items:
-    - 01_Transfer_Capacity_Refreshables_Unit.Notebook
-    - Load_Capacity_Refreshables_E2E.DataPipeline
-  - name: "Workspaces"
-    items:
-    - 02_Transfer_Workspaces_Unit.Notebook
-    - Load_PBI_Workspaces_E2E.DataPipeline
-  - name: "Inventory"
-    items:
-    - 01_Transfer_Incremental_Inventory_Unit.Notebook
-    - Load_Inventory_E2E.DataPipeline
-  - name: "Tenant Settings"
-    items:
-    - 01_Transfer_Delegated_Tenant_Settings_Overrides_Unit.Notebook
-    - 01_Transfer_Tenant_Admin_Settings_Unit.Notebook
-    - Load_Tenant_Settings_E2E.DataPipeline
-    - Load_Delegated_Tenant_Settings_Overrides_E2E.DataPipeline
-  - name: "Git Connections"
-    items:
-    - 01_Transfer_Git_Connections_Unit.Notebook
-    - Load_Git_Connections_E2E.DataPipeline
-  - name: "Maintenance"
-    items:  
-    - FOS_Backup_Lakehouse.Lakehouse
-    - 01_FOS_Lakehouse_Backup.Notebook
-    - 02_FOS_Lakehouse_Optimization.Notebook
-    - Maintenance_for_FOS.DataPipeline
-    - 01_Create_Snapshot_Tables_Unit.Notebook
-  - name: "Capacity Metrics"
-    items:  
-    - 01_Transfer_CapacityMetricData_Timepoints_Unit.Notebook
-    - 02_Transfer_CapacityMetricData_ItemKind_Unit.Notebook
-    - 03_Transfer_CapacityMetricData_ItemOperation_Unit.Notebook
-    - Load_Capacity_Metrics_E2E.DataPipeline
-  - name: "Reporting"
-    items:
-    - FOS_Core_SM.SemanticModel
-    - FOS_Core_Report.Report
-    - FOS_Item_SM.SemanticModel
-    - FOS_Item_Analyzer_Report.Report
-    - FOS_Semantic_Model_Meta_Data_Analyzer_SM.SemanticModel
-    - FOS_Semantic_Model_Meta_Data_Analyzer_Report.Report
-    - FOS_SQL_Endpoint_Analyzer_SM.SemanticModel
-    - FOS_SQL_Endpoint_Analyzer_Report.Report
-    - FOS_Gateway_Monitoring_From_Files_SM.SemanticModel
-    - FOS_Gateway_Monitoring_From_Files_Report.Report
-  - name: "Domains"
-    items:
-    - 01_Transfer_Domains_Unit.Notebook
-    - Load_Domains_E2E.DataPipeline
-  - name: "WidelyShared"
-    items:
-    - 01_Transfer_WidelyShared_OrganizationLinks_Unit.Notebook
-    - 01_Transfer_WidelyShared_PublishedToWeb_Unit.Notebook
-    - Load_WidelyShared_OrganizationLinks_E2E.DataPipeline
-    - Load_WidelyShared_PublishedToWeb_E2E.DataPipeline
-  - name: "Optimization Module"
-    items:
-    - 00_Run_Optimization_Module_for_SM_Unit.Notebook
-  - name: "Tags"
-    items:
-    - 01_Tags_Unit.Notebook
-    - Load_Tags_E2E.DataPipeline
-  - name: "Optimization Module"
-    items:
-    - 01_Run_Optimization_Module_for_SM_Unit.Notebook
-    - Load_Optimization_Module_E2E.DataPipeline
-    
-    
+  - name: Admin Monitoring
+    folders:
+      - name: Deployment
+        items:
+          - FOS_Config_Lakehouse.Lakehouse
+          - Init_FOS_Lakehouse_Tables.Notebook
+      - name: Other
+        items:
+          - FOS_Staging_Lakehouse.Lakehouse
+          - Generate_Calendar_Table.Notebook
+          - Check_FOS_Version.Notebook
+      - name: Active Items
+        items:
+          - 01_Transfer_Active_Items_Unit.Notebook
+          - Load_Items_E2E.DataPipeline
+      - name: Activities
+        items:
+          - 02_Transfer_Activities_Unit.Notebook
+          - 03_Aggregate_Activities_Unit.Notebook
+          - Load_Activities_E2E.DataPipeline
+      - name: Capacities
+        items:
+          - 01_Transfer_Capacities_Unit.Notebook
+          - Load_Capacities_E2E.DataPipeline
+      - name: Capacity Refreshables
+        items:
+          - 01_Transfer_Capacity_Refreshables_Unit.Notebook
+          - Load_Capacity_Refreshables_E2E.DataPipeline
+      - name: Workspaces
+        items:
+          - 02_Transfer_Workspaces_Unit.Notebook
+          - Load_PBI_Workspaces_E2E.DataPipeline
+      - name: Inventory
+        items:
+          - 01_Transfer_Incremental_Inventory_Unit.Notebook
+          - Load_Inventory_E2E.DataPipeline
+      - name: Tenant Settings
+        items:
+          - 01_Transfer_Delegated_Tenant_Settings_Overrides_Unit.Notebook
+          - 01_Transfer_Tenant_Admin_Settings_Unit.Notebook
+          - Load_Tenant_Settings_E2E.DataPipeline
+          - Load_Delegated_Tenant_Settings_Overrides_E2E.DataPipeline
+      - name: Git Connections
+        items:
+          - 01_Transfer_Git_Connections_Unit.Notebook
+          - Load_Git_Connections_E2E.DataPipeline
+      - name: Maintenance
+        items:
+          - FOS_Backup_Lakehouse.Lakehouse
+          - 01_FOS_Lakehouse_Backup.Notebook
+          - 02_FOS_Lakehouse_Optimization.Notebook
+          - Maintenance_for_FOS.DataPipeline
+          - 01_Create_Snapshot_Tables_Unit.Notebook
+      - name: Capacity Metrics
+        items:
+          - 01_Transfer_CapacityMetricData_Timepoints_Unit.Notebook
+          - 02_Transfer_CapacityMetricData_ItemKind_Unit.Notebook
+          - 03_Transfer_CapacityMetricData_ItemOperation_Unit.Notebook
+          - Load_Capacity_Metrics_E2E.DataPipeline
+      - name: Reporting
+        items:
+          - FOS_Core_SM.SemanticModel
+          - FOS_Core_Report.Report
+          - FOS_Item_SM.SemanticModel
+          - FOS_Item_Analyzer_Report.Report
+          - FOS_Semantic_Model_Meta_Data_Analyzer_SM.SemanticModel
+          - FOS_Semantic_Model_Meta_Data_Analyzer_Report.Report
+          - FOS_SQL_Endpoint_Analyzer_SM.SemanticModel
+          - FOS_SQL_Endpoint_Analyzer_Report.Report
+          - FOS_Gateway_Monitoring_From_Files_SM.SemanticModel
+          - FOS_Gateway_Monitoring_From_Files_Report.Report
+      - name: Domains
+        items:
+          - 01_Transfer_Domains_Unit.Notebook
+          - Load_Domains_E2E.DataPipeline
+      - name: WidelyShared
+        items:
+          - 01_Transfer_WidelyShared_OrganizationLinks_Unit.Notebook
+          - 01_Transfer_WidelyShared_PublishedToWeb_Unit.Notebook
+          - Load_WidelyShared_OrganizationLinks_E2E.DataPipeline
+          - Load_WidelyShared_PublishedToWeb_E2E.DataPipeline
+      - name: Optimization Module
+        items:
+          - 00_Run_Optimization_Module_for_SM_Unit.Notebook
+          - 01_Run_Optimization_Module_for_SM_Unit.Notebook
+          - Load_Optimization_Module_E2E.DataPipeline
+      - name: Tags
+        items:
+          - 01_Tags_Unit.Notebook
+          - Load_Tags_E2E.DataPipeline

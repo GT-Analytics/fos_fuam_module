@@ -124,6 +124,43 @@ class ComposeReleaseTests(unittest.TestCase):
         self.assertTrue((output / "src/Second.Notebook").exists())
         self.assertFalse((output / "src/First.Notebook").exists())
 
+    def test_preserves_same_named_folders_under_different_module_roots(self):
+        self.add_module("first", "First.Notebook")
+        self.add_module("second", "Second.Notebook")
+        for module_id, item_name in (
+            ("first", "First.Notebook"),
+            ("second", "Second.Notebook"),
+        ):
+            config_path = (
+                self.root / f"config/modules/{module_id}/deployment_config.yaml"
+            )
+            config = yaml.safe_load(config_path.read_text())
+            config["folders"] = [
+                {
+                    "name": module_id.title(),
+                    "folders": [
+                        {"name": "Reporting", "items": [item_name]},
+                    ],
+                }
+            ]
+            config_path.write_text(yaml.safe_dump(config), encoding="utf-8")
+        self.write_release("first", "second")
+
+        output = self.root / "output"
+        compose_release(self.root, output)
+        composed = yaml.safe_load(
+            (output / "config/deployment_config.yaml").read_text()
+        )
+
+        self.assertEqual(
+            [folder["name"] for folder in composed["folders"]],
+            ["First", "Second"],
+        )
+        self.assertEqual(
+            [folder["folders"][0]["name"] for folder in composed["folders"]],
+            ["Reporting", "Reporting"],
+        )
+
     def test_normalizes_direct_notebook_module_selection(self):
         self.assertIsNone(normalize_selected_modules(None))
         self.assertIsNone(normalize_selected_modules("all"))

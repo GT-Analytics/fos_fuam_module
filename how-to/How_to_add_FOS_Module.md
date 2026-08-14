@@ -58,6 +58,30 @@ dependencies:
   - admin-monitoring
 ```
 
+## Workspace folders
+
+`deployment_config.yaml` supports folders at any supported Fabric folder depth. The module must be the first-level folder, with functional folders nested below it:
+
+```yaml
+folders:
+  - name: Example Module
+    folders:
+      - name: Deployment
+        items:
+          - Init_Example.Notebook
+      - name: Reporting
+        items:
+          - Example_SM.SemanticModel
+          - Example_Report.Report
+      - name: Operations
+        folders:
+          - name: Daily
+            items:
+              - Load_Example.DataPipeline
+```
+
+Each folder may contain both `items` and child `folders`. Folder names must be unique among siblings, but the same name can be reused beneath different module roots.
+
 ## Deterministic IDs
 
 All modules use the overarching FOS namespace. IDs must be generated from the Fabric item name only:

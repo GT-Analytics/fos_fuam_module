@@ -69,6 +69,61 @@ def _merge_named_values(target, incoming, module_id, config_key):
         target[name] = value
 
 
+def _merge_folders(target_folders, incoming_folders, module_id, parent_path=()):
+    folders_by_name = {folder["name"]: folder for folder in target_folders}
+    for folder in incoming_folders:
+        name = folder.get("name")
+        if not name:
+            raise CompositionError(
+                f"Module '{module_id}' has a folder without a name under "
+                f"{'/'.join(parent_path) or '<workspace>'}"
+            )
+        target = folders_by_name.get(name)
+        if target is None:
+            target = {"name": name, "items": [], "folders": []}
+            target_folders.append(target)
+            folders_by_name[name] = target
+        for item in folder.get("items", []):
+            if item not in target["items"]:
+                target["items"].append(item)
+        _merge_folders(
+            target["folders"],
+            folder.get("folders", []),
+            module_id,
+            parent_path + (name,),
+        )
+
+
+def _validate_folder_tree(folders, module_id, parent_path=()):
+    names = [folder.get("name") for folder in folders]
+    duplicate_names = sorted({name for name in names if names.count(name) > 1})
+    if duplicate_names:
+        raise CompositionError(
+            f"Module '{module_id}' has duplicate sibling folders under "
+            f"{'/'.join(parent_path) or '<workspace>'}: {duplicate_names}"
+        )
+    for folder in folders:
+        name = folder.get("name")
+        if not name:
+            raise CompositionError(
+                f"Module '{module_id}' has a folder without a name under "
+                f"{'/'.join(parent_path) or '<workspace>'}"
+            )
+        if not isinstance(folder.get("items", []), list):
+            raise CompositionError(
+                f"Module '{module_id}' folder '{'/'.join(parent_path + (name,))}' "
+                "must define items as a list"
+            )
+        if not isinstance(folder.get("folders", []), list):
+            raise CompositionError(
+                f"Module '{module_id}' folder '{'/'.join(parent_path + (name,))}' "
+                "must define folders as a list"
+            )
+        _validate_folder_tree(
+            folder.get("folders", []), module_id, parent_path + (name,)
+        )
+
+
 def _merge_deployment_config(composed, incoming, module_id):
     if not composed:
         composed = {
@@ -110,16 +165,7 @@ def _merge_deployment_config(composed, incoming, module_id):
             if value not in composed["post_deployment"][key]:
                 composed["post_deployment"][key].append(value)
 
-    folders_by_name = {folder["name"]: folder for folder in composed["folders"]}
-    for folder in incoming.get("folders", []):
-        target = folders_by_name.get(folder["name"])
-        if target is None:
-            target = {"name": folder["name"], "items": []}
-            composed["folders"].append(target)
-            folders_by_name[folder["name"]] = target
-        for item in folder.get("items", []):
-            if item not in target["items"]:
-                target["items"].append(item)
+    _merge_folders(composed["folders"], incoming.get("folders", []), module_id)
 
     return composed
 
@@ -151,6 +197,7 @@ def _validate_module_contract(
 ):
     order_names = {item["name"] for item in deployment_order}
     source_names = {path.name for path in src_dir.iterdir() if path.is_dir()}
+    _validate_folder_tree(deployment_config.get("folders", []), module_id)
     missing_source_entries = source_names - order_names
     if missing_source_entries:
         raise CompositionError(
