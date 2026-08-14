@@ -3,9 +3,28 @@ connections:
   pbi_connection : fos pbi-service-api admin
   fabric_connection: fos fabric-service-api admin
 
-fos_lakehouse_semantic_models:
-  - FOS_Core_SM.SemanticModel
-  - FOS_Item_SM.SemanticModel
+connection_specs:
+  pbi_connection:
+    base_url: https://api.powerbi.com/v1.0/myorg/admin
+    audience: https://analysis.windows.net/powerbi/api
+  fabric_connection:
+    base_url: https://api.fabric.microsoft.com/v1/admin
+    audience: https://api.fabric.microsoft.com
+
+semantic_model_lakehouses:
+  FOS_Core_SM.SemanticModel: FOS_Lakehouse.Lakehouse
+  FOS_Item_SM.SemanticModel: FOS_Lakehouse.Lakehouse
+
+post_deployment:
+  jobs:
+    - item: Init_FOS_Lakehouse_Tables.Notebook
+      parameters:
+        _inlineInstallationEnabled:
+          type: Bool
+          value: true
+  sql_endpoints:
+    - FOS_Config_Lakehouse.Lakehouse
+    - FOS_Lakehouse.Lakehouse
 
 folders:
   - name: "Deployment"

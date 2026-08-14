@@ -14,10 +14,12 @@ config/modules/<module-id>/
   deployment_config.yaml
   deployment_order.json
 data/modules/<module-id>/
-  current_fos_version.json
+  current_<module>_version.json
   ...
 src/modules/<module-id>/
   <Fabric item folders>
+docs/modules/<module-id>/
+  ...
 ```
 
 The release repository owns these shared files:
@@ -74,6 +76,7 @@ Set `MODULE_ID` in both module sync workflows. Synchronization replaces only the
 config/modules/<module-id>
 data/modules/<module-id>
 src/modules/<module-id>
+docs/modules/<module-id>  # optional
 ```
 
 The exporter and `item_src_config.yaml` remain development-only and are not synchronized. Other modules and release-owned files are not modified.

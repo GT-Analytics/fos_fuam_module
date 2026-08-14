@@ -1,0 +1,14 @@
+schema_version: 1
+id: fabric-cost-analysis
+display_name: Fabric Cost Analysis
+version: 2026.05.26
+dependencies: []
+
+source:
+  repository: https://github.com/microsoft/fabric-toolbox
+  path: monitoring/fabric-cost-analysis
+  ref: main
+
+shared_resources:
+  provides:
+    - FCA.Lakehouse

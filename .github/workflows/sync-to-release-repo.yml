@@ -7,10 +7,18 @@ on:
         description: 'Exact branch name to create in the release repo (no prefix will be added)'
         required: true
         type: string
+      module_id:
+        description: 'Module to publish'
+        required: true
+        type: choice
+        options:
+          - admin-monitoring
+          - fabric-cost-analysis
+        default: admin-monitoring
 
 env:
   RELEASE_REPO: GT-Analytics/fos_release
-  MODULE_ID: admin-monitoring
+  MODULE_ID: ${{ github.event.inputs.module_id }}
 
 jobs:
   sync-release:
@@ -29,7 +37,7 @@ jobs:
         id: version
         run: |
           set -euo pipefail
-          VERSION=$(jq -r '.current_fos_version' "data/modules/${MODULE_ID}/current_fos_version.json")
+          VERSION=$(awk '$1 == "version:" {print $2; exit}' "config/modules/${MODULE_ID}/module.yaml")
           if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
             VERSION="unknown"
           fi
@@ -52,6 +60,11 @@ jobs:
             mkdir -p "$RUNNER_TEMP/payload/${root}/modules"
             cp -R "$p" "$RUNNER_TEMP/payload/${root}/modules/"
           done
+          docs_path="docs/modules/${MODULE_ID}"
+          if [ -d "$docs_path" ]; then
+            mkdir -p "$RUNNER_TEMP/payload/docs/modules"
+            cp -R "$docs_path" "$RUNNER_TEMP/payload/docs/modules/"
+          fi
           ls -la "$RUNNER_TEMP/payload"
 
       - name: Checkout release repo
@@ -111,6 +124,7 @@ jobs:
           for root in config data src; do
             rm -rf "${root}/modules/${MODULE_ID}"
           done
+          rm -rf "docs/modules/${MODULE_ID}"
 
           cp -R "$RUNNER_TEMP/payload/." .
 

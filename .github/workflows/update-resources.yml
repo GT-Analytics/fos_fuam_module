@@ -1,7 +1,16 @@
 name: Update FOS Resources
 
 on:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      module_id:
+        description: 'Module to export from its development workspace'
+        required: true
+        type: choice
+        options:
+          - admin-monitoring
+          - fabric-cost-analysis
+        default: admin-monitoring
   #schedule:
   #  - cron: '0 6 * * 1'  # Run every Monday at 6 AM UTC
   #push:
@@ -13,6 +22,7 @@ on:
   #    - 'cicd/export_module.py'
 
 env:
+  MODULE_ID: ${{ github.event.inputs.module_id }}
   PYTHON_VERSION: '3.11'
   PYTHONIOENCODING: 'utf-8'
   PYTHONUTF8: '1'
@@ -60,7 +70,7 @@ jobs:
       
       - name: Run FOS Get Resources Script
         run: |
-          python cicd/export_module.py --module admin-monitoring
+          python cicd/export_module.py --module ${{ env.MODULE_ID }}
         env:
           # Add any environment variables your script might need
           PYTHONPATH: ${{ github.workspace }}
@@ -99,11 +109,11 @@ jobs:
       - name: Commit and push changes
         if: steps.check_changes.outputs.changes == 'true'
         run: |
-          git add src/modules/admin-monitoring/ config/modules/admin-monitoring/
+          git add "src/modules/${{ env.MODULE_ID }}/" "config/modules/${{ env.MODULE_ID }}/"
           git commit -m "chore: update FOS resources from source workspace
           
           - Updated src folder with latest exports
-          - Updated admin-monitoring module sources and deployment_order.json
+          - Updated ${{ env.MODULE_ID }} module sources and deployment_order.json
           - Processed by export_module.py
           
           Generated on: $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss UTC'))"

@@ -1,0 +1,90 @@
+[
+    {
+        "name": "FOS.Workspace",
+        "fos_id": "66db2b7f-f5d7-34ab-b4ef-640bd59a9b38"
+    },
+    {
+        "name": "fca azure management",
+        "fos_id": "5d15cc3f-1f6d-3b8c-8d85-02a40707877a"
+    },
+    {
+        "name": "FCA.Lakehouse",
+        "fos_id": "03c965a6-f0e4-3f11-99bf-6bb8b5cd054f"
+    },
+    {
+        "name": "01_Load_Focus.Notebook",
+        "fos_id": "0bbcb50d-b83f-39aa-b711-5c3c2b306c7a"
+    },
+    {
+        "name": "01_Load_Calendar.Notebook",
+        "fos_id": "c484c16b-52a4-3284-9514-dd04012884b2"
+    },
+    {
+        "name": "01_Load_FCAVersion.Notebook",
+        "fos_id": "945e23b2-85f7-3cb1-8865-394118622ee8"
+    },
+    {
+        "name": "01_Load_Dimensions.Notebook",
+        "fos_id": "062f6e18-8c37-36c7-a04c-7799e5d67cbd"
+    },
+    {
+        "name": "01_Load_Focus_Fabric.Notebook",
+        "fos_id": "21d47d3c-8b98-32f8-a276-d3381702a829"
+    },
+    {
+        "name": "03_Optimization.Notebook",
+        "fos_id": "59a4a111-25d3-32bd-9f9b-2fde685fcd75"
+    },
+    {
+        "name": "01_Load_Meters.Notebook",
+        "fos_id": "4fafb802-8ef5-33a0-bdb7-b03fba8bd16e"
+    },
+    {
+        "name": "02_Load_DimReservation.Notebook",
+        "fos_id": "cab0140f-38d0-3525-ab3e-8f263c8a620c"
+    },
+    {
+        "name": "02_Load_Reservation.Notebook",
+        "fos_id": "31c1d2bb-1578-3bda-8986-243d245fff3a"
+    },
+    {
+        "name": "02_Load_Reservation_Fabric.Notebook",
+        "fos_id": "c724e803-1982-3ff7-9397-ab6b37123d25"
+    },
+    {
+        "name": "02_Create_DataAgent.Notebook",
+        "fos_id": "349464fc-b52b-378c-af00-5df5ebc2dd55"
+    },
+    {
+        "name": "Init_FCA_Lakehouse_Tables.Notebook",
+        "fos_id": "5daaaa32-68ef-3e79-a115-05015a1fb814"
+    },
+    {
+        "name": "Update_FCA_delivery.Notebook",
+        "fos_id": "c4ed55c0-70d4-3b64-b715-85439230fc14"
+    },
+    {
+        "name": "02_Load_Quota_Fabric.Notebook",
+        "fos_id": "e9b1a022-c906-3734-a093-3b1f2dd3258a"
+    },
+    {
+        "name": "FCA_Core_SM.SemanticModel",
+        "fos_id": "4c8a022f-cddd-3308-babd-b1f1f3332426"
+    },
+    {
+        "name": "FCA_Core_Report.Report",
+        "fos_id": "b1b89f1b-5d62-30fa-9ed1-417adbb5927e"
+    },
+    {
+        "name": "Load Quota.DataPipeline",
+        "fos_id": "999add1c-5d05-38f9-b2b8-934a85ac7f46"
+    },
+    {
+        "name": "Load Reservations.DataPipeline",
+        "fos_id": "7777607b-00de-3c8f-b63e-15671b228de0"
+    },
+    {
+        "name": "Load FCA E2E.DataPipeline",
+        "fos_id": "3ea0565f-c56f-39be-b5ae-1b7da67a6345"
+    }
+]

@@ -1,0 +1,57 @@
+workspace: FOS
+connections:
+  azure_connection: fca azure management
+
+connection_specs:
+  azure_connection:
+    base_url: https://management.azure.com
+    audience: https://management.azure.com
+
+semantic_model_lakehouses:
+  FCA_Core_SM.SemanticModel: FCA.Lakehouse
+
+post_deployment:
+  jobs:
+    - item: Init_FCA_Lakehouse_Tables.Notebook
+      parameters:
+        _inlineInstallationEnabled:
+          type: Bool
+          value: true
+    - item: Update_FCA_delivery.Notebook
+  sql_endpoints:
+    - FCA.Lakehouse
+
+folders:
+  - name: Deployment
+    items:
+      - Init_FCA_Lakehouse_Tables.Notebook
+      - Update_FCA_delivery.Notebook
+  - name: FCA Data Load
+    items:
+      - 01_Load_Calendar.Notebook
+      - 01_Load_Dimensions.Notebook
+      - 01_Load_Focus_Fabric.Notebook
+      - 01_Load_FCAVersion.Notebook
+      - 01_Load_Focus.Notebook
+      - 01_Load_Meters.Notebook
+  - name: Data Agent
+    items:
+      - 02_Create_DataAgent.Notebook
+      - FCA_Agent.DataAgent
+  - name: Reservations
+    items:
+      - 02_Load_DimReservation.Notebook
+      - 02_Load_Reservation_Fabric.Notebook
+      - 02_Load_Reservation.Notebook
+      - Load Reservations.DataPipeline
+  - name: Quotas
+    items:
+      - 02_Load_Quota_Fabric.Notebook
+      - Load Quota.DataPipeline
+  - name: Maintenance
+    items:
+      - 03_Optimization.Notebook
+  - name: Reporting
+    items:
+      - FCA_Core_Report.Report
+      - FCA_Core_SM.SemanticModel

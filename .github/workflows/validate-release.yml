@@ -7,6 +7,7 @@ on:
       - 'config/release.yaml'
       - 'config/modules/**'
       - 'data/modules/**'
+      - 'docs/modules/**'
       - 'src/modules/**'
   workflow_dispatch:
 

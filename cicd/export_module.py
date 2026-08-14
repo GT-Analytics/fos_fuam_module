@@ -34,8 +34,7 @@ perform_export = True
 
 deployment_workspace_name = "FOS"
 src_workspace_name = config['workspace']
-src_pbi_connection = config['connections']['pbi_connection']
-src_fabric_connection = config['connections']['fabric_connection']
+source_connections = config.get('connections', {})
 items = config['items']
 #items = ['FOS_Lakehouse.Lakehouse', 'FOS_Staging_Lakehouse.Lakehouse', 'Generate_Calendar_Table.Notebook']
 item_inventory = []
@@ -65,7 +64,8 @@ def run_fab_command( command, capture_output: bool = False, silently_continue: b
 
 
 
-def add_item_to_inventory(item_name, item_id, guids=[]):
+def add_item_to_inventory(item_name, item_id, guids=None):
+    guids = guids or []
     fos_id = str(uuid.uuid3(namespace, prefix + item_name))
     item_def = { "name": item_name, "original_id": item_id, "fos_id": fos_id, "related_items" : guids }
     item_inventory.append(item_def)
@@ -134,12 +134,14 @@ def process_file(path):
 src_workspace_id = run_fab_command(f"get {src_workspace_name}.Workspace -q id", silently_continue=True, capture_output=True)
 print("Workspace ID:", src_workspace_id)
 add_item_to_inventory(f"{deployment_workspace_name}.Workspace" , src_workspace_id, [])
-src_pbi_connection_id = run_fab_command(f"get .connections/{src_pbi_connection}.Connection -q id", silently_continue=True, capture_output=True)
-print("PBI Connection ID:", src_pbi_connection_id)
-add_item_to_inventory(src_pbi_connection, src_pbi_connection_id, [])
-src_fabric_connection_id = run_fab_command(f"get .connections/{src_fabric_connection}.Connection -q id", silently_continue=True, capture_output=True)
-print("Fabric Connection ID:", src_fabric_connection_id, [])
-add_item_to_inventory(src_fabric_connection, src_fabric_connection_id)
+for connection_name in source_connections.values():
+    connection_id = run_fab_command(
+        f"get .connections/{connection_name}.Connection -q id",
+        silently_continue=True,
+        capture_output=True,
+    )
+    print(f"Connection ID ({connection_name}):", connection_id)
+    add_item_to_inventory(connection_name, connection_id, [])
 
 #######################################################################################################
 tmp_path = os.path.join(base_path, "tmp", module_id)

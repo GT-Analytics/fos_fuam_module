@@ -58,30 +58,56 @@ def _register_source_items(source, owners, module_id):
         owners[item_path.name] = module_id
 
 
+def _merge_named_values(target, incoming, module_id, config_key):
+    for name, value in incoming.items():
+        existing = target.get(name)
+        if existing is not None and existing != value:
+            raise CompositionError(
+                f"Module '{module_id}' has a conflicting '{config_key}.{name}'"
+            )
+        target[name] = value
+
+
 def _merge_deployment_config(composed, incoming, module_id):
     if not composed:
-        return {
+        composed = {
             "workspace": incoming.get("workspace"),
-            "connections": incoming.get("connections", {}),
-            "fos_lakehouse_semantic_models": list(
-                incoming.get("fos_lakehouse_semantic_models", [])
-            ),
-            "folders": [
-                {"name": folder["name"], "items": list(folder.get("items", []))}
-                for folder in incoming.get("folders", [])
-            ],
+            "connections": {},
+            "connection_specs": {},
+            "semantic_model_lakehouses": {},
+            "post_deployment": {
+                "jobs": [],
+                "sql_endpoints": [],
+            },
+            "folders": [],
         }
 
-    for key in ("workspace", "connections"):
-        if composed.get(key) != incoming.get(key):
-            raise CompositionError(
-                f"Module '{module_id}' has a conflicting deployment_config '{key}'"
-            )
+    if composed.get("workspace") != incoming.get("workspace"):
+        raise CompositionError(
+            f"Module '{module_id}' has a conflicting deployment_config 'workspace'"
+        )
 
-    semantic_models = composed["fos_lakehouse_semantic_models"]
-    for item in incoming.get("fos_lakehouse_semantic_models", []):
-        if item not in semantic_models:
-            semantic_models.append(item)
+    _merge_named_values(
+        composed["connections"], incoming.get("connections", {}), module_id, "connections"
+    )
+    _merge_named_values(
+        composed["connection_specs"],
+        incoming.get("connection_specs", {}),
+        module_id,
+        "connection_specs",
+    )
+    _merge_named_values(
+        composed["semantic_model_lakehouses"],
+        incoming.get("semantic_model_lakehouses", {}),
+        module_id,
+        "semantic_model_lakehouses",
+    )
+
+    post_deployment = incoming.get("post_deployment", {})
+    for key in ("jobs", "sql_endpoints"):
+        for value in post_deployment.get(key, []):
+            if value not in composed["post_deployment"][key]:
+                composed["post_deployment"][key].append(value)
 
     folders_by_name = {folder["name"]: folder for folder in composed["folders"]}
     for folder in incoming.get("folders", []):
@@ -117,6 +143,59 @@ def _merge_deployment_order(composed, incoming, module_id):
             continue
         composed.append(item)
         items_by_name[name] = item
+
+
+def _validate_module_contract(
+    module_id, manifest, deployment_config, deployment_order, src_dir
+):
+    order_names = {item["name"] for item in deployment_order}
+    source_names = {path.name for path in src_dir.iterdir() if path.is_dir()}
+    missing_source_entries = source_names - order_names
+    if missing_source_entries:
+        raise CompositionError(
+            f"Module '{module_id}' source items are missing from deployment_order.json: "
+            f"{sorted(missing_source_entries)}"
+        )
+
+    connections = deployment_config.get("connections", {})
+    connection_specs = deployment_config.get("connection_specs", {})
+    if set(connections) != set(connection_specs):
+        raise CompositionError(
+            f"Module '{module_id}' must define one connection_specs entry for every connection"
+        )
+    missing_connection_entries = set(connections.values()) - order_names
+    if missing_connection_entries:
+        raise CompositionError(
+            f"Module '{module_id}' connections are missing from deployment_order.json: "
+            f"{sorted(missing_connection_entries)}"
+        )
+
+    semantic_targets = deployment_config.get("semantic_model_lakehouses", {})
+    missing_models = set(semantic_targets) - source_names
+    missing_lakehouses = set(semantic_targets.values()) - order_names
+    if missing_models or missing_lakehouses:
+        raise CompositionError(
+            f"Module '{module_id}' has invalid semantic model targets: "
+            f"models={sorted(missing_models)}, lakehouses={sorted(missing_lakehouses)}"
+        )
+
+    post_deployment = deployment_config.get("post_deployment", {})
+    post_jobs = {job["item"] for job in post_deployment.get("jobs", [])}
+    missing_jobs = post_jobs - source_names
+    missing_endpoints = set(post_deployment.get("sql_endpoints", [])) - order_names
+    if missing_jobs or missing_endpoints:
+        raise CompositionError(
+            f"Module '{module_id}' has invalid post-deployment references: "
+            f"jobs={sorted(missing_jobs)}, sql_endpoints={sorted(missing_endpoints)}"
+        )
+
+    provided_resources = set(manifest.get("shared_resources", {}).get("provides", []))
+    missing_resources = provided_resources - order_names
+    if missing_resources:
+        raise CompositionError(
+            f"Module '{module_id}' provided resources are missing from deployment_order.json: "
+            f"{sorted(missing_resources)}"
+        )
 
 
 def compose_release(repo_root, output_root):
@@ -186,14 +265,25 @@ def compose_release(repo_root, output_root):
                 )
             shared_resource_owners[resource] = module_id
 
+        module_deployment_config = _load_yaml(
+            config_dir / "deployment_config.yaml"
+        )
+        module_deployment_order = _load_json(config_dir / "deployment_order.json")
+        _validate_module_contract(
+            module_id,
+            manifest,
+            module_deployment_config,
+            module_deployment_order,
+            src_dir,
+        )
         deployment_config = _merge_deployment_config(
             deployment_config,
-            _load_yaml(config_dir / "deployment_config.yaml"),
+            module_deployment_config,
             module_id,
         )
         _merge_deployment_order(
             deployment_order,
-            _load_json(config_dir / "deployment_order.json"),
+            module_deployment_order,
             module_id,
         )
         _copy_tree(
@@ -201,7 +291,7 @@ def compose_release(repo_root, output_root):
             output_data,
             data_owners,
             module_id,
-            excluded_names={"current_fos_version.json"},
+            excluded_names={path.name for path in data_dir.glob("current_*_version.json")},
         )
         _register_source_items(src_dir, source_item_owners, module_id)
         _copy_tree(src_dir, output_src, src_owners, module_id)
