@@ -6,7 +6,11 @@ from pathlib import Path
 
 import yaml
 
-from cicd.release.compose_release import CompositionError, compose_release
+from cicd.release.compose_release import (
+    CompositionError,
+    compose_release,
+    normalize_selected_modules,
+)
 
 
 class ComposeReleaseTests(unittest.TestCase):
@@ -119,6 +123,20 @@ class ComposeReleaseTests(unittest.TestCase):
         self.assertEqual(summary["modules"], ["second"])
         self.assertTrue((output / "src/Second.Notebook").exists())
         self.assertFalse((output / "src/First.Notebook").exists())
+
+    def test_normalizes_direct_notebook_module_selection(self):
+        self.assertIsNone(normalize_selected_modules(None))
+        self.assertIsNone(normalize_selected_modules("all"))
+        self.assertEqual(
+            normalize_selected_modules("second, first,second"),
+            ["second", "first"],
+        )
+        self.assertEqual(
+            normalize_selected_modules(["first", "second"]),
+            ["first", "second"],
+        )
+        with self.assertRaisesRegex(CompositionError, "cannot be combined"):
+            normalize_selected_modules("all,first")
 
     def test_merges_distinct_module_deployment_metadata(self):
         self.add_module("first", "First.Notebook")

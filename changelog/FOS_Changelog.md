@@ -110,7 +110,7 @@ Date: 2025-12-23
     - Update to Item_Analyzer Report
  
 - **Report design**:
-  - With this update, we harmonized the design language across FCA, Workspace Monitoring Dashboards, and FOS. We hope this helps you monitor your tenant, Fabric costs, workspaces, and items with a consistent look and feel.
+  - With this update, we harmonized the design language across Cost_Analysis, Workspace Monitoring Dashboards, and FOS. We hope this helps you monitor your tenant, Fabric costs, workspaces, and items with a consistent look and feel.
  
     
 - **Others**: 

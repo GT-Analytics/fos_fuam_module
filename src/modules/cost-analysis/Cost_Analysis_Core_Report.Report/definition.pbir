@@ -3,10 +3,10 @@
   "version": "4.0",
   "datasetReference": {
     "byConnection": {
-      "connectionString": "Data Source=powerbi://api.powerbi.com/v1.0/myorg/Focus;initial catalog=FCA_Core_SM;integrated security=ClaimsToken",
+      "connectionString": "Data Source=powerbi://api.powerbi.com/v1.0/myorg/Focus;initial catalog=Cost_Analysis_Core_SM;integrated security=ClaimsToken",
       "pbiServiceModelId": null,
       "pbiModelVirtualServerName": "sobe_wowvirtualserver",
-      "pbiModelDatabaseName": "4c8a022f-cddd-3308-babd-b1f1f3332426",
+      "pbiModelDatabaseName": "cc4f86a7-8636-3754-bf07-2966c5c7aadc",
       "name": "EntityDataSource",
       "connectionType": "pbiServiceXmlaStyleLive"
     }

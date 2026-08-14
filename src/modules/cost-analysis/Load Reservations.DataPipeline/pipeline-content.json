@@ -31,7 +31,7 @@
                             "type": "int"
                         }
                     },
-                    "sessionTag": "fca"
+                    "sessionTag": "cost_analysis"
                 }
             },
             {
@@ -71,7 +71,7 @@
                             "type": "int"
                         }
                     },
-                    "sessionTag": "fca"
+                    "sessionTag": "cost_analysis"
                 }
             },
             {
@@ -111,7 +111,7 @@
                             "type": "int"
                         }
                     },
-                    "sessionTag": "fca"
+                    "sessionTag": "cost_analysis"
                 }
             }
         ],

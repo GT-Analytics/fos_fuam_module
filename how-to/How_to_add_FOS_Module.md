@@ -102,11 +102,18 @@ Composition fails for duplicate item names, invalid FOS IDs, missing dependencie
 
 ## Feature branch deployment
 
-Run the **Create or Update Feature Branch** workflow with a feature name and module ID.
+Run the **Create or Update Feature Branch** workflow with a feature name and choose a deployment scope:
+
+```text
+admin-monitoring
+cost-analysis
+all
+```
 
 - If `feature/<name>` does not exist, it is created from `main`.
 - If it exists, current `main` is merged into the feature branch and its existing commits are preserved.
 - The selected module is passed directly to deployment; other enabled modules in `config/release.yaml` are not deployed.
+- `all` deploys every enabled module to the branch workspace.
 - The same deployment script runs for creation and update, so existing Fabric items in the feature workspace are updated in place.
 
-The standalone **Deploy FOS from Repo** workflow supports `all`, `admin-monitoring`, and `cost-analysis`. Select `all` only for a complete combined deployment.
+The standalone **Deploy FOS from Repo** workflow uses the same dropdown. Reusable workflow callers may still provide a comma-separated `module_ids` value programmatically.

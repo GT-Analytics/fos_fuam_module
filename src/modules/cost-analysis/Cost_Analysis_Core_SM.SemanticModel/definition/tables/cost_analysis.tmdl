@@ -1,11 +1,11 @@
-/// FCA Fact Table
-table fca
+/// Cost_Analysis Fact Table
+table cost_analysis
 	lineageTag: 31521cc0-d265-4575-8480-9e7f2c780945
 	sourceLineageTag: [dbo].[focus_fabric]
 
 	/// Counts the distinct number of capacity
 	/// 
-	measure #Capacities = DISTINCTCOUNT(fca[ResourceKey])
+	measure #Capacities = DISTINCTCOUNT(cost_analysis[ResourceKey])
 		formatString: 0
 		displayFolder: measures
 		lineageTag: 1c73cf80-e14d-46e9-adb5-007d9f3e7463
@@ -22,13 +22,13 @@ table fca
 
 		changedProperty = DisplayFolder
 
-	/// Counts the distinct number of regions in the RegionName column of the FCA table
+	/// Counts the distinct number of regions in the RegionName column of the Cost_Analysis table
 	measure #Regions =
 			
-			VAR RegionsFromFCA =
-			    SUMMARIZE ( fca, 'resources'[RegionId])
+			VAR RegionsFromCost_Analysis =
+			    SUMMARIZE ( cost_analysis, 'resources'[RegionId])
 			VAR Result =
-			    SUMX ( RegionsFromFCA, 1 )     -- optimization for COUNTROWS
+			    SUMX ( RegionsFromCost_Analysis, 1 )     -- optimization for COUNTROWS
 			RETURN
 			    Result
 		formatString: 0
@@ -43,13 +43,13 @@ table fca
 
 		changedProperty = DisplayFolder
 
-	/// Calculates the sum of EffectiveCost from the FCA table for meter representing the available capacity
-	measure #AvailableCapacity = CALCULATE(SUM(fca[EffectiveCost]), meters[Main]=TRUE())
+	/// Calculates the sum of EffectiveCost from the Cost_Analysis table for meter representing the available capacity
+	measure #AvailableCapacity = CALCULATE(SUM(cost_analysis[EffectiveCost]), meters[Main]=TRUE())
 		displayFolder: measures
 		lineageTag: 2c0d08ae-a7a5-43dd-a3c8-37ac4930c91d
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -69,15 +69,15 @@ table fca
 	/// Calculates the sum of effective costs for included meters with a specific commitment discount type, adjusted by pause costs
 	measure #CapacityPAYG = ```
 			
-			CALCULATE(SUM(fca[EffectiveCost]),meters[Included]=TRUE(), fca[CommitmentDiscountType]<>"Reservation", 
-			fca[BillingType]<>"Capacity Pause/Delete Surcharge")+0
+			CALCULATE(SUM(cost_analysis[EffectiveCost]),meters[Included]=TRUE(), cost_analysis[CommitmentDiscountType]<>"Reservation", 
+			cost_analysis[BillingType]<>"Capacity Pause/Delete Surcharge")+0
 			
 			```
 		displayFolder: measures
 		lineageTag: e739fabf-5c72-4db9-9c58-c0c8e018373a
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -95,12 +95,12 @@ table fca
 		changedProperty = DisplayFolder
 
 	/// Calculates the total cost without RI by summing the commitment savings and the total cost
-	measure #CostWithoutRI = SUM(fca[CommitmentSavings]) + [#TotalCost]
+	measure #CostWithoutRI = SUM(cost_analysis[CommitmentSavings]) + [#TotalCost]
 		displayFolder: measures
 		lineageTag: 5e359efb-c7c6-4887-8f0c-797bedf82afe
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -118,12 +118,12 @@ table fca
 		changedProperty = DisplayFolder
 
 	/// Calculates the sum of EffectiveCost from OneLake relative meters
-	measure #OneLake = CALCULATE(SUM(fca[EffectiveCost]),meters[Category]="OneLake",meters[Included]=FALSE())
+	measure #OneLake = CALCULATE(SUM(cost_analysis[EffectiveCost]),meters[Category]="OneLake",meters[Included]=FALSE())
 		displayFolder: measures
 		lineageTag: 7e8285be-14f6-4663-9d49-f5183b8ca80d
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -146,7 +146,7 @@ table fca
 		lineageTag: c190a166-984d-4729-a7dc-f4de903108ad
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -164,12 +164,12 @@ table fca
 		changedProperty = DisplayFolder
 
 	/// Calculates the sum of EffectiveCost for Capacity Pause deleting surcharge relative meters
-	measure #PauseCost = CALCULATE(SUM(fca[EffectiveCost]),fca[BillingType]="Capacity Pause/Delete Surcharge") + 0
+	measure #PauseCost = CALCULATE(SUM(cost_analysis[EffectiveCost]),cost_analysis[BillingType]="Capacity Pause/Delete Surcharge") + 0
 		displayFolder: measures
 		lineageTag: d8b89ec9-27f2-4aca-8d6c-35787778d176
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -187,12 +187,12 @@ table fca
 		changedProperty = DisplayFolder
 
 	/// Calculates the total effective cost for provisioned capacity for meters included in capacity price
-	measure #ProvisionedCapacity = CALCULATE(SUM(fca[EffectiveCost]),meters[Included]=TRUE())
+	measure #ProvisionedCapacity = CALCULATE(SUM(cost_analysis[EffectiveCost]),meters[Included]=TRUE())
 		displayFolder: measures
 		lineageTag: 9a310e2c-fece-473c-8872-a4ee11729d6f
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -210,12 +210,12 @@ table fca
 		changedProperty = DisplayFolder
 
 	/// Calculates the sum of EffectiveCost relative to the RI
-	measure #Reservation = CALCULATE(SUM(fca[EffectiveCost]),fca[CommitmentDiscountType]="Reservation",meters[Included]=TRUE())+0
+	measure #Reservation = CALCULATE(SUM(cost_analysis[EffectiveCost]),cost_analysis[CommitmentDiscountType]="Reservation",meters[Included]=TRUE())+0
 		displayFolder: measures
 		lineageTag: 25adad74-50b7-4a4e-bd58-741a65f35ba5
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -233,12 +233,12 @@ table fca
 		changedProperty = DisplayFolder
 
 	/// Calculates the effective cost for Copilot and A Reserved instance ( RI) capacity
-	measure #CopilotRI = CALCULATE(SUM(fca[EffectiveCost]), meters[Name]= "Copilot and AI Capacity Usage CU", fca[CommitmentDiscountType]="Reservation")+0
+	measure #CopilotRI = CALCULATE(SUM(cost_analysis[EffectiveCost]), meters[Name]= "Copilot and AI Capacity Usage CU", cost_analysis[CommitmentDiscountType]="Reservation")+0
 		displayFolder: measures
 		lineageTag: 25adad74-50b7-4a4e-bd58-741a65f35ba8
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -255,13 +255,13 @@ table fca
 
 		changedProperty = DisplayFolder
 
-	/// Calculates the total effective cost by summing the EffectiveCost column in the FCA table
-	measure #TotalCost = CALCULATE(SUM(fca[EffectiveCost]))
+	/// Calculates the total effective cost by summing the EffectiveCost column in the Cost_Analysis table
+	measure #TotalCost = CALCULATE(SUM(cost_analysis[EffectiveCost]))
 		displayFolder: measures
 		lineageTag: 526c4716-9009-4d64-bf6b-b35036b22651
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -300,7 +300,7 @@ table fca
 		lineageTag: c7b6001e-1623-4dd5-86ec-5b92fc8b08b4
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -331,7 +331,7 @@ table fca
 		lineageTag: 1d49cdb4-cee4-45a2-b0b1-46d592722ceb
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -389,12 +389,12 @@ table fca
 		changedProperty = DisplayFolder
 
 	/// Calculates the sum of the EffectiveCost for Spark autoscale relative meters
-	measure #SparkAutoScale = CALCULATE(SUM(fca[EffectiveCost]), meters[Name]= "autoscale for Spark Capacity Usage CU")+0
+	measure #SparkAutoScale = CALCULATE(SUM(cost_analysis[EffectiveCost]), meters[Name]= "autoscale for Spark Capacity Usage CU")+0
 		displayFolder: measures
 		lineageTag: cb1772af-2ede-49b1-a23d-b67ac9320a09
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -410,12 +410,12 @@ table fca
 		changedProperty = DisplayFolder
 
 	/// Calculates the sum of the Capacity Overage relative meters
-	measure #CapacityAutoScale = CALCULATE(SUM(fca[EffectiveCost]), meters[Name]= "Capacity Overage Capacity Usage CU")+0
+	measure #CapacityAutoScale = CALCULATE(SUM(cost_analysis[EffectiveCost]), meters[Name]= "Capacity Overage Capacity Usage CU")+0
 		displayFolder: measures
 		lineageTag: 8a7030ae-404f-4eba-a60b-7da48f7e6567
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -436,7 +436,7 @@ table fca
 		lineageTag: 82eb1070-e49a-411b-a020-d3fa1e82ac2f
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -451,8 +451,8 @@ table fca
 
 		changedProperty = DisplayFolder
 
-	/// Counts the number of rows in the FCA table
-	measure #FCACountRows = COUNTROWS(fca)
+	/// Counts the number of rows in the Cost_Analysis table
+	measure #Cost_AnalysisCountRows = COUNTROWS(cost_analysis)
 		formatString: 0
 		displayFolder: measures
 		lineageTag: 760209bc-7b4e-46cf-83c7-744a473c1ee3
@@ -464,12 +464,12 @@ table fca
 		changedProperty = DisplayFolder
 
 	/// Calculates the total commitment savings if the sum of commitment savings is greater than 1; otherwise, returns 0
-	measure #CommitmentSavings = IF(SUM(fca[CommitmentSavings]) > 1, SUM(fca[CommitmentSavings]), 0)
+	measure #CommitmentSavings = IF(SUM(cost_analysis[CommitmentSavings]) > 1, SUM(cost_analysis[CommitmentSavings]), 0)
 		displayFolder: measures
 		lineageTag: 501f93a1-3a46-434a-afbc-80eee5ba509e
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -484,13 +484,13 @@ table fca
 
 		changedProperty = DisplayFolder
 
-	/// Calculates the total effective costs from the FCA table for BCDR relative meters
-	measure #BCDRCost = CALCULATE(SUM(fca[EffectiveCost]),SEARCH("BCDR",meters[Name],1,0))+0
+	/// Calculates the total effective costs from the Cost_Analysis table for BCDR relative meters
+	measure #BCDRCost = CALCULATE(SUM(cost_analysis[EffectiveCost]),SEARCH("BCDR",meters[Name],1,0))+0
 		displayFolder: measures
 		lineageTag: dfbdc4c7-34ed-421a-83c4-232a543380f1
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -506,12 +506,12 @@ table fca
 		changedProperty = DisplayFolder
 
 	/// Calculates the sum of EffectiveCost for Mirroring relative meters
-	measure #Mirroring = CALCULATE(SUM(fca[EffectiveCost]),fca[ChargeCategory]="Mirroring")+0
+	measure #Mirroring = CALCULATE(SUM(cost_analysis[EffectiveCost]),cost_analysis[ChargeCategory]="Mirroring")+0
 		displayFolder: measures
 		lineageTag: cd489ad5-a884-48bb-90a5-8982fd759758
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -541,7 +541,7 @@ table fca
 		lineageTag: 54e53bda-5b93-4bef-a9e5-470bf13164ea
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -560,7 +560,7 @@ table fca
 		lineageTag: df260ff5-dec6-4b91-9d9c-e280a22e5abe
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -581,7 +581,7 @@ table fca
 		lineageTag: 171c0915-77e5-407a-a648-9150a74f344b
 
 		formatStringDefinition =
-				SWITCH( MAX(fca[BillingCurrency]),
+				SWITCH( MAX(cost_analysis[BillingCurrency]),
 				"USD", "\$#,0.00;(\$#,0.00);\$#,0.00",
 				"EUR", "\€#,0.00;(\€#,0.00);\€#,0.00",
 				"#,0.00;(#,0.00);#,0.00")
@@ -1320,7 +1320,7 @@ table fca
 
 		annotation SummarizationSetBy = User
 
-	partition fca = entity
+	partition cost_analysis = entity
 		mode: directLake
 		source
 			entityName: focus_fabric

@@ -38,7 +38,7 @@
                             "type": "int"
                         }
                     },
-                    "sessionTag": "fca"
+                    "sessionTag": "cost_analysis"
                 }
             },
             {
@@ -62,11 +62,11 @@
                 "typeProperties": {
                     "notebookId": "c484c16b-52a4-3284-9514-dd04012884b2",
                     "workspaceId": "66db2b7f-f5d7-34ab-b4ef-640bd59a9b38",
-                    "sessionTag": "fca"
+                    "sessionTag": "cost_analysis"
                 }
             },
             {
-                "name": "FCA Version",
+                "name": "Cost_Analysis Version",
                 "type": "TridentNotebook",
                 "dependsOn": [],
                 "policy": {
@@ -77,9 +77,9 @@
                     "secureInput": false
                 },
                 "typeProperties": {
-                    "notebookId": "945e23b2-85f7-3cb1-8865-394118622ee8",
+                    "notebookId": "11ccfcf5-c7df-3b9a-aed2-a29e8b6acf6f",
                     "workspaceId": "66db2b7f-f5d7-34ab-b4ef-640bd59a9b38",
-                    "sessionTag": "fca"
+                    "sessionTag": "cost_analysis"
                 }
             },
             {
@@ -96,7 +96,7 @@
                 "typeProperties": {
                     "notebookId": "4fafb802-8ef5-33a0-bdb7-b03fba8bd16e",
                     "workspaceId": "66db2b7f-f5d7-34ab-b4ef-640bd59a9b38",
-                    "sessionTag": "fca"
+                    "sessionTag": "cost_analysis"
                 }
             },
             {
@@ -136,7 +136,7 @@
                             "type": "int"
                         }
                     },
-                    "sessionTag": "fca"
+                    "sessionTag": "cost_analysis"
                 }
             },
             {
@@ -160,7 +160,7 @@
                 "typeProperties": {
                     "notebookId": "062f6e18-8c37-36c7-a04c-7799e5d67cbd",
                     "workspaceId": "66db2b7f-f5d7-34ab-b4ef-640bd59a9b38",
-                    "sessionTag": "fca"
+                    "sessionTag": "cost_analysis"
                 }
             },
             {

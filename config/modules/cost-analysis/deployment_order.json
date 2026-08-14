@@ -4,12 +4,12 @@
         "fos_id": "66db2b7f-f5d7-34ab-b4ef-640bd59a9b38"
     },
     {
-        "name": "fca azure management",
-        "fos_id": "5d15cc3f-1f6d-3b8c-8d85-02a40707877a"
+        "name": "cost_analysis azure management",
+        "fos_id": "78bea064-e11d-3eac-ad57-12a5907ea2eb"
     },
     {
-        "name": "FCA.Lakehouse",
-        "fos_id": "03c965a6-f0e4-3f11-99bf-6bb8b5cd054f"
+        "name": "FOS_Lakehouse.Lakehouse",
+        "fos_id": "169b8e49-1247-331d-a665-aaa4afed18cc"
     },
     {
         "name": "01_Load_Focus.Notebook",
@@ -20,8 +20,8 @@
         "fos_id": "c484c16b-52a4-3284-9514-dd04012884b2"
     },
     {
-        "name": "01_Load_FCAVersion.Notebook",
-        "fos_id": "945e23b2-85f7-3cb1-8865-394118622ee8"
+        "name": "01_Load_Cost_AnalysisVersion.Notebook",
+        "fos_id": "11ccfcf5-c7df-3b9a-aed2-a29e8b6acf6f"
     },
     {
         "name": "01_Load_Dimensions.Notebook",
@@ -56,24 +56,24 @@
         "fos_id": "349464fc-b52b-378c-af00-5df5ebc2dd55"
     },
     {
-        "name": "Init_FCA_Lakehouse_Tables.Notebook",
-        "fos_id": "5daaaa32-68ef-3e79-a115-05015a1fb814"
+        "name": "Init_Cost_Analysis_Lakehouse_Tables.Notebook",
+        "fos_id": "fc4685f9-9450-3677-b02a-fe7ff327caf6"
     },
     {
-        "name": "Update_FCA_delivery.Notebook",
-        "fos_id": "c4ed55c0-70d4-3b64-b715-85439230fc14"
+        "name": "Update_Cost_Analysis_delivery.Notebook",
+        "fos_id": "7da7a1a3-fcc1-36df-80a5-9e354935b0dd"
     },
     {
         "name": "02_Load_Quota_Fabric.Notebook",
         "fos_id": "e9b1a022-c906-3734-a093-3b1f2dd3258a"
     },
     {
-        "name": "FCA_Core_SM.SemanticModel",
-        "fos_id": "4c8a022f-cddd-3308-babd-b1f1f3332426"
+        "name": "Cost_Analysis_Core_SM.SemanticModel",
+        "fos_id": "cc4f86a7-8636-3754-bf07-2966c5c7aadc"
     },
     {
-        "name": "FCA_Core_Report.Report",
-        "fos_id": "b1b89f1b-5d62-30fa-9ed1-417adbb5927e"
+        "name": "Cost_Analysis_Core_Report.Report",
+        "fos_id": "23cac782-8da0-3b3a-b403-7d831e29eec5"
     },
     {
         "name": "Load Quota.DataPipeline",
@@ -84,7 +84,7 @@
         "fos_id": "7777607b-00de-3c8f-b63e-15671b228de0"
     },
     {
-        "name": "Load FCA E2E.DataPipeline",
-        "fos_id": "3ea0565f-c56f-39be-b5ae-1b7da67a6345"
+        "name": "Load Cost_Analysis E2E.DataPipeline",
+        "fos_id": "3f0d3674-b430-3770-805a-a0951a76f41f"
     }
 ]
