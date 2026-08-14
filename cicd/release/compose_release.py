@@ -198,17 +198,48 @@ def _validate_module_contract(
         )
 
 
-def compose_release(repo_root, output_root):
+def _select_modules(repo_root, declared_modules, selected_modules):
+    modules_by_id = {module["id"]: module for module in declared_modules}
+    if selected_modules is None:
+        selected_ids = {
+            module["id"] for module in declared_modules if module.get("enabled", True)
+        }
+    else:
+        selected_ids = set(selected_modules)
+        unknown_ids = selected_ids - set(modules_by_id)
+        if unknown_ids:
+            raise CompositionError(f"Unknown selected modules: {sorted(unknown_ids)}")
+
+        pending = list(selected_ids)
+        while pending:
+            module_id = pending.pop()
+            manifest = _load_yaml(
+                repo_root / "config" / "modules" / module_id / "module.yaml"
+            )
+            for dependency in manifest.get("dependencies", []):
+                if dependency not in modules_by_id:
+                    raise CompositionError(
+                        f"Module '{module_id}' declares unknown dependency '{dependency}'"
+                    )
+                if dependency not in selected_ids:
+                    selected_ids.add(dependency)
+                    pending.append(dependency)
+
+    return sorted(
+        (modules_by_id[module_id] for module_id in selected_ids),
+        key=lambda module: (module.get("order", 0), module["id"]),
+    )
+
+
+def compose_release(repo_root, output_root, selected_modules=None):
     repo_root = Path(repo_root).resolve()
     output_root = Path(output_root).resolve()
     release_config = _load_yaml(repo_root / "config" / "release.yaml")
     if release_config.get("schema_version") != 1:
         raise CompositionError("config/release.yaml must use schema_version 1")
 
-    enabled_modules = [
-        module for module in release_config.get("modules", []) if module.get("enabled", True)
-    ]
-    declared_ids = {module["id"] for module in release_config.get("modules", [])}
+    declared_modules = release_config.get("modules", [])
+    declared_ids = {module["id"] for module in declared_modules}
     config_modules_dir = repo_root / "config" / "modules"
     available_ids = {
         path.name for path in config_modules_dir.iterdir() if path.is_dir()
@@ -219,7 +250,7 @@ def compose_release(repo_root, output_root):
             f"Module payloads are not declared in config/release.yaml: "
             f"{sorted(undeclared_ids)}"
         )
-    enabled_modules.sort(key=lambda module: (module.get("order", 0), module["id"]))
+    enabled_modules = _select_modules(repo_root, declared_modules, selected_modules)
     if not enabled_modules:
         raise CompositionError("config/release.yaml does not enable any modules")
 
@@ -313,8 +344,14 @@ def main():
     parser = argparse.ArgumentParser(description="Compose enabled FOS modules")
     parser.add_argument("--repo-root", type=Path, default=Path(__file__).parents[2])
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--module",
+        action="append",
+        dest="modules",
+        help="Compose only this module and its dependencies; repeat for multiple modules",
+    )
     args = parser.parse_args()
-    summary = compose_release(args.repo_root, args.output)
+    summary = compose_release(args.repo_root, args.output, selected_modules=args.modules)
     print(json.dumps(summary, indent=2))
 
 

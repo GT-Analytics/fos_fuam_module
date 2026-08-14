@@ -99,3 +99,14 @@ python cicd/release/compose_release.py --output "$env:TEMP/fos-release"
 ```
 
 Composition fails for duplicate item names, invalid FOS IDs, missing dependencies, conflicting shared-resource ownership, inconsistent global configuration, or undeclared module payloads.
+
+## Feature branch deployment
+
+Run the **Create or Update Feature Branch** workflow with a feature name and module ID.
+
+- If `feature/<name>` does not exist, it is created from `main`.
+- If it exists, current `main` is merged into the feature branch and its existing commits are preserved.
+- The selected module is passed directly to deployment; other enabled modules in `config/release.yaml` are not deployed.
+- The same deployment script runs for creation and update, so existing Fabric items in the feature workspace are updated in place.
+
+The standalone **Deploy FOS from Repo** workflow supports `all`, `admin-monitoring`, and `cost-analysis`. Select `all` only for a complete combined deployment.

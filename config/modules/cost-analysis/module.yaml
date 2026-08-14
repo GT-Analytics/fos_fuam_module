@@ -1,5 +1,5 @@
 schema_version: 1
-id: fabric-cost-analysis
+id: cost-analysis
 display_name: Fabric Cost Analysis
 version: 2026.05.26
 dependencies: []

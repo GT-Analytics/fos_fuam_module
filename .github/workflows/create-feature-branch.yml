@@ -1,4 +1,4 @@
-name: Create Feature Branch
+name: Create or Update Feature Branch
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ on:
         type: choice
         options:
           - admin-monitoring
-          - fabric-cost-analysis
+          - cost-analysis
         default: admin-monitoring
 
 env:
@@ -56,26 +56,29 @@ jobs:
           
           echo "Feature name validated: $featureName"
       
-      - name: Create feature branch
+      - name: Create or update feature branch
+        id: branch_mode
         run: |
           $featureName = "${{ github.event.inputs.feature_name }}"
           $branchName = "feature/$featureName"
-          
-          # Ensure we're on main branch
-          git checkout main
-          git pull origin main
-          
-          # Check if branch already exists
-          $branchExists = git branch -r --list "origin/$branchName"
-          if ($branchExists) {
-            Write-Error "Branch $branchName already exists"
-            exit 1
+
+          git fetch origin
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          $remoteBranch = git ls-remote --heads origin $branchName
+          if (-not [string]::IsNullOrWhiteSpace(($remoteBranch | Out-String))) {
+            git checkout -B $branchName "origin/$branchName"
+            git pull --ff-only origin $branchName
+            git merge --no-edit origin/main
+            "mode=updated" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+            Write-Host "Updated existing feature branch from origin/main: $branchName"
+          } else {
+            git checkout main
+            git pull --ff-only origin main
+            git checkout -b $branchName
+            "mode=created" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+            Write-Host "Created feature branch: $branchName"
           }
-          
-          # Create and checkout new feature branch
-          git checkout -b $branchName
-          
-          echo "Created and switched to branch: $branchName"
       
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -169,6 +172,7 @@ jobs:
           $featureName = "${{ github.event.inputs.feature_name }}"
           $projectBaseName = "${{ steps.repo_cfg.outputs.project_base_name }}"
           $newWorkspaceName = "$projectBaseName#$featureName"
+          $branchMode = "${{ steps.branch_mode.outputs.mode }}"
           
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -191,20 +195,15 @@ jobs:
           if ($hasChanges) {
             Write-Host "Changes detected, committing..."
             git add cicd/
-            git commit -m "feat: create feature branch '$featureName'
+            git commit -m "chore: configure feature branch '$featureName'
             
             - Updated workspace name to '$newWorkspaceName'
             - Modified module and release workspace configuration for feature development
+            - Branch mode: $branchMode
             
             Generated on: $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss UTC'))"
           } else {
-            Write-Host "No changes detected, creating empty commit..."
-            git commit --allow-empty -m "feat: create feature branch '$featureName'
-            
-            - Created feature branch for development
-            - Workspace configuration verified (cicd configs)
-            
-            Generated on: $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss UTC'))"
+            Write-Host "No configuration changes detected; existing branch state will be redeployed."
           }
       
       - name: Push feature branch
@@ -212,8 +211,8 @@ jobs:
           $featureName = "${{ github.event.inputs.feature_name }}"
           $branchName = "feature/$featureName"
           
-          git push origin $branchName
-          Write-Host "✅ Pushed feature branch: $branchName"
+          git push origin "HEAD:$branchName"
+          Write-Host "Pushed feature branch: $branchName"
       
       - name: Branch Creation Summary
         run: |
@@ -222,10 +221,13 @@ jobs:
           $projectBaseName = "${{ steps.repo_cfg.outputs.project_base_name }}"
           $newWorkspaceName = "$projectBaseName#$featureName"
           
-          echo "## 🎉 Feature Branch Created Successfully" >> $env:GITHUB_STEP_SUMMARY
+          $branchMode = "${{ steps.branch_mode.outputs.mode }}"
+          echo "## Feature Branch Ready" >> $env:GITHUB_STEP_SUMMARY
           echo "" >> $env:GITHUB_STEP_SUMMARY
           echo "**Feature Name**: $featureName" >> $env:GITHUB_STEP_SUMMARY
           echo "**Branch Name**: $branchName" >> $env:GITHUB_STEP_SUMMARY
+          echo "**Branch Mode**: $branchMode" >> $env:GITHUB_STEP_SUMMARY
+          echo "**Module**: ${{ github.event.inputs.module_id }}" >> $env:GITHUB_STEP_SUMMARY
           echo "**Config Workspace Name**: $newWorkspaceName" >> $env:GITHUB_STEP_SUMMARY
           echo "**Created**: $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss UTC'))" >> $env:GITHUB_STEP_SUMMARY
           echo "" >> $env:GITHUB_STEP_SUMMARY
@@ -239,6 +241,7 @@ jobs:
     uses: ./.github/workflows/deploy-fos-from-repo.yml
     with:
       ref: feature/${{ github.event.inputs.feature_name }}
+      module_id: ${{ github.event.inputs.module_id }}
     secrets: inherit
     permissions:
       contents: read
