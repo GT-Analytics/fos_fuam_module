@@ -2,12 +2,26 @@ name: Deploy FOS from Repo
 
 on:
   workflow_dispatch:
-    # No inputs required - uses current branch configuration
+    inputs:
+      module_id:
+        description: 'Module to deploy, or all enabled modules'
+        required: true
+        type: choice
+        options:
+          - all
+          - admin-monitoring
+          - cost-analysis
+        default: all
   workflow_call:
     # Allow this workflow to be called by other workflows
     inputs:
       ref:
         description: 'Git reference (branch, tag, or commit SHA) to checkout'
+        required: false
+        type: string
+        default: ''
+      module_id:
+        description: 'Module to deploy; empty or all deploys every enabled module'
         required: false
         type: string
         default: ''
@@ -22,6 +36,7 @@ env:
   PYTHON_VERSION: '3.11'
   PYTHONIOENCODING: 'utf-8'
   PYTHONUTF8: '1'
+  SELECTED_MODULE: ${{ inputs.module_id || github.event.inputs.module_id || 'all' }}
 
 jobs:
   deploy-fos:
@@ -182,6 +197,7 @@ jobs:
             exit 1
           }
         env:
+          FOS_MODULE_ID: ${{ env.SELECTED_MODULE }}
           FAB_SPN_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           FAB_SPN_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           FAB_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
@@ -203,6 +219,7 @@ jobs:
           echo "**Source Branch**: $currentBranch" >> $env:GITHUB_STEP_SUMMARY
           echo "**Target Workspace**: $workspaceName" >> $env:GITHUB_STEP_SUMMARY
           echo "**Fabric Capacity**: $capacityName" >> $env:GITHUB_STEP_SUMMARY
+          echo "**Module Selection**: ${{ env.SELECTED_MODULE }}" >> $env:GITHUB_STEP_SUMMARY
           if (-not [string]::IsNullOrWhiteSpace($entraObjectId)) {
             echo "**Group Access**: Admin access configured for $entraObjectId" >> $env:GITHUB_STEP_SUMMARY
           } else {

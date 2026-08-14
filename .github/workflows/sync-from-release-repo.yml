@@ -14,7 +14,7 @@ on:
         type: choice
         options:
           - admin-monitoring
-          - fabric-cost-analysis
+          - cost-analysis
         default: admin-monitoring
       source_branch:
         description: 'Branch on GT-Analytics/fos_release to sync FROM (default: main)'

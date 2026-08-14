@@ -13,7 +13,7 @@ on:
         type: choice
         options:
           - admin-monitoring
-          - fabric-cost-analysis
+          - cost-analysis
         default: admin-monitoring
 
 env:

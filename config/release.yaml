@@ -8,6 +8,6 @@ modules:
   - id: admin-monitoring
     enabled: true
     order: 10
-  - id: fabric-cost-analysis
+  - id: cost-analysis
     enabled: true
     order: 20

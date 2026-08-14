@@ -9,7 +9,7 @@ on:
         type: choice
         options:
           - admin-monitoring
-          - fabric-cost-analysis
+          - cost-analysis
         default: admin-monitoring
   #schedule:
   #  - cron: '0 6 * * 1'  # Run every Monday at 6 AM UTC

@@ -104,6 +104,22 @@ class ComposeReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(CompositionError, "both provide source item"):
             compose_release(self.root, self.root / "output")
 
+    def test_selected_module_excludes_other_enabled_modules(self):
+        self.add_module("first", "First.Notebook")
+        self.add_module("second", "Second.Notebook")
+        self.write_release("first", "second")
+
+        output = self.root / "output"
+        summary = compose_release(
+            self.root,
+            output,
+            selected_modules=["second"],
+        )
+
+        self.assertEqual(summary["modules"], ["second"])
+        self.assertTrue((output / "src/Second.Notebook").exists())
+        self.assertFalse((output / "src/First.Notebook").exists())
+
     def test_merges_distinct_module_deployment_metadata(self):
         self.add_module("first", "First.Notebook")
         self.add_module("second", "Second.Notebook")
