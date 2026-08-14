@@ -1,6 +1,6 @@
 workspace: FOS
 connections:
-  azure_connection: fca azure management
+  azure_connection: cost_analysis azure management
 
 connection_specs:
   azure_connection:
@@ -8,36 +8,36 @@ connection_specs:
     audience: https://management.azure.com
 
 semantic_model_lakehouses:
-  FCA_Core_SM.SemanticModel: FCA.Lakehouse
+  Cost_Analysis_Core_SM.SemanticModel: FOS_Lakehouse.Lakehouse
 
 post_deployment:
   jobs:
-    - item: Init_FCA_Lakehouse_Tables.Notebook
+    - item: Init_Cost_Analysis_Lakehouse_Tables.Notebook
       parameters:
         _inlineInstallationEnabled:
           type: Bool
           value: true
-    - item: Update_FCA_delivery.Notebook
+    - item: Update_Cost_Analysis_delivery.Notebook
   sql_endpoints:
-    - FCA.Lakehouse
+    - FOS_Lakehouse.Lakehouse
 
 folders:
   - name: Deployment
     items:
-      - Init_FCA_Lakehouse_Tables.Notebook
-      - Update_FCA_delivery.Notebook
-  - name: FCA Data Load
+      - Init_Cost_Analysis_Lakehouse_Tables.Notebook
+      - Update_Cost_Analysis_delivery.Notebook
+  - name: Cost_Analysis Data Load
     items:
       - 01_Load_Calendar.Notebook
       - 01_Load_Dimensions.Notebook
       - 01_Load_Focus_Fabric.Notebook
-      - 01_Load_FCAVersion.Notebook
+      - 01_Load_Cost_AnalysisVersion.Notebook
       - 01_Load_Focus.Notebook
       - 01_Load_Meters.Notebook
   - name: Data Agent
     items:
       - 02_Create_DataAgent.Notebook
-      - FCA_Agent.DataAgent
+      - Cost_Analysis_Agent.DataAgent
   - name: Reservations
     items:
       - 02_Load_DimReservation.Notebook
@@ -53,5 +53,5 @@ folders:
       - 03_Optimization.Notebook
   - name: Reporting
     items:
-      - FCA_Core_Report.Report
-      - FCA_Core_SM.SemanticModel
+      - Cost_Analysis_Core_Report.Report
+      - Cost_Analysis_Core_SM.SemanticModel

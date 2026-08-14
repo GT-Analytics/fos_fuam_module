@@ -1,4 +1,4 @@
-![FCA](./media/FCA.png)
+![Cost_Analysis](./media/Cost_Analysis.png)
 
 # **Solution accelerator for Fabric platform to monitor cost**
 
@@ -6,17 +6,17 @@ The solution aims to facilitate the understanding and monitoring of the Microsof
 
 Customers may not always clearly distinguish between costs that are included or excluded within the Data Platform, the handling of reservations (particularly those not rationalized within a defined scope), or their capacity usage. They may also need guidance on strategies for optimizing resources and implementing effective FinOps practices, including chargeback and show back to stakeholders. This free solution was developed in France by several passionate CSA experts in FinOps and Data: [Cedric Dupui](https://www.linkedin.com/in/cdupui/), [Manel Omani](https://www.linkedin.com/in/mlomani/), [Antoine Richet](https://www.linkedin.com/in/antoine-richet-22a44021/), and led by [Romain Casteres](https://www.linkedin.com/in/casteres/) inspired by his Blog article [FinOps for Microsoft Fabric](https://www.linkedin.com/pulse/finops-microsoft-fabric-romain-casteres-hc6ee/?trackingId=xFSs0xHqR0OheUQ7Tqn9mw%3D%3D).
 
-![FCA](./media/FCASolution.png)
+![Cost_Analysis](./media/Cost_AnalysisSolution.png)
 
 ---
 
 ## ✨ Introduction
 
-Fabric Cost Analysis (short: FCA) is a solution to enable holistic monitoring of Microsoft Fabric Cost with the help of Microsoft Fabric.
+Fabric Cost Analysis (short: Cost_Analysis) is a solution to enable holistic monitoring of Microsoft Fabric Cost with the help of Microsoft Fabric.
 
-FCA has the goal to provide a holistic view specified on Microsoft Fabric aspects and particularities (joining Financial and Operational forces) on top of the various information, which can be extracted from Azure Cost Management, personal enriched source of information, … allowing its users to analyze at a very high level, but also to deep dive into specific usage, Azure quotas, reservations and particularity of the platform for a more finer data analysis.
+Cost_Analysis has the goal to provide a holistic view specified on Microsoft Fabric aspects and particularities (joining Financial and Operational forces) on top of the various information, which can be extracted from Azure Cost Management, personal enriched source of information, … allowing its users to analyze at a very high level, but also to deep dive into specific usage, Azure quotas, reservations and particularity of the platform for a more finer data analysis.
 
->⚠️ Caution: The FCA solution accelerator is not an official Microsoft product! It is a solution accelerator, which can help you implement a cost monitoring solution within and for Fabric. Consequently, there is no official support provided, and there remains a potential risk of failures.
+>⚠️ Caution: The Cost_Analysis solution accelerator is not an official Microsoft product! It is a solution accelerator, which can help you implement a cost monitoring solution within and for Fabric. Consequently, there is no official support provided, and there remains a potential risk of failures.
 
 🎬 Demo presentation available on YouTube : [Fabric Cost Analysis](https://youtu.be/6uOlYj_eSzo)
 
@@ -24,25 +24,25 @@ FCA has the goal to provide a holistic view specified on Microsoft Fabric aspect
 
 ## 🧱 Architecture
 
-FCA is fully developed utilizing Fabric capabilities, with Pipelines and Notebooks serving as key tools for data extraction and transformation. Data is maintained both in its raw format and as Delta Parquet, allowing users to access it directly through Power BI Direct Lake. FCA includes standard reports that provide an overview of data and allow users to customize or create their own reports using the data model. Fabric's open platform enables integration with external data sources for further analysis as needed.
+Cost_Analysis is fully developed utilizing Fabric capabilities, with Pipelines and Notebooks serving as key tools for data extraction and transformation. Data is maintained both in its raw format and as Delta Parquet, allowing users to access it directly through Power BI Direct Lake. Cost_Analysis includes standard reports that provide an overview of data and allow users to customize or create their own reports using the data model. Fabric's open platform enables integration with external data sources for further analysis as needed.
 
-![FCA](./media/FCASolutionArchitecture.png)
-
----
-
-## 📚 FCA Inputs
-
-FCA gathers diverse data in Lakehouse to provide cost insights:
-- FCA extracts Azure Cost in [FOCUS](https://focus.finops.org/) format (a Unified Standard for Cloud Billing Data)
-- FCA extracts enriched Microsoft Learn documentation data
-- (optional) FCA extracts Azure Reservations details
-- (optional) FCA extracts Azure Quotas
-
->ℹ️ FCA will display only data related to Fabric costs, no other Azure cost will be prepared for analysis.
+![Cost_Analysis](./media/Cost_AnalysisSolutionArchitecture.png)
 
 ---
 
-## 🚀 FCA Outputs
+## 📚 Cost_Analysis Inputs
+
+Cost_Analysis gathers diverse data in Lakehouse to provide cost insights:
+- Cost_Analysis extracts Azure Cost in [FOCUS](https://focus.finops.org/) format (a Unified Standard for Cloud Billing Data)
+- Cost_Analysis extracts enriched Microsoft Learn documentation data
+- (optional) Cost_Analysis extracts Azure Reservations details
+- (optional) Cost_Analysis extracts Azure Quotas
+
+>ℹ️ Cost_Analysis will display only data related to Fabric costs, no other Azure cost will be prepared for analysis.
+
+---
+
+## 🚀 Cost_Analysis Outputs
 
 ### 📊 Report
 
@@ -58,42 +58,42 @@ FCA gathers diverse data in Lakehouse to provide cost insights:
 
 ### 🤖 Data Agent
 
-With a Data Agent on top of the FCA semantic model you can query in natural language Fabric Cost.
+With a Data Agent on top of the Cost_Analysis semantic model you can query in natural language Fabric Cost.
 
 The following provides an example of communication in both English and French.
 
-![FCA Data Agent](./media/FCA_Agent.png)
+![Cost_Analysis Data Agent](./media/Cost_Analysis_Agent.png)
 
 And from Teams:
 
-![FCA Data Agent from Teams](./media/AgentFromTeams.png)
+![Cost_Analysis Data Agent from Teams](./media/AgentFromTeams.png)
 
 ---
 
 ## 📦 Setup
 
-🏃‍♂️‍➡️ Are you ready to try FCA?
+🏃‍♂️‍➡️ Are you ready to try Cost_Analysis?
 
-➡️ [Click here to deploy or update FCA](./Deploy.md)
+➡️ [Click here to deploy or update Cost_Analysis](./Deploy.md)
 
-🆕 FCA can also be deployed via Fabric Jumpstart : https://jumpstart.fabric.microsoft.com/
+🆕 Cost_Analysis can also be deployed via Fabric Jumpstart : https://jumpstart.fabric.microsoft.com/
 
 ---
 
 ## 💰 Solution Cost (CU Usage)
 
-Running FCA itself consumes Fabric capacity (CUs) to execute its pipelines and notebooks. Based on real customer deployments, here is a representative example of FCA cost:
+Running Cost_Analysis itself consumes Fabric capacity (CUs) to execute its pipelines and notebooks. Based on real customer deployments, here is a representative example of Cost_Analysis cost:
 
 - **Sample configuration**: 4 regions, 50 capacities, 13 reservations (RIs), daily pipeline execution, data reload over 2 months (current + previous)
 - **Observed impact**: ~2% of an F4 capacity, slightly above ~6,000 CUs per day
 
-Overall, even at this scale, FCA remains a lightweight solution with a predictable and limited capacity footprint.
+Overall, even at this scale, Cost_Analysis remains a lightweight solution with a predictable and limited capacity footprint.
 
 ---
 
 ## 🐞 Support
 
-The FCA solution accelerator template is not an official Microsoft service.
+The Cost_Analysis solution accelerator template is not an official Microsoft service.
 
 Ideas/Suggestions: Submit ideas and suggestions as issues in this repository.
 
@@ -105,12 +105,12 @@ Important: Support tickets should not be opened for issues related to these temp
 
 ## 🤝 Community Content
 
-Below is a curated list of blog posts, sessions and articles that dive deeper into the use cases, design choices, and benefits of FCA solution.
+Below is a curated list of blog posts, sessions and articles that dive deeper into the use cases, design choices, and benefits of Cost_Analysis solution.
 
 - 📖 **fabricbook.net** – community knowledge hub around Microsoft Fabric: <https://fabricbook.net/>
 - ✍️ **Chris Webb (Crossjoin blog)** – *Monitor Fabric costs with Fabric Cost Analysis* (Oct 2025): <https://blog.crossjoin.co.uk/2025/10/19/monitor-fabric-costs-with-fabric-cost-analysis/>
-- ✍️ **James Serra** – *Fabric Cost Analysis (FCA)* (Dec 2025): <https://www.jamesserra.com/archive/2025/12/fabric-cost-analysis-fca/>
-- ✍️ **Rob Sewell** – *FCA: Fabric Cost Analysis for FinOps*: <https://blog.robsewell.com/blog/fca-fabric-cost-analysis-for-finops/>
+- ✍️ **James Serra** – *Fabric Cost Analysis (Cost_Analysis)* (Dec 2025): <https://www.jamesserra.com/archive/2025/12/fabric-cost-analysis-fca/>
+- ✍️ **Rob Sewell** – *Cost_Analysis: Fabric Cost Analysis for FinOps*: <https://blog.robsewell.com/blog/fca-fabric-cost-analysis-for-finops/>
 - ✍️ **SQLYard** – *Fabric Cost Analysis explained: bringing clarity to Microsoft Fabric costs* (Jan 2026): <https://sqlyard.com/2026/01/12/fabric-cost-analysis-explained-bringing-clarity-to-microsoft-fabric-costs/>
 - 💬 **Microsoft Fabric Community Blog** – *Fabric Cost Analysis: Shine a light on your platform costs*: <https://community.fabric.microsoft.com/t5/Fabric-platform-Community-Blog/Fabric-Cost-Analysis-Shine-a-light-on-your-platform-costs/ba-p/4907392>
 - 🎤 **LinkedIn Event (FR)** – *Fabric Cost Analysis : comprendre…*: <https://www.linkedin.com/events/fabriccostanalysis-comprendre-m7394636250466578432/>

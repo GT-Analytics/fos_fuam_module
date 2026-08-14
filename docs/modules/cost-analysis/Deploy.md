@@ -2,15 +2,15 @@
 
 🎬 Setup demo available on YouTube: [Fabric Cost Analysis - Deployment](https://youtu.be/0ZPH_gp_GTw)
 
-> Since not all users will be interested in analyzing reservations or quotas, nor in using a Data Agent on top of the FCA, we have added additional optional steps that can be followed during the initial deployment or added later.
+> Since not all users will be interested in analyzing reservations or quotas, nor in using a Data Agent on top of the Cost_Analysis, we have added additional optional steps that can be followed during the initial deployment or added later.
 
-🏃‍♂️‍➡️ Are you ready to try FCA? Let's follow these simple steps:
+🏃‍♂️‍➡️ Are you ready to try Cost_Analysis? Let's follow these simple steps:
 
 ## 1 - Configure export
 
 ### 1.1 - Cost FOCUS Data
 
-🚩 If you've already deployed [FinOps hubs](https://learn.microsoft.com/en-us/cloud-computing/finops/toolkit/hubs/finops-hubs-overview), you can plug the FCA on top and so you can skip step 1.1.
+🚩 If you've already deployed [FinOps hubs](https://learn.microsoft.com/en-us/cloud-computing/finops/toolkit/hubs/finops-hubs-overview), you can plug the Cost_Analysis on top and so you can skip step 1.1.
 
 To create an export (Create [Cost Management exports](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-improved-exports#create-exports)) the [Cost Management Contributor role](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/understand-work-scopes#roles-used-in-cost-management-on-rbac-scopes) will be required.
 
@@ -24,21 +24,21 @@ Once Data Lake Gen 2 storage account created here are the high levels steps to c
 - Select **+ Create**
 - On the Basics tab, select the template = **Cost and usage (FOCUS)**
 
-![FCA](./media/Setup-Export1.png)
+![Cost_Analysis](./media/Setup-Export1.png)
 
-- On the Datasets tab, fill in **Export prefix** with "fca"
+- On the Datasets tab, fill in **Export prefix** with "cost_analysis"
 - On the Destination tab, select:
   - Storage type = **Azure blob storage**
   - Destination and storage = **Use existing**
   - Subscription = Your subscription
   - Storage account = Your storage account
-  - Container = **fca**
-  - Directory = **fca**
+  - Container = **cost_analysis**
+  - Directory = **cost_analysis**
   - Format = **Parquet**
   - Compression type = **Snappy**
   - Overwrite data = **Enabled**
 
-![FCA](./media/Setup-Export2.png)
+![Cost_Analysis](./media/Setup-Export2.png)
 
 - On the Review + Create tab, select **Create**
 - Run the export by selecting **Run now** on the export page
@@ -71,25 +71,25 @@ You are free to use your own folder structure. The ingestion process dynamically
 
 ## 2 - Configure Fabric items
 
-- In Microsoft Fabric portal, create a new workspace "FCA" (name can be changed), which is backed by a capacity (Trial, P# or F#)
-- Download the ([Workspace logo](./media/FCA%20Logo%20Small.png)) and add the logo to the workspace
+- In Microsoft Fabric portal, create a new workspace "Cost_Analysis" (name can be changed), which is backed by a capacity (Trial, P# or F#)
+- Download the ([Workspace logo](./media/Cost_Analysis%20Logo%20Small.png)) and add the logo to the workspace
 - You can configure the Workspace to allow the share of a high concurrency session during the pipeline execution to limit the Spark vCore needs during the execution of parallel notebooks
   ![alt text](./media/pipelinehc.png)
 
-- 🚩 Download and import the ➡️   **[00_Deploy_FCA.ipynb](./script/00_Deploy_FCA.ipynb)**   ⬅️ Notebook into your FCA workspace ([Import existing notebooks](https://learn.microsoft.com/en-us/fabric/data-engineering/how-to-use-notebook#import-existing-notebooks)) (unless you deployed the solution via the Jumpstart)
+- 🚩 Download and import the ➡️   **[00_Deploy_Cost_Analysis.ipynb](./script/00_Deploy_Cost_Analysis.ipynb)**   ⬅️ Notebook into your Cost_Analysis workspace ([Import existing notebooks](https://learn.microsoft.com/en-us/fabric/data-engineering/how-to-use-notebook#import-existing-notebooks)) (unless you deployed the solution via the Jumpstart)
 
 - Click "Run All" in the Notebook
 
-![FCA](./media/Setup-Export7.png)
+![Cost_Analysis](./media/Setup-Export7.png)
 
 ℹ️ If you see a warning about "Missing permissions on the existing connection", please contact the administrator to request the required user permissions.
 The Quota pipeline cannot be activated until the permissions are granted and the deployment is re-run.
 
-- Navigate to your FCA Workspace and refresh the browser to view the newly created artifacts
+- Navigate to your Cost_Analysis Workspace and refresh the browser to view the newly created artifacts
 
-![FCA](./media/Setup-Export6.png)
+![Cost_Analysis](./media/Setup-Export6.png)
 
-- Create a new File Shortcut on the FCA Lakehouse ([Create an Azure Data Lake Storage Gen2 shortcut](https://learn.microsoft.com/en-us/fabric/onelake/create-adls-shortcut) or [Create an Azure Blob Storage shortcut](https://learn.microsoft.com/en-us/fabric/onelake/create-blob-shortcut))
+- Create a new File Shortcut on the Cost_Analysis Lakehouse ([Create an Azure Data Lake Storage Gen2 shortcut](https://learn.microsoft.com/en-us/fabric/onelake/create-adls-shortcut) or [Create an Azure Blob Storage shortcut](https://learn.microsoft.com/en-us/fabric/onelake/create-blob-shortcut))
   - ‼️The user must have the Storage Blob Data Contributor role assigned
   - Select the ellipsis (**...**) next to **Files**
   - Select **New shortcut**
@@ -100,18 +100,18 @@ The Quota pipeline cannot be activated until the permissions are granted and the
     - Authentication kind = **Organizational account**
     - Sign in when prompted
     - Select the Shortcut target sub path:
-      -  For <u>Focus export configured previously</u>: **fca-focus-cost** and click on Next (⚠️ Ensure the selected hierarchy is correct)
+      -  For <u>Focus export configured previously</u>: **cost_analysis-focus-cost** and click on Next (⚠️ Ensure the selected hierarchy is correct)
       -  For <u>FinOps Hub</u>: **Costs** in the ingestion container and click on Next
 
-![FCA](./media/Setup-Export3.png)
+![Cost_Analysis](./media/Setup-Export3.png)
 
 - Rename the Shortcut to **focuscost** and click on Create
 
-![FCA](./media/Setup-Export4.png)
+![Cost_Analysis](./media/Setup-Export4.png)
 
 - Verify access to the data
 
-![FCA](./media/Setup-Export5.png)
+![Cost_Analysis](./media/Setup-Export5.png)
 
 ### 📍 Optional Steps
 
@@ -121,9 +121,9 @@ Reservation : [Click here to configure reservation analysis](./Reservation.md)
 
 ## 3 - Run the Pipeline
 
-- Open the **Load FCA E2E** Data pipeline and Run the Pipeline once (Optional activities are deactivated by default and can be enabled if needed)
+- Open the **Load Cost_Analysis E2E** Data pipeline and Run the Pipeline once (Optional activities are deactivated by default and can be enabled if needed)
 
-![Load FCA E2E Notebook](./media/Setup_NotebookExecution.png)
+![Load Cost_Analysis E2E Notebook](./media/Setup_NotebookExecution.png)
 
 >ℹ️ The parameters "FromMonth" and "ToMonth" in the Data pipeline can be configured to specify the historical time frame of data processing. For example, setting FromMonth = -3 and ToMonth = 0 will load data from the previous three months.
 
@@ -132,11 +132,11 @@ We recommend configuring "FromMonth" = -1 and "ToMonth" = 0 to manage the FOCUS 
 
 ## 4 - Open the report
 
-- Navigate to your FCA workspace
+- Navigate to your Cost_Analysis workspace
 
-- Search for the item FCA_Core_Report
+- Search for the item Cost_Analysis_Core_Report
 
-- Open the FCA_Core_Report Power BI report
+- Open the Cost_Analysis_Core_Report Power BI report
 
 - Feel free to explore the report pages
 
@@ -149,32 +149,32 @@ Since it's required additional prerequisites, the creation of the Data Agent is 
 Steps to create the Data Agent:
 - Open the **02_Create_DataAgent** Notebook
 - Click "Run All" in the Notebook
-- Navigate to your FCA Workspace and refresh the browser to view the newly created artifact *FCA_Agent* and open it to chat with your data
-- Enhance custom agents in Microsoft Copilot Studio by leveraging insights from FCA Fabric Data Agent and chat in Teams, as demonstrated in following video: https://www.youtube.com/watch?v=GCtk2HPxZi8
+- Navigate to your Cost_Analysis Workspace and refresh the browser to view the newly created artifact *Cost_Analysis_Agent* and open it to chat with your data
+- Enhance custom agents in Microsoft Copilot Studio by leveraging insights from Cost_Analysis Fabric Data Agent and chat in Teams, as demonstrated in following video: https://www.youtube.com/watch?v=GCtk2HPxZi8
 
 ## Update
 
-To update FCA (Fabric Cost Analysis) to the latest version, follow the documented steps below.
+To update Cost_Analysis (Fabric Cost Analysis) to the latest version, follow the documented steps below.
 
-☑️ Review FCA release notes for the roadmap and updates: [FCA Release notes](https://github.com/microsoft/fabric-toolbox/blob/main/monitoring/fabric-cost-analysis/changelog/README.md)
+☑️ Review Cost_Analysis release notes for the roadmap and updates: [Cost_Analysis Release notes](https://github.com/microsoft/fabric-toolbox/blob/main/monitoring/fabric-cost-analysis/changelog/README.md)
 
 🚩 Important:
 
-- Updates overwrite all FCA provided items based on the item’s name
+- Updates overwrite all Cost_Analysis provided items based on the item’s name
 - Updates do not affect your collected data within the Lakehouse only the metadata will be overwritten
 - If you have made custom changes to pipelines, notebooks, semantic models, and reports, please create a backup or rename your custom items
-- Use the same user to update FCA as you used during the initial deployment. It is important to do so because this user is the owner of all the related items
+- Use the same user to update Cost_Analysis as you used during the initial deployment. It is important to do so because this user is the owner of all the related items
 
 Steps to update:
 
-- 1 - Download the latest version of the **[00_Deploy_FCA.ipynb](./script/00_Deploy_FCA.ipynb)** Notebook
-- 2 - Remove the existing "00_Deploy_FCA" Notebook from your workspace
-- 3 - Import the updated notebook into your FCA workspace
-- 4 - Run the 00_Deploy_FCA.ipynb Notebook
+- 1 - Download the latest version of the **[00_Deploy_Cost_Analysis.ipynb](./script/00_Deploy_Cost_Analysis.ipynb)** Notebook
+- 2 - Remove the existing "00_Deploy_Cost_Analysis" Notebook from your workspace
+- 3 - Import the updated notebook into your Cost_Analysis workspace
+- 4 - Run the 00_Deploy_Cost_Analysis.ipynb Notebook
 - 5 - Update the pipeline activities and parameters as needed (Running the notebook overwrites existing objects and resets pipeline parameters to their default values. Any custom changes will need to be reapplied)
 - 6 - Run the pipeline and then open the Power BI report.
 
->ℹ️ This notebook is designed to initially deploy or update all the items in your FCA workspace. You do not need to manually run the Load FCA E2E pipeline after an update. During the next pipeline run, FCA will also check and update the status of your FCA version on the first page of the FCA_Core_Report:
+>ℹ️ This notebook is designed to initially deploy or update all the items in your Cost_Analysis workspace. You do not need to manually run the Load Cost_Analysis E2E pipeline after an update. During the next pipeline run, Cost_Analysis will also check and update the status of your Cost_Analysis version on the first page of the Cost_Analysis_Core_Report:
 
-![FCA](./media/VersionUpdate.png)
+![Cost_Analysis](./media/VersionUpdate.png)
 

@@ -78,6 +78,18 @@ Please see [FOS's Authorization & Authentication](/monitoring/fabric-unified-adm
 
     ![](/monitoring/fabric-unified-admin-monitoring/media/deployment/FOS_basic_deployment_process_3_1.png)
 
+- In the parameter cell, set `modules_to_deploy` before running the notebook:
+
+|Value|Deployment scope|
+|---|---|
+|`None` or `"all"`|All modules enabled in `config/release.yaml`|
+|`"admin-monitoring"`|Admin Monitoring only|
+|`"cost-analysis"`|Fabric Cost Analysis only|
+|`"admin-monitoring,cost-analysis"`|Both modules|
+|`["admin-monitoring", "cost-analysis"]`|Both modules using list syntax|
+
+`modules_to_deploy` applies to direct GitHub downloads. Air-gapped archives are already composed for their selected scope before the notebook runs.
+
 - Click "Run All" in the Notebook
 
     ![](/monitoring/fabric-unified-admin-monitoring/media/deployment/FOS_basic_deployment_process_3_2.png)

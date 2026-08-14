@@ -1,12 +1,12 @@
-workspace: FCA
+workspace: Cost_Analysis
 connections:
-  azure_connection: fca azure management
+  azure_connection: cost_analysis azure management
 
 items:
-  - FCA.Lakehouse
+  - FOS_Lakehouse.Lakehouse
   - 01_Load_Focus.Notebook
   - 01_Load_Calendar.Notebook
-  - 01_Load_FCAVersion.Notebook
+  - 01_Load_Cost_AnalysisVersion.Notebook
   - 01_Load_Dimensions.Notebook
   - 01_Load_Focus_Fabric.Notebook
   - 03_Optimization.Notebook
@@ -15,11 +15,11 @@ items:
   - 02_Load_Reservation.Notebook
   - 02_Load_Reservation_Fabric.Notebook
   - 02_Create_DataAgent.Notebook
-  - Init_FCA_Lakehouse_Tables.Notebook
-  - Update_FCA_delivery.Notebook
+  - Init_Cost_Analysis_Lakehouse_Tables.Notebook
+  - Update_Cost_Analysis_delivery.Notebook
   - 02_Load_Quota_Fabric.Notebook
-  - FCA_Core_SM.SemanticModel
-  - FCA_Core_Report.Report
+  - Cost_Analysis_Core_SM.SemanticModel
+  - Cost_Analysis_Core_Report.Report
   - Load Quota.DataPipeline
   - Load Reservations.DataPipeline
-  - Load FCA E2E.DataPipeline
+  - Load Cost_Analysis E2E.DataPipeline

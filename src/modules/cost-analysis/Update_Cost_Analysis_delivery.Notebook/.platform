@@ -1,9 +1,8 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
   "metadata": {
-    "type": "DataPipeline",
-    "displayName": "Load FCA E2E",
-    "description": "Imported from fab"
+    "type": "Notebook",
+    "displayName": "Update_Cost_Analysis_delivery"
   },
   "config": {
     "version": "2.0",

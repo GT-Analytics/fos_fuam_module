@@ -1,9 +1,8 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
   "metadata": {
-    "type": "Notebook",
-    "displayName": "Init_FCA_Lakehouse_Tables",
-    "description": "Tables initialization in FCA Lakehouse"
+    "type": "Report",
+    "displayName": "Cost_Analysis_Core_Report"
   },
   "config": {
     "version": "2.0",

@@ -10,5 +10,5 @@ source:
   ref: main
 
 shared_resources:
-  provides:
-    - FCA.Lakehouse
+  uses:
+    - FOS_Lakehouse.Lakehouse

@@ -1,12 +1,12 @@
-/// FCA Version Table
-table audit_latest_available_fca_version
+/// Cost_Analysis Version Table
+table audit_latest_available_cost_analysis_version
 	lineageTag: 73ef1116-064e-4550-8c98-f45b50ca8628
-	sourceLineageTag: [dbo].[audit_latest_available_fca_version]
+	sourceLineageTag: [dbo].[audit_latest_available_cost_analysis_version]
 
-	/// Indicates whether an FCA update is available by comparing the current FCA version with the latest available version.
-	measure 'FCA Update Available' = ```
+	/// Indicates whether an Cost_Analysis update is available by comparing the current Cost_Analysis version with the latest available version.
+	measure 'Cost_Analysis Update Available' = ```
 			
-						IF([FCA Release] == MAX(audit_latest_available_fca_version[current_fca_version]), 0, 1)
+						IF([Cost_Analysis Release] == MAX(audit_latest_available_cost_analysis_version[current_cost_analysis_version]), 0, 1)
 			```
 		formatString: 0
 		lineageTag: 8f8ddc82-e24d-493e-a6b3-203142979dfa
@@ -15,20 +15,20 @@ table audit_latest_available_fca_version
 
 		changedProperty = Description
 
-	/// A static string value for FCA Release.
-	measure 'FCA Release' = "2026.05.26"
+	/// A static string value for Cost_Analysis Release.
+	measure 'Cost_Analysis Release' = "2026.05.26"
 		lineageTag: ba9a1bef-cb0e-42f4-8d14-ad6467ada7b7
 
 		changedProperty = Name
 
 		changedProperty = Description
 
-	/// Displays a string message based on whether the FCA Release is equal to the maximum current FCA version.
-	measure 'FCA Release Message' = ```
+	/// Displays a string message based on whether the Cost_Analysis Release is equal to the maximum current Cost_Analysis version.
+	measure 'Cost_Analysis Release Message' = ```
 			
 						IF(
-						    [FCA Release]== MAX(audit_latest_available_fca_version[current_fca_version]),
-						     "FCA is up-to-date",
+						    [Cost_Analysis Release]== MAX(audit_latest_available_cost_analysis_version[current_cost_analysis_version]),
+						     "Cost_Analysis is up-to-date",
 						     "Update is available"
 						    )
 			```
@@ -52,14 +52,14 @@ table audit_latest_available_fca_version
 
 		annotation SummarizationSetBy = Automatic
 
-	/// Current FCA Version
-	column current_fca_version
+	/// Current Cost_Analysis Version
+	column current_cost_analysis_version
 		dataType: string
 		sourceProviderType: varchar(8000)
 		lineageTag: 40612bd4-0393-4b99-b2df-2dd89367b85a
-		sourceLineageTag: current_fca_version
+		sourceLineageTag: current_cost_analysis_version
 		summarizeBy: none
-		sourceColumn: current_fca_version
+		sourceColumn: current_cost_analysis_version
 
 		changedProperty = Description
 
@@ -98,10 +98,10 @@ table audit_latest_available_fca_version
 
 		annotation SummarizationSetBy = Automatic
 
-	partition audit_latest_available_fca_version = entity
+	partition audit_latest_available_cost_analysis_version = entity
 		mode: directLake
 		source
-			entityName: audit_latest_available_fca_version
+			entityName: audit_latest_available_cost_analysis_version
 			schemaName: dbo
 			expressionSource: DatabaseQuery
 

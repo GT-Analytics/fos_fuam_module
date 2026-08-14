@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 import shutil
 import uuid
 from pathlib import Path
@@ -198,6 +199,20 @@ def _validate_module_contract(
         )
 
 
+def normalize_selected_modules(selected_modules):
+    if selected_modules is None:
+        return None
+    if isinstance(selected_modules, str):
+        modules = [value.strip() for value in selected_modules.split(",") if value.strip()]
+    else:
+        modules = [str(value).strip() for value in selected_modules if str(value).strip()]
+    if not modules or modules == ["all"]:
+        return None
+    if "all" in modules:
+        raise CompositionError("'all' cannot be combined with individual module IDs")
+    return list(dict.fromkeys(modules))
+
+
 def _select_modules(repo_root, declared_modules, selected_modules):
     modules_by_id = {module["id"]: module for module in declared_modules}
     if selected_modules is None:
@@ -237,6 +252,10 @@ def compose_release(repo_root, output_root, selected_modules=None):
     release_config = _load_yaml(repo_root / "config" / "release.yaml")
     if release_config.get("schema_version") != 1:
         raise CompositionError("config/release.yaml must use schema_version 1")
+
+    if selected_modules is None:
+        selected_modules = os.environ.get("FOS_MODULE_IDS")
+    selected_modules = normalize_selected_modules(selected_modules)
 
     declared_modules = release_config.get("modules", [])
     declared_ids = {module["id"] for module in declared_modules}

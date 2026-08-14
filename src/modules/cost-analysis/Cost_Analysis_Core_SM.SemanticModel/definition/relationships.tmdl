@@ -1,9 +1,9 @@
 relationship c012636f-ab04-5d40-959b-302f7f8c24a1
-	fromColumn: fca.MeterKey
+	fromColumn: cost_analysis.MeterKey
 	toColumn: meters.MeterKey
 
 relationship c5137560-7461-4f58-3599-9a62c860ced0
-	fromColumn: fca.ChargePeriodStart_DateKey
+	fromColumn: cost_analysis.ChargePeriodStart_DateKey
 	toColumn: calendar.DateKey
 
 relationship 0b3559d6-f6b2-b283-43ee-da6fb16256ed
@@ -12,12 +12,12 @@ relationship 0b3559d6-f6b2-b283-43ee-da6fb16256ed
 
 relationship acb5b209-af79-b0c5-a64c-cece8fcee79a
 	relyOnReferentialIntegrity
-	fromColumn: fca.ResourceKey
+	fromColumn: cost_analysis.ResourceKey
 	toColumn: resources.ResourceKey
 
 relationship 615f9cfb-f224-4047-a9c8-8d3b2d2fe61f
 	relyOnReferentialIntegrity
-	fromColumn: fca.SubscriptionKey
+	fromColumn: cost_analysis.SubscriptionKey
 	toColumn: subscriptions.SubscriptionKey
 
 relationship 137636c1-df56-827f-d0ba-1da71b11bd02

@@ -2,11 +2,11 @@
 
 The **Fabric FinOps Maturity Score** (also referred to as the **FinOps Maturity Score** in the semantic model) is a composite indicator, on a **0 to 100 scale**, that summarises how well a Microsoft Fabric capacity estate is being managed against FinOps best practices.
 
-It is exposed on the **Summary** page of the FCA report as a gauge with a colour-coded label, and is available in the semantic model so it can be reused in custom reports, Data Agents or alerts.
+It is exposed on the **Summary** page of the Cost_Analysis report as a gauge with a colour-coded label, and is available in the semantic model so it can be reused in custom reports, Data Agents or alerts.
 
 ![Fabric FinOps Maturity Score gauge](./media/MaturityScore.png)
 
->ℹ️ All measures referenced below live in the `fca` table of the **FCA_Core_SM** semantic model and are grouped in the `maturity score` display folder. The 5 sub-scores are hidden by default; only the composite **FinOps Maturity Score** and **FinOps Maturity Label** are visible.
+>ℹ️ All measures referenced below live in the `cost_analysis` table of the **Cost_Analysis_Core_SM** semantic model and are grouped in the `maturity score` display folder. The 5 sub-scores are hidden by default; only the composite **FinOps Maturity Score** and **FinOps Maturity Label** are visible.
 
 ---
 
@@ -229,16 +229,16 @@ flowchart LR
 - **Capacity benchmarking** — slice the score by `CapacityName`, `ResourceLocation` or `SubscriptionName` to compare capacities and identify outliers.
 - **Trend tracking** — add the `calendar` table to the score over months/quarters to monitor FinOps programme progress.
 - **Action prioritisation** — display the 5 sub-scores side by side; act first on the lowest one (weighted by its share of the composite).
-- **Data Agent** — ask the FCA Data Agent questions like *"What is my Fabric FinOps Maturity score and which dimension is the weakest?"* — the descriptions on each measure are surfaced to the agent to ground the answer.
+- **Data Agent** — ask the Cost_Analysis Data Agent questions like *"What is my Fabric FinOps Maturity score and which dimension is the weakest?"* — the descriptions on each measure are surfaced to the agent to ground the answer.
 
 ---
 
 ## ⚠️ Caveats
 
 - Scores require **enriched meter data** and, for dimensions 1 & 2, **reservation data**. Without the reservation export configured (see [Reservation.md](./Reservation.md)), `Score - RI Coverage` and `Score - RI Utilization` will be `0`, which mechanically lowers the composite.
-- The thresholds (95 % RI utilisation, 70 % capacity utilisation, 10 % pause, 15 % autoscale) are **opinionated defaults** based on observed best practices; they can be adjusted by editing the relevant DAX measures in `src/FCA_Core_SM.SemanticModel/definition/tables/fca.tmdl`.
+- The thresholds (95 % RI utilisation, 70 % capacity utilisation, 10 % pause, 15 % autoscale) are **opinionated defaults** based on observed best practices; they can be adjusted by editing the relevant DAX measures in `src/Cost_Analysis_Core_SM.SemanticModel/definition/tables/cost_analysis.tmdl`.
 - The score is computed in the **filter context** of the visual; filtering on a single capacity, subscription or period will recompute all 5 sub-scores accordingly.
 
 ---
 
-⬅️ Back to the [FCA documentation](./README.md)
+⬅️ Back to the [Cost_Analysis documentation](./README.md)

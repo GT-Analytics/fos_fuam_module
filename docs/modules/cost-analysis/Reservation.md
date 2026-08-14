@@ -12,13 +12,13 @@ To create reservation export, on the Azure portal , search for **Cost Management
 - Select the required scope and select **Exports** in the left navigation menu
 - Select **+ Create**
 - On the Basics tab, select the template = **All reservation data**
-- On the Datasets tab, fill in **Export prefix** with "fca"
+- On the Datasets tab, fill in **Export prefix** with "cost_analysis"
 - On the Destination tab, select:
   - Storage type = **Azure blob storage**
   - Destination and storage = **Use existing**
   - Subscription = Your subscription
   - Storage account = Your storage account
-  - Container = **fca**
+  - Container = **cost_analysis**
   - Directory = **reservation**
   - Format = **csv**
   - Compression type = **none**
@@ -37,26 +37,26 @@ To create reservation export, on the Azure portal , search for **Cost Management
 
 ## 2 - Create Shortcut
 
-- Create a new File Shortcut on the FCA Lakehouse ([Create an Azure Data Lake Storage Gen2 shortcut](https://learn.microsoft.com/en-us/fabric/onelake/create-adls-shortcut))
+- Create a new File Shortcut on the Cost_Analysis Lakehouse ([Create an Azure Data Lake Storage Gen2 shortcut](https://learn.microsoft.com/en-us/fabric/onelake/create-adls-shortcut))
 - Select the ellipsis (**...**) next to **Files**
 - Select **New shortcut**
 - Select Azure Data Lake Storage Gen 2 and provide the following settings:
   - Connection = Reuse **Existing connection** or create a new one specifying **Data Lake Storage** URL of the Data Lake storage account
   - Select the Shortcuts target sub path: **reservation-details** and **reservation-transactions**
-  ![FCA](./media/reservationexport.png)
+  ![Cost_Analysis](./media/reservationexport.png)
   - Click on Next
-  ![FCA](./media/reservationexport2.png)
+  ![Cost_Analysis](./media/reservationexport2.png)
   - Verify and rename if required the Shortcuts to **reservation-details** and **reservation-transactions** and click on Create
 
 - Verify access to the data
 
-![FCA](./media/reservationexport3.png)
+![Cost_Analysis](./media/reservationexport3.png)
 
 ## 3 - Enable activity in the Pipeline
 
-- Open the **Load FCA E2E** Data pipeline
+- Open the **Load Cost_Analysis E2E** Data pipeline
 - Activate the **Load Reservations** activity
 
-![Load FCA E2E Notebook](./media/PipelineReservation.png)
+![Load Cost_Analysis E2E Notebook](./media/PipelineReservation.png)
 
 - Save and go back to deployment documentation : [Deployment documentation](./Deploy.md#-optional-steps)
