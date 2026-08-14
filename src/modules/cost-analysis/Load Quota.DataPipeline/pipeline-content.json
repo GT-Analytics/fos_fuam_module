@@ -34,7 +34,7 @@
                         "type": "LakehouseTable",
                         "schema": [],
                         "typeProperties": {
-                            "table": "subscriptions"
+                            "table": "dbo.subscriptions"
                         }
                     }
                 }

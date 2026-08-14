@@ -82,6 +82,19 @@ folders:
 
 Each folder may contain both `items` and child `folders`. Folder names must be unique among siblings, but the same name can be reused beneath different module roots.
 
+## Lakehouse schemas
+
+FOS creates Lakehouses with schema support enabled. All current module tables initially use the `dbo` schema:
+
+- Default-Lakehouse Spark tables use `dbo.<table>`.
+- Named Lakehouse references use `<lakehouse>.dbo.<table>`.
+- Relative Delta paths use `Tables/dbo/<table>`.
+- Direct Lake semantic model partitions declare `schemaName: dbo`.
+
+When introducing module-specific schemas later, migrate the tables first and then update the corresponding notebook table names, relative Delta paths, pipeline datasets, and semantic model partition `schemaName` values together.
+
+Existing non-schema Lakehouses can't currently be converted in place by Fabric. Deployment validates `properties.defaultSchema` and stops with a migration error if an existing Lakehouse isn't schema-enabled. Create replacement schema-enabled Lakehouses and migrate existing data before updating such a workspace.
+
 ## Deterministic IDs
 
 All modules use the overarching FOS namespace. IDs must be generated from the Fabric item name only:
