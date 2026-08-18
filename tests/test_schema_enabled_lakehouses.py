@@ -51,6 +51,24 @@ class SchemaEnabledLakehouseTests(unittest.TestCase):
         self.assertIn("Existing non-schema", source)
         self.assertIn("lakehouse_schemas", source)
         self.assertNotIn("spark.", source)
+        self.assertNotIn("pandas", source)
+        self.assertIn("notebookutils.fs.cp", source)
+
+        admin_initializer = json.loads(
+            (
+                MODULES_ROOT
+                / "admin-monitoring/Init_FOS_Lakehouse_Tables.Notebook/notebook-content.ipynb"
+            ).read_text(encoding="utf-8")
+        )
+        initializer_source = "\n".join(
+            line
+            for cell in admin_initializer["cells"]
+            for line in cell.get("source", [])
+        )
+        self.assertIn(
+            'spark.read.parquet(table_definitions_path)',
+            initializer_source,
+        )
 
     def test_initializers_create_declared_schemas_before_use(self):
         expected_schemas = {
