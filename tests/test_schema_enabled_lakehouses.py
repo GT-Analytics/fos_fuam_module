@@ -35,7 +35,7 @@ class SchemaEnabledLakehouseTests(unittest.TestCase):
             },
         )
 
-    def test_deployment_creates_schema_enabled_lakehouses(self):
+    def test_deployment_creates_schema_enabled_lakehouses_without_spark(self):
         notebook = json.loads(
             (REPO_ROOT / "scripts" / "Deploy_FOS.ipynb").read_text(encoding="utf-8")
         )
@@ -49,8 +49,38 @@ class SchemaEnabledLakehouseTests(unittest.TestCase):
         self.assertIn("properties.defaultSchema", source)
         self.assertEqual(source.count("properties.defaultSchema"), 1)
         self.assertIn("Existing non-schema", source)
-        self.assertIn("CREATE SCHEMA IF NOT EXISTS", source)
         self.assertIn("lakehouse_schemas", source)
+        self.assertNotIn("spark.", source)
+
+    def test_initializers_create_declared_schemas_before_use(self):
+        expected_schemas = {
+            "admin-monitoring/Init_FOS_Lakehouse_Tables.Notebook/notebook-content.ipynb": (
+                "admin",
+                "staging",
+                "config",
+                "capacity_metrics",
+            ),
+            "cost-analysis/Init_Cost_Analysis_Lakehouse_Tables.Notebook/notebook-content.ipynb": (
+                "cost",
+            ),
+        }
+        for relative_path, schemas in expected_schemas.items():
+            with self.subTest(path=relative_path):
+                notebook = json.loads(
+                    (MODULES_ROOT / relative_path).read_text(encoding="utf-8")
+                )
+                source = "\n".join(
+                    line
+                    for cell in notebook["cells"]
+                    for line in cell.get("source", [])
+                )
+                self.assertIn("CREATE SCHEMA IF NOT EXISTS", source)
+                self.assertLess(
+                    source.index("CREATE SCHEMA IF NOT EXISTS"),
+                    source.index(f'USE {schemas[0]}'),
+                )
+                for schema in schemas:
+                    self.assertIn(schema, source)
 
     def test_each_module_notebook_selects_its_schema_once(self):
         for path in MODULES_ROOT.rglob("*.ipynb"):
