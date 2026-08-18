@@ -1,6 +1,6 @@
 table workspaces
 	lineageTag: bde6e3c9-8ace-40e8-817c-c0d7f8cdd578
-	sourceLineageTag: [admin].[workspaces]
+	sourceLineageTag: [adm].[workspaces]
 
 	column CapacityId
 		dataType: string
@@ -151,7 +151,7 @@ table workspaces
 		mode: directLake
 		source
 			entityName: workspaces
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

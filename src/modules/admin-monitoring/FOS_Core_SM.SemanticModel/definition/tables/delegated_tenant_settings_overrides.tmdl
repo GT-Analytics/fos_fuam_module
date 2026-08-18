@@ -1,6 +1,6 @@
 table delegated_tenant_settings_overrides
 	lineageTag: 6d5f0868-76e4-420a-a4e2-de49d20fae5a
-	sourceLineageTag: [admin].[delegated_tenant_settings_overrides]
+	sourceLineageTag: [adm].[delegated_tenant_settings_overrides]
 
 	column settingName
 		dataType: string
@@ -100,7 +100,7 @@ table delegated_tenant_settings_overrides
 		mode: directLake
 		source
 			entityName: delegated_tenant_settings_overrides
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

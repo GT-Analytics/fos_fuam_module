@@ -18,7 +18,7 @@ FOS is designed to be modular. FOS aims for a medallion architecture (Bronze, Si
 
 |Schema|Description|
 |--|--|
-|admin|Persistent Admin Monitoring tables.|
+|adm|Persistent Admin Monitoring tables (`admin` is reserved).|
 |capacity_metrics|Persistent tables whose names contain `metrics`.|
 |staging|Transient Admin Monitoring tables used during processing.|
 |config|Deployment metadata, including `FOS_Table_Definitions`.|

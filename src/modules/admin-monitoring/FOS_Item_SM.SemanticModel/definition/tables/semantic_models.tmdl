@@ -1,6 +1,6 @@
 table semantic_models
 	lineageTag: ba7d8204-1801-4312-ab30-d315f098ca6d
-	sourceLineageTag: [admin].[semantic_models]
+	sourceLineageTag: [adm].[semantic_models]
 
 	column WorkspaceId
 		dataType: string
@@ -181,6 +181,6 @@ table semantic_models
 		mode: directLake
 		source
 			entityName: semantic_models
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 

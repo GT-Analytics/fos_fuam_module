@@ -17,7 +17,7 @@ semantic_model_lakehouses:
 
 lakehouse_schemas:
   FOS_Lakehouse.Lakehouse:
-    - admin
+    - adm
     - staging
     - config
     - capacity_metrics

@@ -1,6 +1,6 @@
 table semantic_model_bpa_rule_catalog
 	lineageTag: be737207-a4ed-45f2-a0ac-edda350e762d
-	sourceLineageTag: [admin].[semantic_model_bpa_rule_catalog]
+	sourceLineageTag: [adm].[semantic_model_bpa_rule_catalog]
 
 	column RuleId
 		dataType: int64
@@ -101,6 +101,6 @@ table semantic_model_bpa_rule_catalog
 		mode: directLake
 		source
 			entityName: semantic_model_bpa_rule_catalog
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 

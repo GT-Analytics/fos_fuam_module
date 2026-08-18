@@ -1,6 +1,6 @@
 table workspaces_scanned_users
 	lineageTag: 6af566f0-5d3d-49a0-8fe8-8a759b99868f
-	sourceLineageTag: [admin].[workspaces_scanned_users]
+	sourceLineageTag: [adm].[workspaces_scanned_users]
 
 	column WorkspaceId
 		dataType: string
@@ -66,6 +66,6 @@ table workspaces_scanned_users
 		mode: directLake
 		source
 			entityName: workspaces_scanned_users
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 

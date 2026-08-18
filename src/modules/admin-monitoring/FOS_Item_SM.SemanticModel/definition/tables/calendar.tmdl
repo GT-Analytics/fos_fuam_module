@@ -1,6 +1,6 @@
 table calendar
 	lineageTag: fc54c4b0-c3fc-4dac-bd71-06c7ff555047
-	sourceLineageTag: [admin].[calendar]
+	sourceLineageTag: [adm].[calendar]
 
 	column DateKey
 		dataType: string
@@ -196,6 +196,6 @@ table calendar
 		mode: directLake
 		source
 			entityName: calendar
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 

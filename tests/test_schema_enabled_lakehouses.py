@@ -10,7 +10,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 MODULES_ROOT = REPO_ROOT / "src" / "modules"
 ADMIN_LAKEHOUSE_TABLE_PATTERN = re.compile(
     r"\bFOS_Lakehouse\."
-    r"(?!admin(?:\.|\b)|staging(?:\.|\b)|config(?:\.|\b)|"
+    r"(?!adm(?:\.|\b)|staging(?:\.|\b)|config(?:\.|\b)|"
     r"capacity_metrics(?:\.|\b)|\{schema_name\}|Lakehouse\b)"
 )
 
@@ -27,7 +27,7 @@ class SchemaEnabledLakehouseTests(unittest.TestCase):
             config["lakehouse_schemas"],
             {
                 "FOS_Lakehouse.Lakehouse": [
-                    "admin",
+                    "adm",
                     "staging",
                     "config",
                     "capacity_metrics",
@@ -73,7 +73,7 @@ class SchemaEnabledLakehouseTests(unittest.TestCase):
     def test_initializers_create_declared_schemas_before_use(self):
         expected_schemas = {
             "admin-monitoring/Init_FOS_Lakehouse_Tables.Notebook/notebook-content.ipynb": (
-                "admin",
+                "adm",
                 "staging",
                 "config",
                 "capacity_metrics",
@@ -109,7 +109,7 @@ class SchemaEnabledLakehouseTests(unittest.TestCase):
                 elif any("CapacityMetricData" in part for part in path.parts):
                     expected_schema = "capacity_metrics"
                 else:
-                    expected_schema = "admin"
+                    expected_schema = "adm"
                 count = sum(
                     line.strip() == f'spark.sql("USE {expected_schema}")'
                     for cell in notebook["cells"]
@@ -117,7 +117,7 @@ class SchemaEnabledLakehouseTests(unittest.TestCase):
                 )
                 self.assertEqual(count, 1)
 
-    def test_admin_notebook_table_references_use_admin_and_staging(self):
+    def test_admin_notebook_table_references_use_declared_schemas(self):
         violations = []
         admin_root = MODULES_ROOT / "admin-monitoring"
         for path in admin_root.rglob("*.ipynb"):
@@ -133,6 +133,24 @@ class SchemaEnabledLakehouseTests(unittest.TestCase):
                     if "FOS_Staging_Lakehouse" in line:
                         violations.append(f"{path}: {line.strip()}")
         self.assertEqual(violations, [])
+
+    def test_reserved_admin_schema_is_not_used_for_storage(self):
+        storage_tokens = (
+            "USE admin",
+            "FOS_Lakehouse.admin",
+            "Tables/admin",
+            "schemaName: admin",
+            "[admin].",
+        )
+        files = [
+            *MODULES_ROOT.glob("admin-monitoring/**/*.ipynb"),
+            *MODULES_ROOT.glob("admin-monitoring/**/*.tmdl"),
+        ]
+        for path in files:
+            with self.subTest(path=path):
+                text = path.read_text(encoding="utf-8")
+                for token in storage_tokens:
+                    self.assertNotIn(token, text)
 
     def test_admin_staging_tables_use_shared_lakehouse(self):
         admin_root = MODULES_ROOT / "admin-monitoring"
@@ -214,7 +232,7 @@ class SchemaEnabledLakehouseTests(unittest.TestCase):
             line for cell in init_notebook["cells"] for line in cell.get("source", [])
         )
         self.assertIn(
-            '"capacity_metrics" if "metrics" in table_name.lower() else "admin"',
+            '"capacity_metrics" if "metrics" in table_name.lower() else "adm"',
             init_source,
         )
 
@@ -255,7 +273,7 @@ class SchemaEnabledLakehouseTests(unittest.TestCase):
                 elif "metrics" in path.stem.lower():
                     expected_schema = "capacity_metrics"
                 else:
-                    expected_schema = "admin"
+                    expected_schema = "adm"
                 self.assertIn(
                     f"schemaName: {expected_schema}",
                     path.read_text(encoding="utf-8"),

@@ -91,7 +91,7 @@ FOS implements a modern data platform architecture with clear separation of conc
 ├─────────────────────────────────────────────────────────────────────┤
 │  FOS_Lakehouse:                                                    │
 │    • Files/bronze/* (Raw JSON/API responses)                        │
-│    • Tables/admin/* (Admin Monitoring tables)                       │
+│    • Tables/adm/* (Admin Monitoring tables)                         │
 │    • Tables/capacity_metrics/* (Capacity metrics tables)            │
 │    • Tables/staging/* (Temporary processing)                        │
 │    • Tables/config/* (Deployment metadata)                          │
@@ -124,7 +124,7 @@ FOS implements a modern data platform architecture with clear separation of conc
 - **Structure:**
   - `Files/bronze/`: Raw API responses (JSON format)
   - `Files/history/`: Historical activity logs
-    - `Tables/admin/`: Persistent Admin Monitoring tables
+    - `Tables/adm/`: Persistent Admin Monitoring tables
     - `Tables/capacity_metrics/`: Persistent metrics tables
     - `Tables/staging/`: Transient processing tables
     - `Tables/config/`: Deployment metadata
@@ -273,7 +273,7 @@ API/Source → Bronze (Raw JSON) → Silver (Transformed DataFrame) → Gold (De
 - Delta tables optimized for analytics
 - Partitioned by date where applicable
 - Indexed for common query patterns
-- Location: `FOS_Lakehouse.admin` and `FOS_Lakehouse.capacity_metrics`
+- Location: `FOS_Lakehouse.adm` and `FOS_Lakehouse.capacity_metrics`
 
 ---
 

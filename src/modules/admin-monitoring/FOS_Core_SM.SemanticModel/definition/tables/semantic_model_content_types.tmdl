@@ -1,6 +1,6 @@
 table semantic_model_content_types
 	lineageTag: 9fd657cc-b5ec-4c4e-8db7-a0675bce1938
-	sourceLineageTag: [admin].[semantic_model_content_types]
+	sourceLineageTag: [adm].[semantic_model_content_types]
 
 	column ContentProviderType
 		dataType: string
@@ -48,7 +48,7 @@ table semantic_model_content_types
 		mode: directLake
 		source
 			entityName: semantic_model_content_types
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

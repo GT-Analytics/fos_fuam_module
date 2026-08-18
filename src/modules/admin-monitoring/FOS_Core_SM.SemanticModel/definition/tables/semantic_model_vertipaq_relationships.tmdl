@@ -1,6 +1,6 @@
 table semantic_model_vertipaq_relationships
 	lineageTag: 91871bd4-981b-435e-a70a-dafe3a83f4a9
-	sourceLineageTag: [admin].[semantic_model_vertipaq_relationships]
+	sourceLineageTag: [adm].[semantic_model_vertipaq_relationships]
 
 	column SemanticModelRunKey
 		dataType: string
@@ -211,7 +211,7 @@ table semantic_model_vertipaq_relationships
 		mode: directLake
 		source
 			entityName: semantic_model_vertipaq_relationships
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

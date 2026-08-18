@@ -1,6 +1,6 @@
 table audit_activity_log_anonymization
 	lineageTag: b13f7414-85fd-4dda-8029-9a2b986ba8cb
-	sourceLineageTag: [admin].[audit_activity_log_anonymization]
+	sourceLineageTag: [adm].[audit_activity_log_anonymization]
 
 	column timestamp
 		dataType: dateTime
@@ -94,7 +94,7 @@ table audit_activity_log_anonymization
 		mode: directLake
 		source
 			entityName: audit_activity_log_anonymization
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table
