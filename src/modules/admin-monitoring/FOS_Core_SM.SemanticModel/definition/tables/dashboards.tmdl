@@ -1,6 +1,6 @@
 table dashboards
 	lineageTag: aa97bc71-d7a4-42d1-873c-5ad234b394cb
-	sourceLineageTag: [dbo].[dashboards]
+	sourceLineageTag: [admin].[dashboards]
 
 	column WorkspaceId
 		dataType: string
@@ -56,7 +56,7 @@ table dashboards
 		mode: directLake
 		source
 			entityName: dashboards
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

@@ -1,6 +1,6 @@
 table semantic_model_bpa_rule_catalog
 	lineageTag: 05415fcb-ae6c-4e59-bb18-1a5d59fbb9e1
-	sourceLineageTag: [dbo].[semantic_model_bpa_rule_catalog]
+	sourceLineageTag: [admin].[semantic_model_bpa_rule_catalog]
 
 	column RuleId
 		dataType: int64
@@ -101,7 +101,7 @@ table semantic_model_bpa_rule_catalog
 		mode: directLake
 		source
 			entityName: semantic_model_bpa_rule_catalog
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

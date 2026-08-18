@@ -1,6 +1,6 @@
 table active_items
 	lineageTag: e4837909-5448-4b7d-be64-b12b21574fb7
-	sourceLineageTag: [dbo].[active_items]
+	sourceLineageTag: [admin].[active_items]
 
 	column capacityId
 		dataType: string
@@ -128,7 +128,7 @@ table active_items
 		mode: directLake
 		source
 			entityName: active_items
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

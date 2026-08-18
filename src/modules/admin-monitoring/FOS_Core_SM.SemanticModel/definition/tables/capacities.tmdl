@@ -1,6 +1,6 @@
 table capacities
 	lineageTag: dccd0226-07d4-4b68-bb48-5c1bd91d2c45
-	sourceLineageTag: [dbo].[capacities]
+	sourceLineageTag: [admin].[capacities]
 
 	column capacityUserAccessRight
 		dataType: string
@@ -88,7 +88,7 @@ table capacities
 		mode: directLake
 		source
 			entityName: capacities
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

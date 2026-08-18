@@ -1,6 +1,6 @@
 table calendar_timepoints
 	lineageTag: 8a8e1df5-b301-4b71-b1b0-a1ff0fd9ee7e
-	sourceLineageTag: [dbo].[calendar_timepoints]
+	sourceLineageTag: [admin].[calendar_timepoints]
 
 	column TimePoint
 		dataType: dateTime
@@ -43,7 +43,7 @@ table calendar_timepoints
 		mode: directLake
 		source
 			entityName: calendar_timepoints
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

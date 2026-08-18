@@ -1,6 +1,6 @@
 table activities
 	lineageTag: f999df7d-51f1-47ae-adf9-5acd0da2ed4c
-	sourceLineageTag: [dbo].[activities]
+	sourceLineageTag: [admin].[activities]
 
 	column CreationDate
 		dataType: dateTime
@@ -1412,7 +1412,7 @@ table activities
 		mode: directLake
 		source
 			entityName: activities
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

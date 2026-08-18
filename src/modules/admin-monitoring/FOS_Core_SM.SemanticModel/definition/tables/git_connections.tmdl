@@ -1,6 +1,6 @@
 table git_connections
 	lineageTag: 47f54b23-d8f1-48be-b4d7-1f6055e79d74
-	sourceLineageTag: [dbo].[git_connections]
+	sourceLineageTag: [admin].[git_connections]
 
 	column workspaceId
 		dataType: string
@@ -36,7 +36,7 @@ table git_connections
 		mode: directLake
 		source
 			entityName: git_connections
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

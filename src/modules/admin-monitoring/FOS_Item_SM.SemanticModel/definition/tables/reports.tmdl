@@ -1,6 +1,6 @@
 table reports
 	lineageTag: 778987ab-d0e7-47b4-a78e-85cd1063abbe
-	sourceLineageTag: [dbo].[reports]
+	sourceLineageTag: [admin].[reports]
 
 	column WorkspaceId
 		dataType: string
@@ -165,6 +165,6 @@ table reports
 		mode: directLake
 		source
 			entityName: reports
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 

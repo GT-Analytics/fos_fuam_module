@@ -5,8 +5,6 @@ connections:
 
 items:
   - FOS_Lakehouse.Lakehouse
-  - FOS_Staging_Lakehouse.Lakehouse
-  - FOS_Config_Lakehouse.Lakehouse
 
   - Generate_Calendar_Table.Notebook
   - Init_FOS_Lakehouse_Tables.Notebook
@@ -39,8 +37,6 @@ items:
   - 01_Transfer_Git_Connections_Unit.Notebook
   - Load_Git_Connections_E2E.DataPipeline
 
-  - FOS_Backup_Lakehouse.Lakehouse
-  - 01_FOS_Lakehouse_Backup.Notebook
   - 02_FOS_Lakehouse_Optimization.Notebook
   - Maintenance_for_FOS.DataPipeline
   - 01_Create_Snapshot_Tables_Unit.Notebook

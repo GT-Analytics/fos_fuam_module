@@ -1,6 +1,6 @@
 table semantic_model_content_types
 	lineageTag: 761e90f0-9a5c-4979-8eca-131e7959420d
-	sourceLineageTag: [dbo].[semantic_model_content_types]
+	sourceLineageTag: [admin].[semantic_model_content_types]
 
 	column ContentProviderType
 		dataType: string
@@ -48,6 +48,6 @@ table semantic_model_content_types
 		mode: directLake
 		source
 			entityName: semantic_model_content_types
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 

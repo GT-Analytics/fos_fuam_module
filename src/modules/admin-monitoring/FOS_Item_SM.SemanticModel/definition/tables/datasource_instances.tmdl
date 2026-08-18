@@ -1,6 +1,6 @@
 table datasource_instances
 	lineageTag: 8664628c-a00e-46eb-a1ef-3cb5f4fd696d
-	sourceLineageTag: [dbo].[datasource_instances]
+	sourceLineageTag: [admin].[datasource_instances]
 
 	column DatasourceType
 		dataType: string
@@ -126,6 +126,6 @@ table datasource_instances
 		mode: directLake
 		source
 			entityName: datasource_instances
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 

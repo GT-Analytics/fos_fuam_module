@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import re
 import shutil
 import uuid
 from pathlib import Path
@@ -131,6 +132,7 @@ def _merge_deployment_config(composed, incoming, module_id):
             "connections": {},
             "connection_specs": {},
             "semantic_model_lakehouses": {},
+            "lakehouse_schemas": {},
             "post_deployment": {
                 "jobs": [],
                 "sql_endpoints": [],
@@ -158,6 +160,11 @@ def _merge_deployment_config(composed, incoming, module_id):
         module_id,
         "semantic_model_lakehouses",
     )
+    for lakehouse, schemas in incoming.get("lakehouse_schemas", {}).items():
+        target_schemas = composed["lakehouse_schemas"].setdefault(lakehouse, [])
+        for schema in schemas:
+            if schema not in target_schemas:
+                target_schemas.append(schema)
 
     post_deployment = incoming.get("post_deployment", {})
     for key in ("jobs", "sql_endpoints"):
@@ -225,6 +232,21 @@ def _validate_module_contract(
         raise CompositionError(
             f"Module '{module_id}' has invalid semantic model targets: "
             f"models={sorted(missing_models)}, lakehouses={sorted(missing_lakehouses)}"
+        )
+
+    lakehouse_schemas = deployment_config.get("lakehouse_schemas", {})
+    missing_schema_lakehouses = set(lakehouse_schemas) - order_names
+    invalid_schemas = sorted(
+        f"{lakehouse}.{schema}"
+        for lakehouse, schemas in lakehouse_schemas.items()
+        for schema in schemas
+        if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", schema)
+    )
+    if missing_schema_lakehouses or invalid_schemas:
+        raise CompositionError(
+            f"Module '{module_id}' has invalid lakehouse schemas: "
+            f"missing_lakehouses={sorted(missing_schema_lakehouses)}, "
+            f"invalid_schemas={invalid_schemas}"
         )
 
     post_deployment = deployment_config.get("post_deployment", {})

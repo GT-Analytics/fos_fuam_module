@@ -1,6 +1,6 @@
 table reports
 	lineageTag: ac608518-8c3a-438f-9b6f-25b7d27b3344
-	sourceLineageTag: [dbo].[reports]
+	sourceLineageTag: [admin].[reports]
 
 	column WorkspaceId
 		dataType: string
@@ -175,7 +175,7 @@ table reports
 		mode: directLake
 		source
 			entityName: reports
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

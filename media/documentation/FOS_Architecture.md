@@ -8,16 +8,22 @@ The **data ingestion** logic is orchestrated and parameterizable, allowing you t
 
 ![image](/monitoring/fabric-unified-admin-monitoring/media/general/fos_architecture.png)
 
-## Lakehouses
+## Lakehouse schemas
 
 FOS is designed to be modular. FOS aims for a medallion architecture (Bronze, Silver, and Gold), with the target tables (Gold layer) and the raw files (Bronze layer) stored centrally.
 
 |Lakehouse|Description|
 |--|--|
-|FOS_Lakehouse|Main data storage. Stores all FOS data in Delta parquet tables.|
-|FOS_Staging_Lakehouse|Intermediate storage for processing. No long-term storage of data.|
-|FOS_Config_Lakehouse|Used for deployment of FOS.|
-|FOS_Backup_Lakehouse|Used for backup of raw and/or parquet files.|
+|FOS_Lakehouse|Schema-enabled storage for all FOS module data and deployment metadata.|
+
+|Schema|Description|
+|--|--|
+|admin|Persistent Admin Monitoring tables.|
+|capacity_metrics|Persistent tables whose names contain `metrics`.|
+|staging|Transient Admin Monitoring tables used during processing.|
+|config|Deployment metadata, including `FOS_Table_Definitions`.|
+
+The former `FOS_Staging_Lakehouse`, `FOS_Config_Lakehouse`, and `FOS_Backup_Lakehouse` items are no longer deployed. The former `01_FOS_Lakehouse_Backup` notebook is also removed.
 
 You can find the detailed documentation of **FOS_Lakehouse** tables, data lineage, and its purpose here:
 [FOS Lakehouse table documentation](/monitoring/fabric-unified-admin-monitoring/media/documentation/FOS_Documentation_Lakehouse_table_lineage.pdf).

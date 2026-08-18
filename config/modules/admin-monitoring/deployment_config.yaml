@@ -15,6 +15,13 @@ semantic_model_lakehouses:
   FOS_Core_SM.SemanticModel: FOS_Lakehouse.Lakehouse
   FOS_Item_SM.SemanticModel: FOS_Lakehouse.Lakehouse
 
+lakehouse_schemas:
+  FOS_Lakehouse.Lakehouse:
+    - admin
+    - staging
+    - config
+    - capacity_metrics
+
 post_deployment:
   jobs:
     - item: Init_FOS_Lakehouse_Tables.Notebook
@@ -23,7 +30,6 @@ post_deployment:
           type: Bool
           value: true
   sql_endpoints:
-    - FOS_Config_Lakehouse.Lakehouse
     - FOS_Lakehouse.Lakehouse
 
 folders:
@@ -31,11 +37,9 @@ folders:
     folders:
       - name: Deployment
         items:
-          - FOS_Config_Lakehouse.Lakehouse
           - Init_FOS_Lakehouse_Tables.Notebook
       - name: Other
         items:
-          - FOS_Staging_Lakehouse.Lakehouse
           - Generate_Calendar_Table.Notebook
           - Check_FOS_Version.Notebook
       - name: Active Items
@@ -75,8 +79,6 @@ folders:
           - Load_Git_Connections_E2E.DataPipeline
       - name: Maintenance
         items:
-          - FOS_Backup_Lakehouse.Lakehouse
-          - 01_FOS_Lakehouse_Backup.Notebook
           - 02_FOS_Lakehouse_Optimization.Notebook
           - Maintenance_for_FOS.DataPipeline
           - 01_Create_Snapshot_Tables_Unit.Notebook

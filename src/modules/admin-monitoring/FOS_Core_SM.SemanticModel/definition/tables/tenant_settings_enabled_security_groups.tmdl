@@ -1,6 +1,6 @@
 table tenant_settings_enabled_security_groups
 	lineageTag: ea869977-4375-4a92-9f5e-900d089c2da7
-	sourceLineageTag: [dbo].[tenant_settings_enabled_security_groups]
+	sourceLineageTag: [admin].[tenant_settings_enabled_security_groups]
 
 	column settingName
 		dataType: string
@@ -43,7 +43,7 @@ table tenant_settings_enabled_security_groups
 		mode: directLake
 		source
 			entityName: tenant_settings_enabled_security_groups
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

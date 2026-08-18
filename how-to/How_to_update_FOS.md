@@ -14,6 +14,19 @@ To update FOS (Fabric Unified Admin Monitoring) to the latest version, follow th
 - **Recommended:** Check the release notes of FOS to see enhanced, fixed, or new items and features.
 - **Use the same user to update FOS** as you **used during initial deployment**. It is important to do so because this user is the owner of all the FOS-related items and the cloud connections.
 
+## Lakehouse schema migration
+
+The current release consolidates Admin Monitoring storage into the schema-enabled `FOS_Lakehouse`:
+
+- Persistent Admin Monitoring tables move to `admin`.
+- Tables whose names contain `metrics` move to `capacity_metrics`.
+- Intermediate tables move from `FOS_Staging_Lakehouse` to `staging`.
+- Deployment metadata moves from `FOS_Config_Lakehouse` to `config`.
+- `FOS_Staging_Lakehouse`, `FOS_Config_Lakehouse`, and `FOS_Backup_Lakehouse` are no longer deployed.
+- `01_FOS_Lakehouse_Backup` is removed, and `Maintenance_for_FOS` now performs table optimization only.
+
+Fabric can't currently convert an existing non-schema Lakehouse in place. Existing installations must provision a schema-enabled `FOS_Lakehouse` and migrate retained data into the schemas above before running the updated deployment. Back up any required historical data externally before removing legacy Lakehouses.
+
 # Steps
 
 ## 1. Preparation

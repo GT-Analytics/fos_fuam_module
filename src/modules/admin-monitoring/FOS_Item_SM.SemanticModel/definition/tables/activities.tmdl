@@ -1,6 +1,6 @@
 table activities
 	lineageTag: 5af3c787-d06a-4c12-927b-e935cba877ac
-	sourceLineageTag: [dbo].[activities]
+	sourceLineageTag: [admin].[activities]
 
 	column CreationDate
 		dataType: dateTime
@@ -1352,6 +1352,6 @@ table activities
 		mode: directLake
 		source
 			entityName: activities
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 

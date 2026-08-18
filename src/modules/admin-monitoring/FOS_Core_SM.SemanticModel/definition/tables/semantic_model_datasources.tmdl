@@ -1,6 +1,6 @@
 table semantic_model_datasources
 	lineageTag: 4d2f411b-e85a-43d1-9d54-0ccc4358fe7c
-	sourceLineageTag: [dbo].[semantic_model_datasources]
+	sourceLineageTag: [admin].[semantic_model_datasources]
 
 	column WorkspaceId
 		dataType: string
@@ -36,7 +36,7 @@ table semantic_model_datasources
 		mode: directLake
 		source
 			entityName: semantic_model_datasources
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

@@ -1,6 +1,6 @@
 table capacity_refreshable_days
 	lineageTag: c30b4e5b-9f58-4864-8ccd-8e3399298728
-	sourceLineageTag: [dbo].[capacity_refreshable_days]
+	sourceLineageTag: [admin].[capacity_refreshable_days]
 
 	column CapacityId
 		dataType: string
@@ -46,6 +46,6 @@ table capacity_refreshable_days
 		mode: directLake
 		source
 			entityName: capacity_refreshable_days
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 

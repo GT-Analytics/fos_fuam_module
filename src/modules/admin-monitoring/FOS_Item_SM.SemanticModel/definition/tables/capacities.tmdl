@@ -1,6 +1,6 @@
 table capacities
 	lineageTag: d933d0b5-c842-40e8-97d9-511f0175ec34
-	sourceLineageTag: [dbo].[capacities]
+	sourceLineageTag: [admin].[capacities]
 
 	column capacityUserAccessRight
 		dataType: string
@@ -88,6 +88,6 @@ table capacities
 		mode: directLake
 		source
 			entityName: capacities
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 

@@ -1,6 +1,6 @@
 table item_users
 	lineageTag: aabc5fba-a24f-498f-b064-c82ad160c221
-	sourceLineageTag: [dbo].[item_users]
+	sourceLineageTag: [admin].[item_users]
 
 	column WorkspaceId
 		dataType: string
@@ -107,7 +107,7 @@ table item_users
 		mode: directLake
 		source
 			entityName: item_users
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

@@ -1,6 +1,6 @@
 table workspaces_scanned_users
 	lineageTag: 7eda397f-127e-4b5b-b98a-472f0edd6018
-	sourceLineageTag: [dbo].[workspaces_scanned_users]
+	sourceLineageTag: [admin].[workspaces_scanned_users]
 
 	column WorkspaceId
 		dataType: string
@@ -66,7 +66,7 @@ table workspaces_scanned_users
 		mode: directLake
 		source
 			entityName: workspaces_scanned_users
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

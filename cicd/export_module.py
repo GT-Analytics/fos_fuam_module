@@ -36,7 +36,7 @@ deployment_workspace_name = "FOS"
 src_workspace_name = config['workspace']
 source_connections = config.get('connections', {})
 items = config['items']
-#items = ['FOS_Lakehouse.Lakehouse', 'FOS_Staging_Lakehouse.Lakehouse', 'Generate_Calendar_Table.Notebook']
+# items = ['FOS_Lakehouse.Lakehouse', 'Generate_Calendar_Table.Notebook']
 item_inventory = []
 
 namespace = uuid.NAMESPACE_DNS

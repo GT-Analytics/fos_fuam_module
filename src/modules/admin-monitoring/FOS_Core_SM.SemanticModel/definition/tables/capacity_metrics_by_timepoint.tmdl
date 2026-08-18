@@ -1,6 +1,6 @@
 table capacity_metrics_by_timepoint
 	lineageTag: 5c6050e1-6fe1-4dab-adce-bce128daa3f0
-	sourceLineageTag: [dbo].[capacity_metrics_by_timepoint]
+	sourceLineageTag: [capacity_metrics].[capacity_metrics_by_timepoint]
 
 	column CapacityId
 		dataType: string
@@ -250,7 +250,7 @@ table capacity_metrics_by_timepoint
 		mode: directLake
 		source
 			entityName: capacity_metrics_by_timepoint
-			schemaName: dbo
+			schemaName: capacity_metrics
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table
