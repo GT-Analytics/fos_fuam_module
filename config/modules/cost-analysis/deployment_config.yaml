@@ -10,6 +10,10 @@ connection_specs:
 semantic_model_lakehouses:
   Cost_Analysis_Core_SM.SemanticModel: FOS_Lakehouse.Lakehouse
 
+lakehouse_schemas:
+  FOS_Lakehouse.Lakehouse:
+    - cost
+
 post_deployment:
   jobs:
     - item: Init_Cost_Analysis_Lakehouse_Tables.Notebook

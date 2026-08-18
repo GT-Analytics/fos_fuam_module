@@ -22,6 +22,7 @@ The current release consolidates Admin Monitoring storage into the schema-enable
 - Tables whose names contain `metrics` move to `capacity_metrics`.
 - Intermediate tables move from `FOS_Staging_Lakehouse` to `staging`.
 - Deployment metadata moves from `FOS_Config_Lakehouse` to `config`.
+- Cost Analysis tables move from `dbo` to `cost`.
 - `FOS_Staging_Lakehouse`, `FOS_Config_Lakehouse`, and `FOS_Backup_Lakehouse` are no longer deployed.
 - `01_FOS_Lakehouse_Backup` is removed, and `Maintenance_for_FOS` now performs table optimization only.
 

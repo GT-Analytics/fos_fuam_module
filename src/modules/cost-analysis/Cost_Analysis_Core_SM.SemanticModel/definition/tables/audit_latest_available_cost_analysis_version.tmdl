@@ -1,7 +1,7 @@
 /// Cost_Analysis Version Table
 table audit_latest_available_cost_analysis_version
 	lineageTag: 73ef1116-064e-4550-8c98-f45b50ca8628
-	sourceLineageTag: [dbo].[audit_latest_available_cost_analysis_version]
+	sourceLineageTag: [cost].[audit_latest_available_cost_analysis_version]
 
 	/// Indicates whether an Cost_Analysis update is available by comparing the current Cost_Analysis version with the latest available version.
 	measure 'Cost_Analysis Update Available' = ```
@@ -102,7 +102,7 @@ table audit_latest_available_cost_analysis_version
 		mode: directLake
 		source
 			entityName: audit_latest_available_cost_analysis_version
-			schemaName: dbo
+			schemaName: cost
 			expressionSource: DatabaseQuery
 
 	changedProperty = Description

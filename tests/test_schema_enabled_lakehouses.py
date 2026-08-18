@@ -56,8 +56,8 @@ class SchemaEnabledLakehouseTests(unittest.TestCase):
         for path in MODULES_ROOT.rglob("*.ipynb"):
             with self.subTest(path=path):
                 notebook = json.loads(path.read_text(encoding="utf-8"))
-                if "admin-monitoring" not in path.parts:
-                    expected_schema = "dbo"
+                if "cost-analysis" in path.parts:
+                    expected_schema = "cost"
                 elif any("CapacityMetricData" in part for part in path.parts):
                     expected_schema = "capacity_metrics"
                 else:
@@ -170,7 +170,18 @@ class SchemaEnabledLakehouseTests(unittest.TestCase):
             init_source,
         )
 
-    def test_pipeline_lookup_uses_dbo(self):
+    def test_cost_analysis_uses_cost_schema(self):
+        config = yaml.safe_load(
+            (
+                REPO_ROOT
+                / "config/modules/cost-analysis/deployment_config.yaml"
+            ).read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            config["lakehouse_schemas"],
+            {"FOS_Lakehouse.Lakehouse": ["cost"]},
+        )
+
         pipeline_path = (
             MODULES_ROOT
             / "cost-analysis"
@@ -179,7 +190,7 @@ class SchemaEnabledLakehouseTests(unittest.TestCase):
         )
         pipeline = json.loads(pipeline_path.read_text(encoding="utf-8"))
         serialized = json.dumps(pipeline)
-        self.assertIn('"table": "dbo.subscriptions"', serialized)
+        self.assertIn('"table": "cost.subscriptions"', serialized)
 
     def test_direct_lake_partitions_use_module_schema(self):
         table_files = list(MODULES_ROOT.rglob("*.SemanticModel/definition/tables/*.tmdl"))
@@ -191,8 +202,8 @@ class SchemaEnabledLakehouseTests(unittest.TestCase):
         self.assertTrue(direct_lake_files)
         for path in direct_lake_files:
             with self.subTest(path=path):
-                if "admin-monitoring" not in path.parts:
-                    expected_schema = "dbo"
+                if "cost-analysis" in path.parts:
+                    expected_schema = "cost"
                 elif "metrics" in path.stem.lower():
                     expected_schema = "capacity_metrics"
                 else:

@@ -1,6 +1,6 @@
 table reservations
 	lineageTag: 048955a8-8999-437f-aae7-c9fde20286fe
-	sourceLineageTag: [dbo].[reservations]
+	sourceLineageTag: [cost].[reservations]
 
 	measure 'RI Amount' = SUM(reservations[Amount])
 		lineageTag: 529c3627-05f8-4a8f-80f6-d2a7099e527d
@@ -159,6 +159,6 @@ table reservations
 		mode: directLake
 		source
 			entityName: reservations
-			schemaName: dbo
+			schemaName: cost
 			expressionSource: DatabaseQuery
 

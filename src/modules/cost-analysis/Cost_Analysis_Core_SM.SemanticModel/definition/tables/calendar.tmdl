@@ -1,7 +1,7 @@
 /// Calandar Table
 table calendar
 	lineageTag: 70bb4cbc-9b0c-45fd-93de-64fd3fbe8408
-	sourceLineageTag: [dbo].[calendar]
+	sourceLineageTag: [cost].[calendar]
 	dataCategory: Time
 
 	column DateKey
@@ -214,7 +214,7 @@ table calendar
 		mode: directLake
 		source
 			entityName: calendar
-			schemaName: dbo
+			schemaName: cost
 			expressionSource: DatabaseQuery
 
 	changedProperty = Description

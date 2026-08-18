@@ -1,6 +1,6 @@
 table capacity_regions
 	lineageTag: 97ba5560-8233-4d21-975e-ad0c17f94132
-	sourceLineageTag: [dbo].[capacity_regions]
+	sourceLineageTag: [cost].[capacity_regions]
 
 	column Continent
 		dataType: string
@@ -91,6 +91,6 @@ table capacity_regions
 		mode: directLake
 		source
 			entityName: capacity_regions
-			schemaName: dbo
+			schemaName: cost
 			expressionSource: DatabaseQuery
 

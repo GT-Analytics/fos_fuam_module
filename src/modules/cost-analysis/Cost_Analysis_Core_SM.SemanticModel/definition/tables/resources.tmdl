@@ -1,6 +1,6 @@
 table resources
 	lineageTag: 5083cf2c-0215-4d1a-917a-4b72538de465
-	sourceLineageTag: [dbo].[resources]
+	sourceLineageTag: [cost].[resources]
 
 	column ResourceId
 		dataType: string
@@ -87,6 +87,6 @@ table resources
 		mode: directLake
 		source
 			entityName: resources
-			schemaName: dbo
+			schemaName: cost
 			expressionSource: DatabaseQuery
 

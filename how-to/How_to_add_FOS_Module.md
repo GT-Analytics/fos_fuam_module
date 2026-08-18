@@ -90,7 +90,7 @@ FOS creates Lakehouses with schema support enabled. Current schema ownership is:
 - Admin Monitoring tables whose names contain `metrics` use `capacity_metrics`.
 - Admin Monitoring transient tables use `staging` in `FOS_Lakehouse`.
 - Admin Monitoring deployment metadata uses `config` in `FOS_Lakehouse`.
-- Cost Analysis tables currently use `dbo`.
+- Cost Analysis tables use `cost` in `FOS_Lakehouse`.
 - Direct Lake semantic model partitions declare the corresponding schema name.
 
 When introducing module-specific schemas later, migrate the tables first and then update the corresponding notebook table names, relative Delta paths, pipeline datasets, and semantic model partition `schemaName` values together.
