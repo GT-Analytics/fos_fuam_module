@@ -1,6 +1,6 @@
 table dataflows
 	lineageTag: 0cb51830-f99b-4aa5-b95a-776f701c985a
-	sourceLineageTag: [dbo].[dataflows]
+	sourceLineageTag: [admin].[dataflows]
 
 	column WorkspaceId
 		dataType: string
@@ -106,7 +106,7 @@ table dataflows
 		mode: directLake
 		source
 			entityName: dataflows
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

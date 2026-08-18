@@ -1,6 +1,6 @@
 table semantic_models
 	lineageTag: 26e1ec58-3ba8-4108-ad17-c6cab2474fa2
-	sourceLineageTag: [dbo].[semantic_models]
+	sourceLineageTag: [admin].[semantic_models]
 
 	column WorkspaceId
 		dataType: string
@@ -191,7 +191,7 @@ table semantic_models
 		mode: directLake
 		source
 			entityName: semantic_models
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

@@ -1,6 +1,6 @@
 table capacity_metrics_by_item_by_operation_by_day
 	lineageTag: 9e689846-7c47-4a6f-978d-e2e47f3420c3
-	sourceLineageTag: [dbo].[capacity_metrics_by_item_by_operation_by_day]
+	sourceLineageTag: [capacity_metrics].[capacity_metrics_by_item_by_operation_by_day]
 
 	column CapacityId
 		dataType: string
@@ -190,7 +190,7 @@ table capacity_metrics_by_item_by_operation_by_day
 		mode: directLake
 		source
 			entityName: capacity_metrics_by_item_by_operation_by_day
-			schemaName: dbo
+			schemaName: capacity_metrics
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

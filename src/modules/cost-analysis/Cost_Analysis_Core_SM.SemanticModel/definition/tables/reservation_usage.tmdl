@@ -1,6 +1,6 @@
 table reservation_usage
 	lineageTag: 48ed37bf-0c7e-4676-ae12-403d83be59e0
-	sourceLineageTag: [dbo].[reservation_usage]
+	sourceLineageTag: [cost].[reservation_usage]
 
 	measure 'RI usage countrows' = COUNTROWS(reservation_usage)
 		formatString: 0
@@ -260,6 +260,6 @@ table reservation_usage
 		mode: directLake
 		source
 			entityName: reservation_usage
-			schemaName: dbo
+			schemaName: cost
 			expressionSource: DatabaseQuery
 

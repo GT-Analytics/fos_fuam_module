@@ -16,14 +16,6 @@
         "fos_id": "169b8e49-1247-331d-a665-aaa4afed18cc"
     },
     {
-        "name": "FOS_Staging_Lakehouse.Lakehouse",
-        "fos_id": "e8bbcefe-70dd-3d01-b1c6-57f50318f10d"
-    },
-    {
-        "name": "FOS_Config_Lakehouse.Lakehouse",
-        "fos_id": "5e6a967b-f5e6-393d-85f7-b310493d1a79"
-    },
-    {
         "name": "Generate_Calendar_Table.Notebook",
         "fos_id": "8e8775c0-f6ed-34c4-b052-5ba5d441d378"
     },
@@ -110,14 +102,6 @@
     {
         "name": "Load_Git_Connections_E2E.DataPipeline",
         "fos_id": "365c7c49-5758-3352-894d-b934c291c7de"
-    },
-    {
-        "name": "FOS_Backup_Lakehouse.Lakehouse",
-        "fos_id": "4785231b-9b82-3400-b88f-fb4b12af898d"
-    },
-    {
-        "name": "01_FOS_Lakehouse_Backup.Notebook",
-        "fos_id": "6b1fd1b4-ecd0-3d7b-b809-5d6f925cd8b8"
     },
     {
         "name": "02_FOS_Lakehouse_Optimization.Notebook",

@@ -1,6 +1,6 @@
 table workspaces
 	lineageTag: 79f09e20-9bb1-4866-8a71-3c883a2f36d6
-	sourceLineageTag: [dbo].[workspaces]
+	sourceLineageTag: [admin].[workspaces]
 
 	column CapacityId
 		dataType: string
@@ -141,6 +141,6 @@ table workspaces
 		mode: directLake
 		source
 			entityName: workspaces
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 

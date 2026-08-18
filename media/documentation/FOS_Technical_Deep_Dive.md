@@ -91,10 +91,10 @@ FOS implements a modern data platform architecture with clear separation of conc
 ├─────────────────────────────────────────────────────────────────────┤
 │  FOS_Lakehouse:                                                    │
 │    • Files/bronze/* (Raw JSON/API responses)                        │
-│    • Tables/* (Delta tables - Gold layer)                           │
-│  FOS_Staging_Lakehouse: Temporary processing                       │
-│  FOS_Config_Lakehouse: Deployment artifacts                        │
-│  FOS_Backup_Lakehouse: Historical backups                          │
+│    • Tables/admin/* (Admin Monitoring tables)                       │
+│    • Tables/capacity_metrics/* (Capacity metrics tables)            │
+│    • Tables/staging/* (Temporary processing)                        │
+│    • Tables/config/* (Deployment metadata)                          │
 └─────────────────────────────────────────────────────────────────────┘
                                     │
                                     ▼
@@ -124,7 +124,10 @@ FOS implements a modern data platform architecture with clear separation of conc
 - **Structure:**
   - `Files/bronze/`: Raw API responses (JSON format)
   - `Files/history/`: Historical activity logs
-  - `Tables/`: Delta tables (Gold layer)
+    - `Tables/admin/`: Persistent Admin Monitoring tables
+    - `Tables/capacity_metrics/`: Persistent metrics tables
+    - `Tables/staging/`: Transient processing tables
+    - `Tables/config/`: Deployment metadata
 - **Key Tables:**
   - `activities`: User activity logs
   - `aggregated_activities_last_30days`: Pre-aggregated activity metrics
@@ -138,22 +141,7 @@ FOS implements a modern data platform architecture with clear separation of conc
   - `tenant_settings`: Historical tenant setting snapshots
   - `calendar`: Date dimension with time intelligence columns
 
-**2. FOS_Staging_Lakehouse**
-- **Purpose:** Temporary storage for intermediate transformations
-- **Lifecycle:** Data written during pipeline execution, cleaned up after successful completion
-- **Usage Pattern:** Silver layer processing before final gold layer write
-
-**3. FOS_Config_Lakehouse**
-- **Purpose:** Deployment configuration storage
-- **Contents:**
-  - `table_definitions.snappy.parquet`: Schema definitions for all tables
-  - `FOS_Table_Definitions`: Metadata table for dynamic table creation
-- **Usage:** Referenced during initial deployment and table schema updates
-
-**4. FOS_Backup_Lakehouse**
-- **Purpose:** Historical backup and disaster recovery
-- **Retention:** Configurable based on organizational requirements
-- **Scope:** Both raw files and Delta table snapshots
+The former staging, config, and backup Lakehouses have been removed. Staging and configuration now use schemas in `FOS_Lakehouse`; backups must be managed externally when required.
 
 ---
 
@@ -279,13 +267,13 @@ API/Source → Bronze (Raw JSON) → Silver (Transformed DataFrame) → Gold (De
 - Schema validation and type conversion
 - Data cleansing and enrichment
 - Column renaming for consistency
-- Location: Transient (FOS_Staging_Lakehouse for complex transformations)
+- Location: `FOS_Lakehouse.staging` (transient tables for complex transformations)
 
 **Gold Layer:**
 - Delta tables optimized for analytics
 - Partitioned by date where applicable
 - Indexed for common query patterns
-- Location: `FOS_Lakehouse/Tables/`
+- Location: `FOS_Lakehouse.admin` and `FOS_Lakehouse.capacity_metrics`
 
 ---
 
@@ -780,9 +768,9 @@ FOS uses the `Deploy_FOS.ipynb` notebook for automated deployment and updates.
      ↓
 6. Creates/validates cloud connections (if first deployment)
      ↓
-7. Creates lakehouses (FOS_Lakehouse, FOS_Staging_Lakehouse, etc.)
+7. Creates the schema-enabled FOS_Lakehouse and its module schemas
      ↓
-8. Uploads table_definitions.snappy.parquet to FOS_Config_Lakehouse
+8. Loads table_definitions.snappy.parquet into FOS_Lakehouse.config
      ↓
 9. Deploys items in order:
      - Notebooks
@@ -828,9 +816,6 @@ folders:
 {
   "order": [
     "FOS_Lakehouse.Lakehouse",
-    "FOS_Staging_Lakehouse.Lakehouse",
-    "FOS_Config_Lakehouse.Lakehouse",
-    "FOS_Backup_Lakehouse.Lakehouse",
     "Init_FOS_Lakehouse_Tables.Notebook",
     "01_Transfer_Capacities_Unit.Notebook",
     "Load_Capacities_E2E.DataPipeline",

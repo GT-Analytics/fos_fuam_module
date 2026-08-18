@@ -7,6 +7,3 @@ dependencies: []
 shared_resources:
   provides:
     - FOS_Lakehouse.Lakehouse
-    - FOS_Staging_Lakehouse.Lakehouse
-    - FOS_Config_Lakehouse.Lakehouse
-    - FOS_Backup_Lakehouse.Lakehouse

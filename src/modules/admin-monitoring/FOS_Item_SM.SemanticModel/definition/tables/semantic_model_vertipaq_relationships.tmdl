@@ -1,6 +1,6 @@
 table semantic_model_vertipaq_relationships
 	lineageTag: 97b817ae-1bde-4dd0-9902-4522abdff5b8
-	sourceLineageTag: [dbo].[semantic_model_vertipaq_relationships]
+	sourceLineageTag: [admin].[semantic_model_vertipaq_relationships]
 
 	column Multiplicity
 		dataType: string
@@ -211,6 +211,6 @@ table semantic_model_vertipaq_relationships
 		mode: directLake
 		source
 			entityName: semantic_model_vertipaq_relationships
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 

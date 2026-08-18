@@ -1,6 +1,6 @@
 table aggregated_activities_last_30days
 	lineageTag: ef90b91f-7b6e-49db-b61d-c2043296de27
-	sourceLineageTag: [dbo].[aggregated_activities_last_30days]
+	sourceLineageTag: [admin].[aggregated_activities_last_30days]
 
 	column CreationDate
 		dataType: dateTime
@@ -186,7 +186,7 @@ table aggregated_activities_last_30days
 		mode: directLake
 		source
 			entityName: aggregated_activities_last_30days
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

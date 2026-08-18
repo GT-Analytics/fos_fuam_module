@@ -1,6 +1,6 @@
 table tenant_settings
 	lineageTag: 166a6b62-bac2-4aee-81da-89f664bc06f6
-	sourceLineageTag: [dbo].[tenant_settings]
+	sourceLineageTag: [admin].[tenant_settings]
 
 	column TransferDate
 		dataType: dateTime
@@ -117,7 +117,7 @@ table tenant_settings
 		mode: directLake
 		source
 			entityName: tenant_settings
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

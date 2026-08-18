@@ -1,6 +1,6 @@
 table semantic_model_analyzer_runs
 	lineageTag: 070ec87f-1dd2-467d-81a7-ec52fb56ff8f
-	sourceLineageTag: [dbo].[semantic_model_analyzer_runs]
+	sourceLineageTag: [admin].[semantic_model_analyzer_runs]
 
 	column HierarchySize
 		dataType: int64
@@ -169,7 +169,7 @@ table semantic_model_analyzer_runs
 		mode: directLake
 		source
 			entityName: semantic_model_analyzer_runs
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

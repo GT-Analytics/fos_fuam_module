@@ -1,6 +1,6 @@
 table audit_latest_available_fos_version
 	lineageTag: 138fabf8-56d1-4e36-a49d-dfec70842d96
-	sourceLineageTag: [dbo].[audit_latest_available_fos_version]
+	sourceLineageTag: [admin].[audit_latest_available_fos_version]
 
 	column build_version
 		dataType: int64
@@ -60,7 +60,7 @@ table audit_latest_available_fos_version
 		mode: directLake
 		source
 			entityName: audit_latest_available_fos_version
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

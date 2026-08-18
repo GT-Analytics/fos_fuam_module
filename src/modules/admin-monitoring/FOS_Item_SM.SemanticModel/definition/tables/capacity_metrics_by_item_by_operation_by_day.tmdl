@@ -1,6 +1,6 @@
 table capacity_metrics_by_item_by_operation_by_day
 	lineageTag: cf3f4555-4067-4998-895a-3d6ae80daf99
-	sourceLineageTag: [dbo].[capacity_metrics_by_item_by_operation_by_day]
+	sourceLineageTag: [capacity_metrics].[capacity_metrics_by_item_by_operation_by_day]
 
 	column CapacityId
 		dataType: string
@@ -198,6 +198,6 @@ table capacity_metrics_by_item_by_operation_by_day
 		mode: directLake
 		source
 			entityName: capacity_metrics_by_item_by_operation_by_day
-			schemaName: dbo
+			schemaName: capacity_metrics
 			expressionSource: DatabaseQuery
 

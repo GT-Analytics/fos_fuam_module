@@ -1,6 +1,6 @@
 table semantic_model_vertipaq_tables
 	lineageTag: b163a7ce-7daa-4d68-99ec-aae0822fc6bc
-	sourceLineageTag: [dbo].[semantic_model_vertipaq_tables]
+	sourceLineageTag: [admin].[semantic_model_vertipaq_tables]
 
 	column Name
 		dataType: string
@@ -220,6 +220,6 @@ table semantic_model_vertipaq_tables
 		mode: directLake
 		source
 			entityName: semantic_model_vertipaq_tables
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 

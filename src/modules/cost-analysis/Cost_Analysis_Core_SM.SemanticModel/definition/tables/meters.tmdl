@@ -1,7 +1,7 @@
 /// Meter table
 table meters
 	lineageTag: 3909217c-6b73-4264-8783-a8f4cfcf884b
-	sourceLineageTag: [dbo].[meters]
+	sourceLineageTag: [cost].[meters]
 
 	/// Meter Name
 	column Name
@@ -118,7 +118,7 @@ table meters
 		mode: directLake
 		source
 			entityName: meters
-			schemaName: dbo
+			schemaName: cost
 			expressionSource: DatabaseQuery
 
 	changedProperty = Description

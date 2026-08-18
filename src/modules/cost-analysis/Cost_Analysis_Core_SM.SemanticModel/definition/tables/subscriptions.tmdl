@@ -1,6 +1,6 @@
 table subscriptions
 	lineageTag: b38edd54-7876-40de-87b7-495b58b6b80a
-	sourceLineageTag: [dbo].[subscriptions]
+	sourceLineageTag: [cost].[subscriptions]
 
 	column SubAccountId
 		dataType: string
@@ -58,6 +58,6 @@ table subscriptions
 		mode: directLake
 		source
 			entityName: subscriptions
-			schemaName: dbo
+			schemaName: cost
 			expressionSource: DatabaseQuery
 

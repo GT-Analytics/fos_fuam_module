@@ -1,6 +1,6 @@
 table capacity_regions
 	lineageTag: 125ec8f2-a2e4-4058-81c0-f665053f67bb
-	sourceLineageTag: [dbo].[capacity_regions]
+	sourceLineageTag: [admin].[capacity_regions]
 
 	column Continent
 		dataType: string
@@ -60,7 +60,7 @@ table capacity_regions
 		mode: directLake
 		source
 			entityName: capacity_regions
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

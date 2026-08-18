@@ -1,6 +1,6 @@
 table semantic_model_bpa_results
 	lineageTag: 0b4b1d3d-2c1e-4b9d-9336-3eaaf4022dda
-	sourceLineageTag: [dbo].[semantic_model_bpa_results]
+	sourceLineageTag: [admin].[semantic_model_bpa_results]
 
 	column Timestamp
 		dataType: dateTime
@@ -99,6 +99,6 @@ table semantic_model_bpa_results
 		mode: directLake
 		source
 			entityName: semantic_model_bpa_results
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 

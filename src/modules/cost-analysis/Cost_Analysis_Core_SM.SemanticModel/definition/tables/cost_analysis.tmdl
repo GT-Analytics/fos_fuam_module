@@ -1,7 +1,7 @@
 /// Cost_Analysis Fact Table
 table cost_analysis
 	lineageTag: 31521cc0-d265-4575-8480-9e7f2c780945
-	sourceLineageTag: [dbo].[focus_fabric]
+	sourceLineageTag: [cost].[focus_fabric]
 
 	/// Counts the distinct number of capacity
 	/// 
@@ -1324,7 +1324,7 @@ table cost_analysis
 		mode: directLake
 		source
 			entityName: focus_fabric
-			schemaName: dbo
+			schemaName: cost
 			expressionSource: DatabaseQuery
 
 	changedProperty = Name

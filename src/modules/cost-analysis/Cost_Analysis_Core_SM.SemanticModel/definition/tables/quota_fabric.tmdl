@@ -1,6 +1,6 @@
 table quota_fabric
 	lineageTag: 0d4f3e74-27c6-487b-9770-95b2dbd0096c
-	sourceLineageTag: [dbo].[quota_fabric]
+	sourceLineageTag: [cost].[quota_fabric]
 
 	measure 'Quota Consumed' = DIVIDE(SUM(quota_fabric[Usage]),SUM(quota_fabric[Limit]))
 		formatString: 0.00%;-0.00%;0.00%
@@ -115,6 +115,6 @@ table quota_fabric
 		mode: directLake
 		source
 			entityName: quota_fabric
-			schemaName: dbo
+			schemaName: cost
 			expressionSource: DatabaseQuery
 

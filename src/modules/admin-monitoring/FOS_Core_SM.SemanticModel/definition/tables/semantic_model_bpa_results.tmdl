@@ -1,6 +1,6 @@
 table semantic_model_bpa_results
 	lineageTag: d5039322-0a1d-4e90-8867-e4de39aada43
-	sourceLineageTag: [dbo].[semantic_model_bpa_results]
+	sourceLineageTag: [admin].[semantic_model_bpa_results]
 
 	column RunName
 		dataType: string
@@ -99,7 +99,7 @@ table semantic_model_bpa_results
 		mode: directLake
 		source
 			entityName: semantic_model_bpa_results
-			schemaName: dbo
+			schemaName: admin
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

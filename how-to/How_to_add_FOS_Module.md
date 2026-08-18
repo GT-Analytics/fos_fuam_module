@@ -84,12 +84,14 @@ Each folder may contain both `items` and child `folders`. Folder names must be u
 
 ## Lakehouse schemas
 
-FOS creates Lakehouses with schema support enabled. All current module tables initially use the `dbo` schema:
+FOS creates Lakehouses with schema support enabled. Current schema ownership is:
 
-- Default-Lakehouse Spark tables use `dbo.<table>`.
-- Named Lakehouse references use `<lakehouse>.dbo.<table>`.
-- Relative Delta paths use `Tables/dbo/<table>`.
-- Direct Lake semantic model partitions declare `schemaName: dbo`.
+- Admin Monitoring tables use `admin`, except metrics tables.
+- Admin Monitoring tables whose names contain `metrics` use `capacity_metrics`.
+- Admin Monitoring transient tables use `staging` in `FOS_Lakehouse`.
+- Admin Monitoring deployment metadata uses `config` in `FOS_Lakehouse`.
+- Cost Analysis tables use `cost` in `FOS_Lakehouse`.
+- Direct Lake semantic model partitions declare the corresponding schema name.
 
 When introducing module-specific schemas later, migrate the tables first and then update the corresponding notebook table names, relative Delta paths, pipeline datasets, and semantic model partition `schemaName` values together.
 
