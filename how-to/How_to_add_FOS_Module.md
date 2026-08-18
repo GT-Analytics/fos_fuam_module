@@ -86,7 +86,7 @@ Each folder may contain both `items` and child `folders`. Folder names must be u
 
 FOS creates Lakehouses with schema support enabled. Current schema ownership is:
 
-- Admin Monitoring tables use `admin`, except metrics tables.
+- Admin Monitoring tables use `adm`, except metrics tables. The reserved `admin` name is not used as a schema.
 - Admin Monitoring tables whose names contain `metrics` use `capacity_metrics`.
 - Admin Monitoring transient tables use `staging` in `FOS_Lakehouse`.
 - Admin Monitoring deployment metadata uses `config` in `FOS_Lakehouse`.

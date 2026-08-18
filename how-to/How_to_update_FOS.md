@@ -18,7 +18,7 @@ To update FOS (Fabric Unified Admin Monitoring) to the latest version, follow th
 
 The current release consolidates Admin Monitoring storage into the schema-enabled `FOS_Lakehouse`:
 
-- Persistent Admin Monitoring tables move to `admin`.
+- Persistent Admin Monitoring tables move to `adm` (`admin` is reserved).
 - Tables whose names contain `metrics` move to `capacity_metrics`.
 - Intermediate tables move from `FOS_Staging_Lakehouse` to `staging`.
 - Deployment metadata moves from `FOS_Config_Lakehouse` to `config`.

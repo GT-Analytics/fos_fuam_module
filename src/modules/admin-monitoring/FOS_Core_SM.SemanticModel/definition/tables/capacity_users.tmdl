@@ -1,6 +1,6 @@
 table capacity_users
 	lineageTag: 5f025766-0f5f-459a-b123-5225a5c0048d
-	sourceLineageTag: [admin].[capacity_users]
+	sourceLineageTag: [adm].[capacity_users]
 
 	column CapacityId
 		dataType: string
@@ -33,7 +33,7 @@ table capacity_users
 		mode: directLake
 		source
 			entityName: capacity_users
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

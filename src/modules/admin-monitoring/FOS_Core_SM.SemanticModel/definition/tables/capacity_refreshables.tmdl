@@ -1,6 +1,6 @@
 table capacity_refreshables
 	lineageTag: 3ad6ff1d-1a91-4fd2-996f-07a3e16ae3c2
-	sourceLineageTag: [admin].[capacity_refreshables]
+	sourceLineageTag: [adm].[capacity_refreshables]
 
 	column CapacityId
 		dataType: string
@@ -77,7 +77,7 @@ table capacity_refreshables
 		mode: directLake
 		source
 			entityName: capacity_refreshables
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

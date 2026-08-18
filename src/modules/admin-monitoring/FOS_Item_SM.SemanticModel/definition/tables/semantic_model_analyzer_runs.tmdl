@@ -1,6 +1,6 @@
 table semantic_model_analyzer_runs
 	lineageTag: f972f28b-dda3-4085-93de-a4e749af582c
-	sourceLineageTag: [admin].[semantic_model_analyzer_runs]
+	sourceLineageTag: [adm].[semantic_model_analyzer_runs]
 
 	column SemanticModelRunKey
 		dataType: string
@@ -169,6 +169,6 @@ table semantic_model_analyzer_runs
 		mode: directLake
 		source
 			entityName: semantic_model_analyzer_runs
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 

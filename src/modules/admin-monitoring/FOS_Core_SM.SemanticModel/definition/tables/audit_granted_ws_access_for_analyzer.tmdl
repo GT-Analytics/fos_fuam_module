@@ -1,6 +1,6 @@
 table audit_granted_ws_access_for_analyzer
 	lineageTag: 1f3e79de-557f-4653-acdd-b9dda944e1a8
-	sourceLineageTag: [admin].[audit_granted_ws_access_for_analyzer]
+	sourceLineageTag: [adm].[audit_granted_ws_access_for_analyzer]
 
 	column workspace_id
 		dataType: string
@@ -67,7 +67,7 @@ table audit_granted_ws_access_for_analyzer
 		mode: directLake
 		source
 			entityName: audit_granted_ws_access_for_analyzer
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

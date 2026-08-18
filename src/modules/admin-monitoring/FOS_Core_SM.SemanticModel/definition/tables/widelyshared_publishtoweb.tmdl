@@ -1,6 +1,6 @@
 table widelyshared_publishtoweb
 	lineageTag: 13b8f013-94bb-4c03-a416-afe096f428dd
-	sourceLineageTag: [admin].[widelyshared_publishtoweb]
+	sourceLineageTag: [adm].[widelyshared_publishtoweb]
 
 	column TransferDate
 		dataType: dateTime
@@ -128,7 +128,7 @@ table widelyshared_publishtoweb
 		mode: directLake
 		source
 			entityName: widelyshared_publishtoweb
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

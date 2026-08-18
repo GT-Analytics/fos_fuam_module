@@ -1,6 +1,6 @@
 table datasource_instances
 	lineageTag: 295515eb-9785-483d-9d89-713822455ba7
-	sourceLineageTag: [admin].[datasource_instances]
+	sourceLineageTag: [adm].[datasource_instances]
 
 	column DatasourceType
 		dataType: string
@@ -146,7 +146,7 @@ table datasource_instances
 		mode: directLake
 		source
 			entityName: datasource_instances
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

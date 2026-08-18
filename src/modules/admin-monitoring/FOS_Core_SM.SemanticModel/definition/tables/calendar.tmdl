@@ -1,6 +1,6 @@
 table calendar
 	lineageTag: df2a160b-c210-4c66-ad96-b69ed0dc0448
-	sourceLineageTag: [admin].[calendar]
+	sourceLineageTag: [adm].[calendar]
 
 	column DateKey
 		dataType: string
@@ -204,7 +204,7 @@ table calendar
 		mode: directLake
 		source
 			entityName: calendar
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

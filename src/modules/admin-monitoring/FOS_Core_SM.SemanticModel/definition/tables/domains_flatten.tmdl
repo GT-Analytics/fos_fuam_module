@@ -1,6 +1,6 @@
 table domains_flatten
 	lineageTag: a647cb1c-0fec-44f6-9fcf-f081bb8590f8
-	sourceLineageTag: [admin].[domains_flatten]
+	sourceLineageTag: [adm].[domains_flatten]
 
 	column DomainId
 		dataType: string
@@ -86,7 +86,7 @@ table domains_flatten
 		mode: directLake
 		source
 			entityName: domains_flatten
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 
 	annotation PBI_ResultType = Table

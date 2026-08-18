@@ -1,6 +1,6 @@
 table capacity_refreshable_summaries
 	lineageTag: ddd5bac7-e33c-464a-96ef-0d0bfc90d287
-	sourceLineageTag: [admin].[capacity_refreshable_summaries]
+	sourceLineageTag: [adm].[capacity_refreshable_summaries]
 
 	column CapacityId
 		dataType: string
@@ -154,6 +154,6 @@ table capacity_refreshable_summaries
 		mode: directLake
 		source
 			entityName: capacity_refreshable_summaries
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 

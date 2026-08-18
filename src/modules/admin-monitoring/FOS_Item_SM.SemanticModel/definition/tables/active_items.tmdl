@@ -1,6 +1,6 @@
 table active_items
 	lineageTag: 996e8b5f-78ca-4235-8eb6-f181d065a73a
-	sourceLineageTag: [admin].[active_items]
+	sourceLineageTag: [adm].[active_items]
 
 	column capacityId
 		dataType: string
@@ -128,6 +128,6 @@ table active_items
 		mode: directLake
 		source
 			entityName: active_items
-			schemaName: admin
+			schemaName: adm
 			expressionSource: DatabaseQuery
 
