@@ -1,0 +1,83 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/variableLibrary/definition/variables/1.0.0/schema.json",
+    "variables": [
+        {
+            "name": "use_keyvault",
+            "note": "",
+            "type": "Boolean",
+            "value": false
+        },
+        {
+            "name": "keyvault_sp_tenant_secret_name",
+            "note": "",
+            "type": "String",
+            "value": "fos-sp-tenant"
+        },
+        {
+            "name": "keyvault_name",
+            "note": "",
+            "type": "String",
+            "value": "foskv"
+        },
+        {
+            "name": "keyvault_sp_clientId_secret_name",
+            "note": "",
+            "type": "String",
+            "value": "fos-sp-client"
+        },
+        {
+            "name": "keyvault_sp_secret_secret_name",
+            "note": "",
+            "type": "String",
+            "value": "fos-sp-secret"
+        },
+        {
+            "name": "keyvault_sp_enterprise_object_id_secret_name",
+            "note": "",
+            "type": "String",
+            "value": "fos-sp-enterprise-app-object-id"
+        },
+        {
+            "name": "has_tenant_domains",
+            "note": "",
+            "type": "Boolean",
+            "value": true
+        },
+        {
+            "name": "extract_powerbi_artifacts_only",
+            "note": "",
+            "type": "Boolean",
+            "value": false
+        },
+        {
+            "name": "metric_workspace",
+            "note": "",
+            "type": "String",
+            "value": "5edcbd6e-b4d3-4625-ae22-a4d524221f78"
+        },
+        {
+            "name": "metric_dataset",
+            "note": "",
+            "type": "String",
+            "value": "2d4511ba-4364-4468-9171-d5f39c19f66e"
+        },
+        {
+            "name": "activity_anonymize_tables",
+            "note": "",
+            "type": "Boolean",
+            "value": false
+        },
+        {
+            "name": "activity_anonymize_files",
+            "note": "",
+            "type": "Boolean",
+            "value": false
+        },
+        {
+            "name": "activity_anonymize_after_days",
+            "note": "",
+            "type": "Integer",
+            "value": 0
+        }
+    ]
+}

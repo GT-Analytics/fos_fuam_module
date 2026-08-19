@@ -17,54 +17,12 @@
                     "notebookId": "75e000dd-f29a-383f-9f0b-4ecda082a787",
                     "workspaceId": "66db2b7f-f5d7-34ab-b4ef-640bd59a9b38",
                     "parameters": {
-                        "has_tenant_domains": {
-                            "value": {
-                                "value": "@pipeline().parameters.has_tenant_domains",
-                                "type": "Expression"
-                            },
-                            "type": "bool"
-                        },
-                        "extract_powerbi_artifacts_only": {
-                            "value": {
-                                "value": "@pipeline().parameters.extract_powerbi_artifacts_only",
-                                "type": "Expression"
-                            },
-                            "type": "bool"
-                        },
                         "display_data": {
                             "value": {
                                 "value": "@pipeline().parameters.display_data",
                                 "type": "Expression"
                             },
                             "type": "bool"
-                        },
-                        "optional_keyvault_name": {
-                            "value": {
-                                "value": "@pipeline().parameters.optional_keyvault_name",
-                                "type": "Expression"
-                            },
-                            "type": "string"
-                        },
-                        "optional_keyvault_sp_tenantId_secret_name": {
-                            "value": {
-                                "value": "@pipeline().parameters.optional_keyvault_sp_tenantId_secret_name",
-                                "type": "Expression"
-                            },
-                            "type": "string"
-                        },
-                        "optional_keyvault_sp_clientId_secret_name": {
-                            "value": {
-                                "value": "@pipeline().parameters.optional_keyvault_sp_clientId_secret_name",
-                                "type": "Expression"
-                            },
-                            "type": "string"
-                        },
-                        "optional_keyvault_sp_secret_secret_name": {
-                            "value": {
-                                "value": "@pipeline().parameters.optional_keyvault_sp_secret_secret_name",
-                                "type": "Expression"
-                            },
-                            "type": "string"
                         }
                     },
                     "sessionTag": "fos"
@@ -72,29 +30,9 @@
             }
         ],
         "parameters": {
-            "has_tenant_domains": {
-                "type": "bool",
-                "defaultValue": false
-            },
-            "extract_powerbi_artifacts_only": {
-                "type": "bool",
-                "defaultValue": false
-            },
             "display_data": {
                 "type": "bool",
                 "defaultValue": false
-            },
-            "optional_keyvault_name": {
-                "type": "string"
-            },
-            "optional_keyvault_sp_tenantId_secret_name": {
-                "type": "string"
-            },
-            "optional_keyvault_sp_clientId_secret_name": {
-                "type": "string"
-            },
-            "optional_keyvault_sp_secret_secret_name": {
-                "type": "string"
             }
         }
     }

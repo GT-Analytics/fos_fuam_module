@@ -28,6 +28,10 @@
         "fos_id": "1242858b-ec12-3853-895a-ba3563222893"
     },
     {
+        "name": "FOS_Admin_Monitoring_Config.VariableLibrary",
+        "fos_id": "d2fe51b4-aacb-31c5-918d-a8de5ac6b7a6"
+    },
+    {
         "name": "01_Transfer_Active_Items_Unit.Notebook",
         "fos_id": "30ec71db-d3a7-3dd9-9f50-2e9abe622fea"
     },

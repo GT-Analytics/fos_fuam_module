@@ -23,20 +23,6 @@
                             },
                             "type": "int"
                         },
-                        "metric_workspace": {
-                            "value": {
-                                "value": "@pipeline().parameters.metric_workspace",
-                                "type": "Expression"
-                            },
-                            "type": "string"
-                        },
-                        "metric_dataset": {
-                            "value": {
-                                "value": "@pipeline().parameters.metric_dataset",
-                                "type": "Expression"
-                            },
-                            "type": "string"
-                        },
                         "display_data": {
                             "value": {
                                 "value": "@pipeline().parameters.display_data",
@@ -76,20 +62,6 @@
                                 "type": "Expression"
                             },
                             "type": "int"
-                        },
-                        "metric_workspace": {
-                            "value": {
-                                "value": "@pipeline().parameters.metric_workspace",
-                                "type": "Expression"
-                            },
-                            "type": "string"
-                        },
-                        "metric_dataset": {
-                            "value": {
-                                "value": "@pipeline().parameters.metric_dataset",
-                                "type": "Expression"
-                            },
-                            "type": "string"
                         },
                         "display_data": {
                             "value": {
@@ -131,20 +103,6 @@
                             },
                             "type": "int"
                         },
-                        "metric_workspace": {
-                            "value": {
-                                "value": "@pipeline().parameters.metric_workspace",
-                                "type": "Expression"
-                            },
-                            "type": "string"
-                        },
-                        "metric_dataset": {
-                            "value": {
-                                "value": "@pipeline().parameters.metric_dataset",
-                                "type": "Expression"
-                            },
-                            "type": "string"
-                        },
                         "display_data": {
                             "value": {
                                 "value": "@pipeline().parameters.display_data",
@@ -161,14 +119,6 @@
             "metric_days_in_scope": {
                 "type": "int",
                 "defaultValue": 2
-            },
-            "metric_workspace": {
-                "type": "string",
-                "defaultValue": "5edcbd6e-b4d3-4625-ae22-a4d524221f78"
-            },
-            "metric_dataset": {
-                "type": "string",
-                "defaultValue": "2d4511ba-4364-4468-9171-d5f39c19f66e"
             },
             "display_data": {
                 "type": "bool",
