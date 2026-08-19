@@ -1,4 +1,4 @@
-# Fabric Unified Admin Monitoring (FOS)
+# Fabric Observability Suite (FOS)
 
 **Solution accelerator for Fabric platform admin monitoring**
 
