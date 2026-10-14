@@ -1,5 +1,14 @@
 {
     "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/variableLibrary/definition/valueSet/1.0.0/schema.json",
     "name": "Customer_Values",
-    "variableOverrides": []
+    "variableOverrides": [
+        {
+            "name": "metric_workspace",
+            "value": "34d0dd44-d779-44be-ad1e-a3bcbb6eeb65"
+        },
+        {
+            "name": "metric_dataset",
+            "value": "5445b4fc-3fd8-4426-894d-e93b58c1efeb"
+        }
+    ]
 }
