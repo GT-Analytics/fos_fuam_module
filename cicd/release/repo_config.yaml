@@ -1,4 +1,4 @@
-workspace: 'FOS#with_schema'
+workspace: 'FOS#feature_20261014_3'
 project_base_name: 'FOS'
 capacity: 'kethfabricsc'
 admin_group: '8b31359b-8267-46b7-8b16-d3673ffd4e17'
