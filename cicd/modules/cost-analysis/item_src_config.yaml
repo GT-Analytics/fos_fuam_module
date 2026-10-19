@@ -1,4 +1,4 @@
-workspace: 'FOS#feature_20261014_3'
+workspace: 'FOS#aneb_working_branch'
 connections:
   azure_connection: cost_analysis azure management
 
