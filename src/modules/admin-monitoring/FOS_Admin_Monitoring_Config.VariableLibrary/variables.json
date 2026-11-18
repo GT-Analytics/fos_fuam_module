@@ -53,13 +53,13 @@
             "name": "metric_workspace",
             "note": "",
             "type": "String",
-            "value": "5edcbd6e-b4d3-4625-ae22-a4d524221f78"
+            "value": "1005ea32-f749-4e89-82b8-bedb390d0501"
         },
         {
             "name": "metric_dataset",
             "note": "",
             "type": "String",
-            "value": "2d4511ba-4364-4468-9171-d5f39c19f66e"
+            "value": "73b403e3-7056-4137-aecf-20283f28ab91"
         },
         {
             "name": "activity_anonymize_tables",

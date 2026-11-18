@@ -36,7 +36,7 @@
             },
             {
                 "name": "Get Capacities",
-                "description": "https://learn.microsoft.com/en-us/rest/api/fabric/core/capacities/list-capacities?tabs=HTTP",
+                "description": "https://learn.microsoft.com/en-us/rest/api/fabric/core/capacities/list-capacities?tabs=HTTP ",
                 "type": "Copy",
                 "dependsOn": [],
                 "policy": {
@@ -70,7 +70,7 @@
                     "sink": {
                         "type": "JsonSink",
                         "storeSettings": {
-                            "type": "LakehouseWriteSettings"
+                            "type": "AzureBlobStorageWriteSettings"
                         },
                         "formatSettings": {
                             "type": "JsonWriteSettings",
