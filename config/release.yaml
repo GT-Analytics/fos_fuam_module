@@ -11,3 +11,7 @@ modules:
   - id: cost-analysis
     enabled: true
     order: 20
+  - id: architecture-review
+    enabled: true
+    deployable: true
+    order: 30

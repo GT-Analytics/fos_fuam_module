@@ -1,0 +1,13 @@
+workspace: FOS
+lakehouse_schemas:
+  FOS_Lakehouse.Lakehouse:
+    - far
+post_deployment:
+  jobs:
+    - item: FOS_Install_FAR.Notebook
+folders:
+  - name: FAR
+    folders:
+      - name: Deployment
+        items:
+          - FOS_Install_FAR.Notebook

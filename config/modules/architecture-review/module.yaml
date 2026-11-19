@@ -1,0 +1,16 @@
+schema_version: 1
+id: architecture-review
+display_name: Fabric Architecture Review
+version: 2026.11.2
+dependencies: []
+
+source:
+  repository: https://github.com/microsoft/fabric-architecture-review
+  ref: 30e91adbed4bb9e6c3793da82ef3e7aaa0eb10ed
+
+source_assets:
+  - far-runtime
+
+shared_resources:
+  uses:
+    - FOS_Lakehouse.Lakehouse

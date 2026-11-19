@@ -1,0 +1,234 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+"""Shared HTTP helpers for collectors.
+
+DATA SAFETY: This module performs HTTP only. It does not interpret payloads
+beyond pagination and retry. Callers decide which endpoints (metadata vs.
+data) to invoke.
+"""
+from __future__ import annotations
+
+import logging
+import re
+import time
+from contextlib import contextmanager
+from contextvars import ContextVar
+from typing import Any, Callable, Dict, Iterable, Iterator, List, Optional
+
+import requests
+
+log = logging.getLogger("collectors._http")
+
+DEFAULT_TIMEOUT = 60
+MAX_RETRIES = 5
+BACKOFF_BASE = 2.0
+Headers = Dict[str, str] | Callable[[], Dict[str, str]]
+_deadline: ContextVar[float | None] = ContextVar("collector_request_deadline", default=None)
+
+
+class HttpError(Exception):
+    def __init__(self, message: str, *, status_code: int | None = None, error_code: str | None = None):
+        super().__init__(message)
+        self.status_code = status_code
+        self.error_code = error_code
+
+
+@contextmanager
+def request_deadline(deadline: float):
+    token = _deadline.set(deadline)
+    try:
+        yield
+    finally:
+        _deadline.reset(token)
+
+
+def remaining_time() -> float | None:
+    deadline = _deadline.get()
+    if deadline is None:
+        return None
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        raise HttpError("Evidence retry time limit reached", error_code="RetryDeadlineExceeded")
+    return remaining
+
+
+def wait(seconds: float) -> None:
+    remaining = remaining_time()
+    if remaining is not None and seconds >= remaining:
+        raise HttpError("Evidence retry time limit reached", error_code="RetryDeadlineExceeded")
+    time.sleep(seconds)
+
+
+def response_error_code(response: requests.Response) -> str | None:
+    try:
+        payload = response.json()
+    except ValueError:
+        return None
+    if isinstance(payload, dict):
+        error = payload.get("error")
+        code = payload.get("errorCode") or (error.get("code") if isinstance(error, dict) else None)
+        if isinstance(code, str) and re.fullmatch(r"[A-Za-z][A-Za-z0-9_.-]{0,127}", code):
+            return code
+    return None
+
+
+def definition_error(response: requests.Response) -> str:
+    code = (response_error_code(response) or "").lower()
+    if "unsupported" in code or "notsupported" in code:
+        return "unsupported_operation"
+    if code in {"invalidtoken", "tokenexpired", "invalidauthenticationtoken", "invalidaudience"}:
+        return "authentication_failed"
+    return "not_found" if response.status_code == 404 else f"http_{response.status_code}"
+
+
+def request(
+    method: str,
+    url: str,
+    headers: Headers,
+    *,
+    params: Optional[Dict[str, Any]] = None,
+    json_body: Any = None,
+    timeout: int = DEFAULT_TIMEOUT,
+) -> requests.Response:
+    """Issue an HTTP request with simple retry on 429 / 5xx."""
+    for attempt in range(1, MAX_RETRIES + 1):
+        remaining = remaining_time()
+        try:
+            r = requests.request(
+                method,
+                url,
+                headers=headers() if callable(headers) else headers,
+                params=params,
+                json=json_body,
+                timeout=min(timeout, remaining) if remaining is not None else timeout,
+            )
+        except requests.RequestException as exc:
+            if attempt == MAX_RETRIES:
+                raise HttpError(f"{method} {url} failed after {attempt} attempts: {exc}") from exc
+            wait(BACKOFF_BASE ** attempt)
+            continue
+
+        if r.status_code == 429:
+            delay = int(r.headers.get("Retry-After", BACKOFF_BASE ** attempt))
+            log.warning("429 from %s; sleeping %ss", url, delay)
+            wait(delay)
+            continue
+        if 500 <= r.status_code < 600 and attempt < MAX_RETRIES:
+            wait(BACKOFF_BASE ** attempt)
+            continue
+        return r
+    raise HttpError(f"{method} {url} exhausted retries", status_code=429)
+
+
+def get_json(
+    url: str,
+    headers: Headers,
+    *,
+    params: Optional[Dict[str, Any]] = None,
+    allow: Iterable[int] = (200,),
+) -> Any:
+    """Return a successful JSON response, or raise instead of fabricating absence.
+
+    ``allow`` selects successful response codes; HTTP errors are never data,
+    even if a caller includes their codes in ``allow``.
+    """
+    r = request("GET", url, headers, params=params)
+    if r.status_code not in allow or not 200 <= r.status_code < 300:
+        error_code = response_error_code(r)
+        detail = f" ({error_code})" if error_code else ""
+        raise HttpError(
+            f"GET {url} returned HTTP {r.status_code}{detail}",
+            status_code=r.status_code, error_code=error_code,
+        )
+    if not r.content:
+        raise HttpError(f"GET {url} returned no JSON body", status_code=r.status_code)
+    try:
+        return r.json()
+    except ValueError as exc:
+        raise HttpError(f"GET {url} returned invalid JSON", status_code=r.status_code) from exc
+
+
+def paginate_value(
+    url: str,
+    headers: Headers,
+    *,
+    params: Optional[Dict[str, Any]] = None,
+) -> Iterator[Dict[str, Any]]:
+    """Iterate `value` arrays across `@odata.nextLink` / `continuationUri` pagination.
+
+    Works for both Fabric REST (uses ``continuationUri``) and Power BI REST
+    (uses ``@odata.nextLink``).
+    """
+    next_url: Optional[str] = url
+    next_params = params
+    while next_url:
+        payload = get_json(next_url, headers, params=next_params)
+        if not isinstance(payload, dict) or not isinstance(payload.get("value"), list):
+            raise HttpError(f"GET {next_url} returned no value array")
+        if not all(isinstance(item, dict) for item in payload["value"]):
+            raise HttpError(f"GET {next_url} returned invalid value entries")
+        for item in payload["value"]:
+            yield item
+        next_url = payload.get("continuationUri") or payload.get("@odata.nextLink") or payload.get("nextLink")
+        if next_url is not None and not isinstance(next_url, str):
+            raise HttpError("Pagination link must be a URL string")
+        next_params = None  # already encoded in continuation URL
+
+
+def collect_value(
+    url: str,
+    headers: Headers,
+    *,
+    params: Optional[Dict[str, Any]] = None,
+) -> List[Dict[str, Any]]:
+    return list(paginate_value(url, headers, params=params))
+
+
+def collect_workspace_groups(url: str, headers: Headers) -> List[Dict[str, Any]]:
+    """Enumerate Power BI groups using their documented $top/$skip contract.
+
+    A full page is not terminal even when there is no continuation link.
+    Reject overlapping/malformed pages rather than persisting partial policy
+    metadata or looping forever when the service ignores $skip.
+    """
+    groups: List[Dict[str, Any]] = []
+    seen: set[str] = set()
+    top = 5000
+    admin = url.rstrip("/").endswith("/admin/groups")
+    while True:
+        try:
+            params: Dict[str, Any] = {"$top": top, "$skip": len(groups)}
+            if admin:
+                params["$expand"] = "datasets,reports"
+            payload = get_json(url, headers, params=params)
+        except HttpError as exc:
+            if groups:
+                raise HttpError(
+                    "Workspace listing failed after its first page",
+                    status_code=exc.status_code, error_code="IncompleteWorkspaceListing",
+                ) from exc
+            raise
+        if (
+            not isinstance(payload, dict)
+            or "error" in payload
+            or not isinstance(payload.get("value"), list)
+            or len(payload["value"]) > top
+            or any(payload.get(key) for key in (
+                "@odata.nextLink", "nextLink", "continuationUri", "continuationToken",
+            ))
+        ):
+            raise HttpError("Invalid workspace listing page")
+        page = payload["value"]
+        for group in page:
+            identity = group.get("id") if isinstance(group, dict) else None
+            if not isinstance(identity, str) or not identity.strip() or identity.lower() in seen:
+                raise HttpError("Workspace listing returned missing or repeated identities")
+            seen.add(identity.lower())
+        groups.extend(page)
+        if len(page) < top:
+            if not admin:
+                for group in groups:
+                    for kind in ("datasets", "reports"):
+                        group[kind] = collect_value(f"{url.rstrip('/')}/{group['id']}/{kind}", headers)
+            return groups

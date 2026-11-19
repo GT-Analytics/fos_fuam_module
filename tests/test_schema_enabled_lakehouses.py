@@ -100,8 +100,11 @@ class SchemaEnabledLakehouseTests(unittest.TestCase):
                 for schema in schemas:
                     self.assertIn(schema, source)
 
-    def test_each_module_notebook_selects_its_schema_once(self):
-        for path in MODULES_ROOT.rglob("*.ipynb"):
+    def test_producer_module_notebooks_select_their_schema_once(self):
+        for path in (
+            *MODULES_ROOT.glob("admin-monitoring/**/*.ipynb"),
+            *MODULES_ROOT.glob("cost-analysis/**/*.ipynb"),
+        ):
             with self.subTest(path=path):
                 notebook = json.loads(path.read_text(encoding="utf-8"))
                 if "cost-analysis" in path.parts:

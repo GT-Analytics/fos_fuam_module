@@ -27,12 +27,19 @@ def _load_json(path):
         return json.load(file)
 
 
-def _copy_tree(source, target, owners, module_id, excluded_names=None):
+def _copy_tree(
+    source, target, owners, module_id, excluded_names=None, excluded_roots=(),
+    base_directory=None,
+):
     excluded_names = excluded_names or set()
     for source_file in source.rglob("*"):
         if not source_file.is_file() or source_file.name in excluded_names:
             continue
         relative_path = source_file.relative_to(source)
+        if relative_path.parts[0] in excluded_roots or "__pycache__" in relative_path.parts:
+            continue
+        if base_directory is not None:
+            relative_path = Path(base_directory) / relative_path
         target_file = target / relative_path
         owner = owners.get(relative_path)
         if owner is not None:
@@ -47,9 +54,9 @@ def _copy_tree(source, target, owners, module_id, excluded_names=None):
         owners[relative_path] = module_id
 
 
-def _register_source_items(source, owners, module_id):
+def _register_source_items(source, owners, module_id, source_assets):
     for item_path in source.iterdir():
-        if not item_path.is_dir():
+        if not item_path.is_dir() or item_path.name in source_assets:
             continue
         existing_owner = owners.get(item_path.name)
         if existing_owner is not None:
@@ -203,7 +210,19 @@ def _validate_module_contract(
     module_id, manifest, deployment_config, deployment_order, src_dir
 ):
     order_names = {item["name"] for item in deployment_order}
-    source_names = {path.name for path in src_dir.iterdir() if path.is_dir()}
+    source_assets = manifest.get("source_assets", [])
+    if not isinstance(source_assets, list) or not all(
+        isinstance(name, str) and re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_-]*", name)
+        for name in source_assets
+    ):
+        raise CompositionError(f"Module '{module_id}' has invalid source_assets")
+    source_dirs = {path.name for path in src_dir.iterdir() if path.is_dir()}
+    missing_assets = set(source_assets) - source_dirs
+    if missing_assets:
+        raise CompositionError(
+            f"Module '{module_id}' source assets are missing: {sorted(missing_assets)}"
+        )
+    source_names = source_dirs - set(source_assets)
     _validate_folder_tree(deployment_config.get("folders", []), module_id)
     missing_source_entries = source_names - order_names
     if missing_source_entries:
@@ -266,6 +285,7 @@ def _validate_module_contract(
             f"Module '{module_id}' provided resources are missing from deployment_order.json: "
             f"{sorted(missing_resources)}"
         )
+    return source_assets
 
 
 def normalize_selected_modules(selected_modules):
@@ -279,7 +299,8 @@ def normalize_selected_modules(selected_modules):
         return None
     if "all" in modules:
         raise CompositionError("'all' cannot be combined with individual module IDs")
-    return list(dict.fromkeys(modules))
+    aliases = {"fuam": "admin-monitoring", "fca": "cost-analysis", "far": "architecture-review"}
+    return list(dict.fromkeys(aliases.get(module, module) for module in modules))
 
 
 def _select_modules(repo_root, declared_modules, selected_modules):
@@ -315,7 +336,7 @@ def _select_modules(repo_root, declared_modules, selected_modules):
     )
 
 
-def compose_release(repo_root, output_root, selected_modules=None):
+def compose_release(repo_root, output_root, selected_modules=None, *, preview=False):
     repo_root = Path(repo_root).resolve()
     output_root = Path(output_root).resolve()
     release_config = _load_yaml(repo_root / "config" / "release.yaml")
@@ -341,6 +362,14 @@ def compose_release(repo_root, output_root, selected_modules=None):
     enabled_modules = _select_modules(repo_root, declared_modules, selected_modules)
     if not enabled_modules:
         raise CompositionError("config/release.yaml does not enable any modules")
+    not_deployable = [
+        module["id"] for module in enabled_modules if not module.get("deployable", True)
+    ]
+    if not_deployable and not preview:
+        raise CompositionError(
+            f"Modules are not ready for deployment: {not_deployable}. "
+            "Use --preview to compose their assets locally."
+        )
 
     output_root.mkdir(parents=True, exist_ok=True)
     output_config = output_root / "config"
@@ -388,7 +417,7 @@ def compose_release(repo_root, output_root, selected_modules=None):
             config_dir / "deployment_config.yaml"
         )
         module_deployment_order = _load_json(config_dir / "deployment_order.json")
-        _validate_module_contract(
+        source_assets = _validate_module_contract(
             module_id,
             manifest,
             module_deployment_config,
@@ -412,9 +441,16 @@ def compose_release(repo_root, output_root, selected_modules=None):
             module_id,
             excluded_names={path.name for path in data_dir.glob("current_*_version.json")},
         )
-        _register_source_items(src_dir, source_item_owners, module_id)
-        _copy_tree(src_dir, output_src, src_owners, module_id)
+        for name in source_assets:
+            _copy_tree(
+                src_dir / name, output_data, data_owners, module_id,
+                base_directory=name,
+            )
+        _register_source_items(src_dir, source_item_owners, module_id, source_assets)
+        _copy_tree(src_dir, output_src, src_owners, module_id, excluded_roots=source_assets)
 
+    if enabled_ids == {"architecture-review"}:
+        deployment_config["existing_lakehouses"] = ["FOS_Lakehouse.Lakehouse"]
     with (output_config / "deployment_config.yaml").open("w", encoding="utf-8") as file:
         yaml.safe_dump(deployment_config, file, sort_keys=False, allow_unicode=True)
     with (output_config / "deployment_order.json").open("w", encoding="utf-8") as file:
@@ -433,13 +469,20 @@ def main():
     parser.add_argument("--repo-root", type=Path, default=Path(__file__).parents[2])
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
+        "--preview",
+        action="store_true",
+        help="Allow local packaging of modules not ready to deploy",
+    )
+    parser.add_argument(
         "--module",
         action="append",
         dest="modules",
         help="Compose only this module and its dependencies; repeat for multiple modules",
     )
     args = parser.parse_args()
-    summary = compose_release(args.repo_root, args.output, selected_modules=args.modules)
+    summary = compose_release(
+        args.repo_root, args.output, selected_modules=args.modules, preview=args.preview
+    )
     print(json.dumps(summary, indent=2))
 
 

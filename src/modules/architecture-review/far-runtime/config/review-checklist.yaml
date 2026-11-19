@@ -1,0 +1,834 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+# Fabric Architecture Review - architecture review rule catalogue.
+#
+# 70 rules in five dimensions. IDs are contiguous within a dimension. The original rules are ordered
+# controls first, then signals, then coverage; rules added later (SEC-024 to SEC-027) keep every earlier
+# identifier stable and follow the original rules.
+#
+# Rule kinds
+#   control   Can pass or fail and is part of the architecture score.
+#   signal    Non-scored context that suggests where to look; never a failure.
+#   coverage  Reports whether the evidence the review needs was available.
+#
+# Scope
+#   Workspace rules produce one finding per workspace in the review scope.
+#   Capacity rules (OPS-004, OPS-008, OPS-009) produce one finding per capacity; every workspace on it points to it.
+#   Tenant rules (marked "tenant-wide") produce one finding per review.
+#
+# Rules that need FUAM or FCA
+#   GOV-006 to GOV-009, OPS-002 to OPS-005, OPS-007, SEC-006 and SEC-019 read FUAM (GOV-009: FCA) data. They run
+#   only when that module is connected and its data is fresh; otherwise they are not
+#   applicable or report missing evidence. The rest of the catalogue never depends on them.
+#
+# How a control becomes assessable
+#   Controls marked "declared" are evaluated only for workspaces whose requirement
+#   you declare (see config/policy.yaml). Until then the result is "unknown",
+#   which is never counted as a pass.
+#   Controls marked "default" are evaluated without any declaration; where noted,
+#   only for workspaces declared as production. Tenant-setting controls evaluate the
+#   recorded tenant settings and need no declaration.
+#
+# Fields
+#   id                   Stable identifier used in findings.
+#   enabled              Set to false to exclude a rule from every review.
+#   kind                 control | signal | coverage
+#   dimension            architecture | governance | operations | reliability | security
+#   severity             critical | high | medium | low | info
+#   description          What is checked and what the result means.
+#   microsoft_learn_url  Authoritative guidance.
+#
+# DATA SAFETY: rules read architectural metadata and sanitized structural evidence
+# only. No rule queries customer business rows.
+
+rules:
+
+  # ==================== ARCHITECTURE ====================
+  - id: ARCH-001
+    enabled: true
+    kind: control
+    dimension: architecture
+    severity: high
+    description: >
+      Declared workspaces hold only the item types you allow (for example a landing zone with
+      Lakehouses, Notebooks and Pipelines only). Evaluated only when allowed_item_types is
+      declared; requires a complete item inventory.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/onelake/onelake-medallion-lakehouse-architecture
+
+  - id: ARCH-002
+    enabled: true
+    kind: control
+    dimension: architecture
+    severity: medium
+    description: >
+      Production workspaces are owned by a shared workspace rather than a personal one and,
+      when allowed_capacity_ids is declared, are hosted on an approved capacity. Default for
+      declared production workspaces; names never establish production.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/enterprise/licenses
+
+  - id: ARCH-003
+    enabled: true
+    kind: control
+    dimension: architecture
+    severity: high
+    description: >
+      Semantic models use only the storage modes you allow (Import, DirectQuery, DirectLake,
+      Dual). Evaluated only when allowed_storage_modes is declared; requires the model
+      definitions to be readable.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/get-started/direct-lake-overview
+
+  - id: ARCH-004
+    enabled: true
+    kind: control
+    dimension: architecture
+    severity: high
+    description: >
+      Pipeline notebook activities pass only parameters that the target notebook declares.
+      Default; dynamic or partial definitions are reported as unknown, not as pass.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/data-factory/notebook-activity
+
+  - id: ARCH-005
+    enabled: true
+    kind: control
+    dimension: architecture
+    severity: medium
+    description: >
+      Pipeline activity dependencies are consistent: no duplicate activity names, no
+      references to missing activities, and no self-dependencies or cycles. Default; dynamic
+      or partial definitions are reported as unknown.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/data-factory/activity-dependencies
+
+  - id: ARCH-006
+    enabled: true
+    kind: control
+    dimension: architecture
+    severity: high
+    description: >
+      A production workspace does not share its capacity with non-production work. Fails when
+      the capacity is declared non-production or hosts a workspace you declared
+      non-production. Default for declared production workspaces; compared with the declared
+      environments of the workspaces in this review's scope only.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/enterprise/licenses
+
+  - id: ARCH-007
+    enabled: true
+    kind: control
+    dimension: architecture
+    severity: high
+    description: >
+      Each workspace runs on a capacity in an Azure region you approve, for data residency.
+      Evaluated only when allowed_regions is declared. This is the region of the capacity, not
+      of every item's data.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/admin/service-admin-premium-multi-geo
+
+  - id: ARCH-008
+    enabled: true
+    kind: signal
+    dimension: architecture
+    severity: info
+    description: >
+      The workspace holds more items than monolith_max_items, which can indicate mixed
+      responsibilities worth reviewing. Never a failure.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/get-started/create-workspaces
+
+  - id: ARCH-009
+    enabled: true
+    kind: signal
+    dimension: architecture
+    severity: info
+    description: >
+      Share of the workspace and its items that carry a description, compared with
+      description_coverage_min_ratio. Descriptions record purpose and ownership.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/get-started/create-workspaces
+
+  - id: ARCH-010
+    enabled: true
+    kind: signal
+    dimension: architecture
+    severity: info
+    description: >
+      Notebook source contains patterns tied to a specific runtime that can limit portability
+      between Fabric and other Spark platforms. A sanitized heuristic count; intentional
+      platform-specific code is expected.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/data-engineering/microsoft-spark-utilities
+
+  - id: ARCH-011
+    enabled: true
+    kind: signal
+    dimension: architecture
+    severity: info
+    description: >
+      Notebook source contains literal storage paths, workspace or item identifiers or server
+      names, which tie the code to one environment and block promotion between development and
+      production. A sanitized heuristic count; use parameters, variable libraries or relative
+      paths instead.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/cicd/best-practices-cicd
+
+  - id: ARCH-012
+    enabled: true
+    kind: signal
+    dimension: architecture
+    severity: info
+    description: >
+      Notebook source installs packages without a pinned version or requirements file, so the
+      runtime can change between runs. A sanitized heuristic count; pin versions or use an
+      environment item.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/data-engineering/library-management
+
+  - id: ARCH-013
+    enabled: true
+    kind: signal
+    dimension: architecture
+    severity: info
+    description: >
+      Pipeline activities that call a service have no retry or keep the default 12-hour
+      timeout. A transient failure then stops the pipeline, and a hung activity blocks it for
+      half a day. Activities with a dynamic value are not judged.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/data-factory/activity-overview
+
+  - id: ARCH-014
+    enabled: true
+    kind: signal
+    dimension: architecture
+    severity: info
+    description: >
+      The workspace's semantic models and dataflows depend on items in more than
+      cross_workspace_dependency_max other workspaces, a sign of tight coupling. Sharing
+      across workspaces is sometimes intended.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/governance/lineage
+
+  - id: ARCH-015
+    enabled: true
+    kind: signal
+    dimension: architecture
+    severity: info
+    description: >
+      The workspace holds legacy item types, today Datamart, that are candidates for
+      migration.
+    microsoft_learn_url: https://learn.microsoft.com/power-bi/transform-model/datamarts/datamarts-overview
+
+  - id: ARCH-016
+    enabled: true
+    kind: signal
+    dimension: architecture
+    severity: info
+    description: >
+      Tenant-wide. Capacities with no assigned workspace. Evaluated only when the review is
+      not limited to chosen workspaces, because a limited scan cannot tell whether a capacity
+      is empty.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/enterprise/licenses
+
+  - id: ARCH-017
+    enabled: true
+    kind: signal
+    dimension: architecture
+    severity: info
+    description: >
+      The workspace holds no items. An empty workspace can be a leftover, or a workspace that was
+      created and never used. Needs the item inventory.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/admin/portal-workspaces
+
+  - id: ARCH-018
+    enabled: true
+    kind: signal
+    dimension: architecture
+    severity: info
+    description: >
+      Power BI reports whose semantic model is not found in the administrator scan. Counts and
+      IDs only. A model in a workspace outside the review scope cannot be resolved, and paginated
+      reports have no model, so they are not counted.
+    microsoft_learn_url: https://learn.microsoft.com/power-bi/connect-data/service-datasets-understand
+
+  - id: ARCH-019
+    enabled: true
+    kind: signal
+    dimension: architecture
+    severity: info
+    description: >
+      Semantic models that no report in the administrator scan reads from and no other model
+      builds on. A model can still be used by Excel, the Analyze feature or reports outside the
+      review scope, and a lakehouse's default model is created without any report.
+    microsoft_learn_url: https://learn.microsoft.com/power-bi/connect-data/service-datasets-understand
+
+  - id: ARCH-020
+    enabled: true
+    kind: coverage
+    dimension: architecture
+    severity: info
+    description: >
+      Whether the item and principal inventory of the workspace was collected completely.
+      Results for the workspace are only as complete as this inventory.
+    microsoft_learn_url: https://learn.microsoft.com/rest/api/power-bi/admin/workspace-info-post-workspace-info
+
+
+  # ==================== GOVERNANCE ====================
+  - id: GOV-001
+    enabled: true
+    kind: control
+    dimension: governance
+    severity: high
+    description: >
+      The workspace has at least min_admins independent administrators who are individual
+      users. Groups and applications are not assumed to contain independent maintainers, so a
+      group-only result is unknown. Default; declare eligible_admin_ids to restrict which
+      users count.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/get-started/roles-workspaces
+
+  - id: GOV-002
+    enabled: true
+    kind: control
+    dimension: governance
+    severity: high
+    description: >
+      Tenant-wide. The tenant setting that lets users create Fabric items is disabled or
+      restricted to security groups, so workspace sprawl stays a deliberate decision. Fails
+      when it is enabled for the entire organization. Evaluates the recorded tenant settings.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/admin/fabric-switch
+
+  - id: GOV-003
+    enabled: true
+    kind: control
+    dimension: governance
+    severity: high
+    description: >
+      The workspace has an administrator. Fails for a workspace the administrator inventory
+      reports as orphaned. Default; needs the administrator inventory, otherwise the state is
+      missing evidence.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/admin/portal-workspaces
+
+  - id: GOV-004
+    enabled: true
+    kind: signal
+    dimension: governance
+    severity: info
+    description: >
+      Share of the workspace and its items whose names match your naming_pattern regular
+      expression, compared with naming_coverage_min_ratio. Evaluated only when a pattern is
+      configured; names are never used to infer environment or purpose.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/governance/governance-overview
+
+  - id: GOV-005
+    enabled: true
+    kind: signal
+    dimension: governance
+    severity: info
+    description: >
+      Share of a production workspace's semantic models that are Promoted or Certified,
+      compared with endorsement_min_ratio. Evaluated for declared production workspaces.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/governance/endorsement-overview
+
+  - id: GOV-006
+    enabled: true
+    kind: signal
+    dimension: governance
+    severity: info
+    description: >
+      Tenant-wide. Share of the reviewed workspaces assigned to a domain, compared with
+      domain_coverage_min_ratio. Needs FUAM; not evaluated when FUAM is not connected.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/governance/domains
+
+  - id: GOV-007
+    enabled: true
+    kind: signal
+    dimension: governance
+    severity: info
+    description: >
+      The workspace has had no recorded activity for inactive_workspace_days. Needs FUAM and
+      enough activity history to cover the window; otherwise missing evidence. A workspace
+      used only through scheduled jobs is still active.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/admin/portal-workspaces
+
+  - id: GOV-008
+    enabled: true
+    kind: signal
+    dimension: governance
+    severity: info
+    description: >
+      More than stale_item_max_ratio of the workspace's items were last modified over
+      stale_item_days ago. Needs FUAM. The date is the last modification, not the last use.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/admin/portal-workspaces
+
+  - id: GOV-009
+    enabled: true
+    kind: signal
+    dimension: governance
+    severity: info
+    description: >
+      Tenant-wide. Azure capacities carry the tag names you require. Needs FCA, the
+      required_capacity_tags policy and the capacity-to-Azure-resource mapping; tag values are
+      never read.
+    microsoft_learn_url: https://learn.microsoft.com/azure/azure-resource-manager/management/tag-resources
+
+  - id: GOV-010
+    enabled: true
+    kind: coverage
+    dimension: governance
+    severity: info
+    description: >
+      Tenant-wide. Whether the tenant settings were recorded for this review. Every recorded
+      setting is kept per run as an audit trail; without the Fabric administrator role they
+      cannot be read and the tenant-setting controls report missing evidence.
+    microsoft_learn_url: https://learn.microsoft.com/rest/api/fabric/admin/tenants/list-tenant-settings
+
+
+  # ==================== OPERATIONS ====================
+  - id: OPS-001
+    enabled: true
+    kind: control
+    dimension: operations
+    severity: high
+    description: >
+      Production workspaces are connected to Git source control. Default for declared
+      production workspaces. A connection shows source control exists, not how changes are
+      reviewed.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/cicd/git-integration/intro-to-git-integration
+
+  - id: OPS-002
+    enabled: true
+    kind: signal
+    dimension: operations
+    severity: info
+    description: >
+      Items whose failed share of operations over window_days exceeds failure_max_ratio,
+      judged only above failure_min_events. Needs FUAM. Capacity operations per item, not
+      individual job runs.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/enterprise/metrics-app
+
+  - id: OPS-003
+    enabled: true
+    kind: signal
+    dimension: operations
+    severity: info
+    description: >
+      An item uses more than expensive_item_cu_max_ratio of its capacity's compute over
+      window_days. Needs FUAM. A heavy item can be intended; the share is relative to the
+      capacity, not an absolute figure.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/enterprise/throttling
+
+  - id: OPS-004
+    enabled: true
+    kind: signal
+    dimension: operations
+    severity: info
+    description: >
+      The workspace's capacity was throttled on more than throttled_day_max_ratio of the days
+      in window_days. Needs FUAM. About the capacity, so it is one finding per capacity that every workspace
+      on it points to.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/enterprise/throttling
+
+  - id: OPS-005
+    enabled: true
+    kind: signal
+    dimension: operations
+    severity: info
+    description: >
+      Items whose failed share of refreshes over window_days exceeds refresh_failure_max_ratio,
+      judged only above refresh_min_events. Needs FUAM. Completed and failed refreshes only;
+      cancelled or unknown outcomes are not counted.
+    microsoft_learn_url: https://learn.microsoft.com/power-bi/connect-data/refresh-troubleshooting-refresh-scenarios
+
+  - id: OPS-006
+    enabled: true
+    kind: signal
+    dimension: operations
+    severity: info
+    description: >
+      A declared production workspace runs on a Trial, Premium-per-user or Embedded (A or EM)
+      capacity, which is not meant for production. Needs the production workspace declared.
+      Premium-per-user workspaces can be outside the review scope.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/enterprise/licenses
+
+  - id: OPS-007
+    enabled: true
+    kind: signal
+    dimension: operations
+    severity: info
+    description: >
+      The workspace uses more than workspace_cu_max_ratio of its capacity's compute over
+      window_days. Needs FUAM. Shared capacities only: a workspace that is alone on its capacity
+      is reported without a recommendation.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/enterprise/throttling
+
+
+  - id: OPS-008
+    enabled: true
+    kind: signal
+    dimension: operations
+    severity: info
+    description: >
+      The capacity the workspace runs on is not active (paused, suspended or otherwise not running).
+      Everything on it is unavailable while it is. Shared by every workspace on the capacity. A
+      capacity paused on a schedule can be on purpose. One finding per capacity that every workspace on it points to.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/enterprise/pause-resume
+
+  - id: OPS-009
+    enabled: true
+    kind: signal
+    dimension: operations
+    severity: info
+    description: >
+      The capacity has fewer administrators than min_capacity_admins, so one departure leaves nobody
+      who can manage it. Counts only; no identity is stored. One finding per capacity that every workspace on it
+      points to.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/admin/capacity-settings
+
+  - id: OPS-010
+    enabled: true
+    kind: signal
+    dimension: operations
+    severity: info
+    description: >
+      A declared production workspace is not assigned to a stage of any deployment pipeline. Needs the
+      production workspace declared. Pipelines are read as an administrator; when only the pipelines the
+      reviewer can see are available, a missing assignment is missing evidence. Release through Git or
+      other automation is not seen.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines
+
+
+  # ==================== RELIABILITY ====================
+  - id: REL-001
+    enabled: true
+    kind: signal
+    dimension: reliability
+    severity: info
+    description: >
+      Tenant-wide. How much of your declared production runs on one capacity, and how many capacities and
+      regions it spans. Flagged when more than capacity_concentration_max_ratio of the production workspaces
+      share one capacity: that capacity is one failure, pause and throttling domain, and Fabric does not move a
+      workload to another capacity by itself. A second capacity that is paused or nearly empty does not help. Needs the production workspaces declared; only workspaces
+      in the review scope are seen. Disaster-recovery settings, replication and recovery objectives are not
+      exposed by any API and are not checked.
+    microsoft_learn_url: https://learn.microsoft.com/azure/reliability/reliability-fabric
+
+  - id: REL-002
+    enabled: true
+    kind: signal
+    dimension: reliability
+    severity: info
+    description: >
+      Pipelines with two or more activities that call a service where no activity runs when another fails or
+      completes, so a failed step ends the run unnoticed by the pipeline itself. Names the pipelines (by ID). A
+      heuristic over the pipeline definitions; alerts and monitoring set up outside the pipeline are not seen.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/data-factory/activity-overview
+
+  - id: REL-003
+    enabled: true
+    kind: signal
+    dimension: reliability
+    severity: info
+    description: >
+      A declared production workspace whose semantic models or dataflows read from a workspace you declared
+      non-production, so production stops or changes when a test workspace does. Upstream workspaces that are
+      not declared are counted but not judged. Read from the administrator scan.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/cicd/best-practices-cicd
+
+
+  # ==================== SECURITY ====================
+  - id: SEC-001
+    enabled: true
+    kind: control
+    dimension: security
+    severity: high
+    description: >
+      Every principal with direct workspace access is on your approved list. Evaluated only
+      when allowed_principal_ids is declared. Direct grants only; transitive group membership
+      is not expanded.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/admin/service-admin-portal-export-sharing
+
+  - id: SEC-002
+    enabled: true
+    kind: control
+    dimension: security
+    severity: medium
+    description: >
+      Direct workspace role assignments use only the roles you allow (Admin, Member,
+      Contributor, Viewer). Evaluated only when allowed_roles is declared. Direct roles only;
+      item-level permissions are not evaluated.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/get-started/roles-workspaces
+
+  - id: SEC-003
+    enabled: true
+    kind: control
+    dimension: security
+    severity: critical
+    description: >
+      Tenant-wide. "Publish to web" is disabled or restricted to security groups, so reports
+      cannot be exposed publicly by anyone in the organization. Fails when it is enabled for
+      the entire organization. Evaluates the recorded tenant settings.
+    microsoft_learn_url: https://learn.microsoft.com/power-bi/admin/service-admin-portal-export-sharing#publish-to-web
+
+  - id: SEC-004
+    enabled: true
+    kind: control
+    dimension: security
+    severity: high
+    description: >
+      Tenant-wide. External data sharing is disabled or restricted to security groups, keeping
+      cross-tenant OneLake sharing a controlled decision. Fails when it is enabled for the
+      entire organization. Evaluates the recorded tenant settings.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/admin/service-admin-portal-export-sharing
+
+  - id: SEC-005
+    enabled: true
+    kind: control
+    dimension: security
+    severity: medium
+    description: >
+      Tenant-wide. Service principal access to Fabric public APIs is disabled or restricted to
+      a security group, so automation identities are an explicit allow-list. Fails when it is
+      enabled for the entire organization. Evaluates the recorded tenant settings.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/admin/service-admin-portal-developer
+
+  - id: SEC-006
+    enabled: true
+    kind: control
+    dimension: security
+    severity: critical
+    description: >
+      No item in the workspace is published to the public web. Fails for each item in the
+      latest FUAM transfer of published-to-web items. Needs FUAM; not evaluated when FUAM is
+      not connected, and missing evidence when its data is stale.
+    microsoft_learn_url: https://learn.microsoft.com/power-bi/collaborate-share/service-publish-to-web
+
+  - id: SEC-007
+    enabled: true
+    kind: control
+    dimension: security
+    severity: high
+    description: >
+      Tenant-wide. The setting that lets users invite guest users through item sharing and
+      permissions is disabled or restricted to security groups. Fails when it is enabled for
+      the entire organization. Evaluates the recorded tenant settings.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/admin/service-admin-portal-export-sharing
+
+  - id: SEC-008
+    enabled: true
+    kind: control
+    dimension: security
+    severity: medium
+    description: >
+      Tenant-wide. Resource-key authentication is blocked, so access keys cannot bypass user
+      sign-in. Passes when the protective setting is enabled. Evaluates the recorded tenant
+      settings.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/admin/service-admin-portal-developer
+
+  - id: SEC-009
+    enabled: true
+    kind: signal
+    dimension: security
+    severity: info
+    description: >
+      The workspace has more direct (non-group) principals than broad_access_max_principals,
+      which can indicate access that is easier to govern through groups. Never a failure.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/get-started/roles-workspaces
+
+  - id: SEC-010
+    enabled: true
+    kind: signal
+    dimension: security
+    severity: info
+    description: >
+      Tenant-wide. Visible on-premises data gateway clusters with a single member, or with
+      differing or outdated versions (when gateway_min_version is set). Not mapped to
+      individual workspaces.
+    microsoft_learn_url: https://learn.microsoft.com/data-integration/gateway/service-gateway-update
+
+  - id: SEC-011
+    enabled: true
+    kind: signal
+    dimension: security
+    severity: info
+    description: >
+      Notebook source contains patterns that suggest credentials are handled in code instead
+      of through Key Vault or a managed connection. A sanitized heuristic count; matches need
+      confirmation and no source is stored.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/data-engineering/microsoft-spark-utilities
+
+  - id: SEC-012
+    enabled: true
+    kind: signal
+    dimension: security
+    severity: info
+    description: >
+      Share of a production workspace's semantic models, reports, dashboards and dataflows
+      that carry a sensitivity label, compared with label_min_ratio. Label content is never
+      read.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/governance/information-protection
+
+  - id: SEC-013
+    enabled: true
+    kind: signal
+    dimension: security
+    severity: info
+    description: >
+      Tenant-wide. Whether tenant-level Private Link is enabled. Context for
+      network-isolation design; not every tenant needs it. Evaluates the recorded tenant
+      settings.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/security/security-private-links-overview
+
+  - id: SEC-014
+    enabled: true
+    kind: signal
+    dimension: security
+    severity: info
+    description: >
+      Tenant-wide. Export and download settings (Excel, CSV, PowerPoint, Word, XML, MHTML,
+      printing, custom-visual export, notebook data export) that are enabled for the entire
+      organization and could be limited to security groups. Names the settings; whether open
+      is intended is your decision. Evaluates the recorded tenant settings.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/admin/service-admin-portal-export-sharing
+
+  - id: SEC-015
+    enabled: true
+    kind: signal
+    dimension: security
+    severity: info
+    description: >
+      Tenant-wide. Sharing and guest settings (organization-wide links, guest access to shared
+      content, guest lookup, external e-mail subscriptions, in-place dataset sharing) that are
+      enabled for the entire organization and could be limited to security groups. Evaluates
+      the recorded tenant settings.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/admin/service-admin-portal-export-sharing
+
+  - id: SEC-016
+    enabled: true
+    kind: signal
+    dimension: security
+    severity: info
+    description: >
+      Tenant-wide. Automation and embedding settings (service principal access to global APIs
+      and profiles, embedding, custom visuals, admin API expressions) that are enabled for the
+      entire organization and could be limited to security groups. Evaluates the recorded
+      tenant settings.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/admin/service-admin-portal-developer
+
+  - id: SEC-017
+    enabled: true
+    kind: signal
+    dimension: security
+    severity: info
+    description: >
+      The workspace has guest (external) users with a direct role. Counts only, including how
+      many hold an Admin or Member role; no identity is stored. Guests inside a group are not
+      expanded.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/get-started/roles-workspaces
+
+  - id: SEC-018
+    enabled: true
+    kind: signal
+    dimension: security
+    severity: info
+    description: >
+      The workspace has applications (service principals) with a direct Admin or Member role.
+      Counts only. An automation that needs write access can be intended.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/get-started/roles-workspaces
+
+  - id: SEC-019
+    enabled: true
+    kind: signal
+    dimension: security
+    severity: info
+    description: >
+      Items in the workspace shared with a link that anyone in the organization can open, from
+      the latest FUAM transfer. Needs FUAM; when FUAM holds no transfer, the tenant setting for
+      organization-wide links is the only evidence.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/get-started/share-items
+
+  - id: SEC-020
+    enabled: true
+    kind: signal
+    dimension: security
+    severity: info
+    description: >
+      A declared production workspace has lakehouses with no custom OneLake data access role, so access to
+      their data follows workspace roles alone. Counts only. Needs the production workspace declared.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/onelake/security/get-started-security
+
+  - id: SEC-021
+    enabled: true
+    kind: signal
+    dimension: security
+    severity: info
+    description: >
+      The network posture of a declared production workspace: default public access inbound and outbound, the
+      number of IP firewall rules (and whether any covers a very wide range), whether outbound access
+      protection is on, and the managed private endpoints. A restriction is recommended only for the directions
+      you declare in restricted_network_directions. Contradictions need no declaration: firewall rules that
+      restrict nothing because inbound is open, an IP range that is too wide, and public outbound left open
+      although managed private endpoints exist. Counts only; no address or target is stored.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/security/security-workspace-level-private-links-overview
+
+  - id: SEC-022
+    enabled: true
+    kind: signal
+    dimension: security
+    severity: info
+    description: >
+      Semantic models, lakehouses and warehouses of a declared production workspace that people, groups or
+      applications can use through a direct grant, and how many of those grants include the right to share
+      again. Counts only; nobody is named. Read from the administrator scan.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/security/permission-model
+
+  - id: SEC-023
+    enabled: true
+    kind: signal
+    dimension: security
+    severity: info
+    description: >
+      Tenant-wide. Whether the tenant lets workspaces restrict inbound and outbound access and use IP firewall
+      rules, and whether public access is blocked for the whole tenant. A direction is recommended only when you
+      declare it in restricted_network_directions and its tenant switch is off, because the workspace setting
+      cannot be applied until then. Reads the recorded tenant settings.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/security/security-workspace-level-firewall-overview
+
+  # ---- Added after the first release; identifiers stay stable, so these follow SEC-023 ----
+  - id: SEC-024
+    enabled: true
+    kind: control
+    dimension: security
+    severity: high
+    description: >
+      Every semantic model you declare in rls_required_model_ids enforces row-level security: at least one role
+      that can read the model has a table filter that restricts rows (a filter that is always TRUE restricts
+      nothing). Evaluated only for workspaces that hold a declared model. A model whose definition cannot be read
+      completely is missing evidence, never a pass. Roles defined in the model only; a configured filter is not
+      proof that it implements the intended rule, and role membership is not checked.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/security/service-admin-row-level-security
+
+  - id: SEC-025
+    enabled: true
+    kind: control
+    dimension: security
+    severity: high
+    description: >
+      Every semantic model you declare in ols_required_model_ids enforces object-level security: at least one role
+      that can read the model hides a table or a column (metadata permission None). Hiding an object in the model
+      view is not object-level security. Evaluated only for workspaces that hold a declared model. A model whose
+      definition cannot be read completely is missing evidence, never a pass. Roles defined in the model only;
+      role membership is not checked.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/security/service-admin-object-level-security
+
+  - id: SEC-026
+    enabled: true
+    kind: signal
+    dimension: security
+    severity: info
+    description: >
+      Which semantic models of the workspace define row-level security, object-level security, both or neither,
+      and how many could not be inspected. Counts, plus the models that define neither so they can be reviewed.
+      Needs no declaration. A model without either can be intended when every authorized reader may see all of it;
+      Copilot and other query experiences answer within each reader's permissions, so the review matters where
+      access is meant to be narrower. Counts only; no role, filter, table or column is stored.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/security/service-admin-row-level-security
+
+  - id: SEC-027
+    enabled: true
+    kind: coverage
+    dimension: security
+    severity: info
+    description: >
+      Tenant-wide. Whether every semantic model declared in rls_required_model_ids or ols_required_model_ids was
+      found in the reviewed workspaces, so a mistyped or deleted ID is not silently ignored. A declared model
+      outside a review limited to chosen workspaces is reported without a gap.
+    microsoft_learn_url: https://learn.microsoft.com/fabric/security/service-admin-row-level-security

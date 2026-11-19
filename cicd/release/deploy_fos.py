@@ -335,7 +335,11 @@ def run_deploy_notebook():
                 "local_deployment_lakehouse": {
                     "type": "String",
                     "value": temp_lakehouse_name,
-                }
+                },
+                "connection_owner_group": {
+                    "type": "String",
+                    "value": repo_cfg.get("admin_group") or os.getenv("ENTRA_OBJECT_ID", ""),
+                },
             }
         }
     )

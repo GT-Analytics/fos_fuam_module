@@ -107,6 +107,10 @@ The Quota pipeline cannot be activated until the permissions are granted and the
 
 - Rename the Shortcut to **focuscost** and click on Create
 
+  In a combined FOS deployment, open the **FOS_Lakehouse** item in Lakehouse
+  view (not its SQL analytics endpoint), then expand **Files** and refresh.
+  `focuscost` appears here, not in the workspace item list or under **Tables**.
+
 ![Cost_Analysis](./media/Setup-Export4.png)
 
 - Verify access to the data
@@ -120,6 +124,13 @@ Azure Quota Data : [Click here to configure quota analysis](./Quota.md)
 Reservation : [Click here to configure reservation analysis](./Reservation.md)
 
 ## 3 - Run the Pipeline
+
+For the combined FOS deployment, verify `Init_Cost_Analysis_Lakehouse_Tables`
+completed in the FOS workspace before the first load. It creates the `cost`
+schema in `FOS_Lakehouse`; the load notebooks expect that schema to exist.
+The meter catalog and FCA version lookup use public reference files from
+`GT-Analytics/fos_fuam_module`. These downloads are separate from the FOCUS
+storage shortcut and do not require making your deployment repository public.
 
 - Open the **Load Cost_Analysis E2E** Data pipeline and Run the Pipeline once (Optional activities are deactivated by default and can be enabled if needed)
 

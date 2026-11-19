@@ -64,6 +64,12 @@ The data ingestion logic is orchestrated and parameterizable, which allows us to
 
 ## Setup
 
+When deploying from GitHub Actions, set `admin_group` in
+[`repo_config.yaml`](./cicd/release/repo_config.yaml) to the Entra security group's **object ID**.
+Deployment grants this group Owner on the cloud connections used by the selected modules,
+including connections reused on a rerun. Existing owners and credentials are preserved.
+Members can then manage those connections under **Manage connections and gateways**.
+
 Are you ready to try FOS out? We have prepared two step-by-step guides to help you deploy FOS in your workspace on your tenant:
 
 
@@ -73,6 +79,9 @@ Are you ready to try FOS out? We have prepared two step-by-step guides to help y
 #### [Click here to **update** FOS](/monitoring/fabric-unified-admin-monitoring/how-to/How_to_update_FOS.md)
 
 ## Changelog
+
+- [Unreleased integration changes](./CHANGELOG.md), including
+  [deployment and identity notes](./docs/deployment-identity-notes.md).
 
 - **FOS [Release 2026.2.1 (latest)](/monitoring/fabric-unified-admin-monitoring/changelog/FOS_Changelog.md)**
 - **FOS [Release 2026.1.1](/monitoring/fabric-unified-admin-monitoring/changelog/FOS_Changelog.md)**
@@ -116,6 +125,7 @@ The FOS solution accelerator template **is not an official Microsoft service**.
 
 ##### Some other Fabric Toolbox assets
 - [Module - Fabric Cost Analysis](docs/modules/cost-analysis/README.md)
+- [Module - Fabric Architecture Review (opt-in)](docs/modules/architecture-review/README.md)
 - [Overview - Fabric Spark Monitoring](/monitoring/fabric-spark-monitoring/README.md)
 - [Overview - Fabric Workspace Monitoring report templates](/monitoring/workspace-monitoring-dashboards/README.md)
 - [Overview - Semantic Model MCP Server](https://github.com/microsoft/fabric-toolbox/tree/main/tools/SemanticModelMCPServer)
