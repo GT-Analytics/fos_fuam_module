@@ -1,0 +1,56 @@
+﻿# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+# Render the findings to a merged Markdown report and then to PDF.
+$ErrorActionPreference = "Stop"
+
+Push-Location (Split-Path -Parent (Split-Path -Parent $PSScriptRoot))
+try {
+    $envFile = Join-Path $PWD ".env.far"
+    if (Test-Path $envFile) {
+        Get-Content $envFile | Where-Object { $_ -match '^\s*[^#].*=' } | ForEach-Object {
+            $k, $v = $_ -split '=', 2
+            [Environment]::SetEnvironmentVariable($k.Trim(), $v.Trim(), 'Process')
+        }
+    }
+
+    $outDir       = if ($env:OUTPUT_DIR) { $env:OUTPUT_DIR } else { "output\far" }
+    $configPath = Join-Path $outDir "review_config.json"
+    if (-not (Test-Path $configPath -PathType Leaf)) {
+        throw "Review configuration not found. Run FAR collection first."
+    }
+    $env:FAR_CONFIG_SNAPSHOT = (Resolve-Path $configPath).Path
+    $rawDir       = Join-Path $outDir "raw"
+    $findingsPath = Join-Path $outDir "findings.json"
+    $reportMd     = Join-Path $outDir "report.md"
+    $reportPdf    = Join-Path $outDir "far-review.pdf"
+
+    if (-not (Test-Path $findingsPath)) {
+        throw "$findingsPath not found. Run scripts/powershell/02_analyze.ps1 first."
+    }
+    Remove-Item -Path $reportMd, $reportPdf -Force -ErrorAction SilentlyContinue
+
+    Write-Host "==> Rendering markdown report..." -ForegroundColor Cyan
+    & python -m reports.render_report `
+        --findings $findingsPath `
+        --out $reportMd `
+        --raw-dir $rawDir
+    if ($LASTEXITCODE -ne 0 -or -not (Test-Path $reportMd -PathType Leaf) -or (Get-Item $reportMd).Length -eq 0) {
+        throw "Markdown report generation failed with exit code $LASTEXITCODE."
+    }
+
+    Write-Host "==> Generating PDF..." -ForegroundColor Cyan
+    # Title and footer default to $ENGAGEMENT_NAME and "$CLIENT_NAME — $ENGAGEMENT_NAME" from .env.far.
+    # Override per-run with --title and --footer-label if needed.
+    & python reports/_generate_pdf.py `
+        --input $reportMd `
+        --output $reportPdf
+    if ($LASTEXITCODE -ne 0 -or -not (Test-Path $reportPdf -PathType Leaf) -or (Get-Item $reportPdf).Length -eq 0) {
+        throw "PDF report generation failed with exit code $LASTEXITCODE."
+    }
+
+    Write-Host ""
+    Write-Host "Report: $reportPdf" -ForegroundColor Green
+}
+finally {
+    Pop-Location
+}

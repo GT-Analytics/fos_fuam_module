@@ -10,6 +10,7 @@ on:
         options:
           - admin-monitoring
           - cost-analysis
+          - far
           - all
         default: all
   workflow_call:
@@ -195,6 +196,7 @@ jobs:
           # Run deployment script
           try {
             python cicd/release/deploy_fos.py
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
             Write-Host "✅ Python deployment script completed successfully"
           } catch {
             Write-Host "❌ Python deployment failed"
@@ -203,6 +205,7 @@ jobs:
           }
         env:
           FOS_MODULE_IDS: ${{ env.SELECTED_MODULES }}
+          ENTRA_OBJECT_ID: ${{ vars.ENTRA_OBJECT_ID }}
           FAB_SPN_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           FAB_SPN_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           FAB_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}

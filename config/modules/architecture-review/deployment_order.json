@@ -1,0 +1,5 @@
+[
+    {"name": "FOS.Workspace", "fos_id": "66db2b7f-f5d7-34ab-b4ef-640bd59a9b38"},
+    {"name": "FOS_Lakehouse.Lakehouse", "fos_id": "169b8e49-1247-331d-a665-aaa4afed18cc"},
+    {"name": "FOS_Install_FAR.Notebook", "fos_id": "3a9df8c0-f343-3c11-bf6c-de178ecd4e8f"}
+]

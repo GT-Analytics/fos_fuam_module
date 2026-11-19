@@ -1,0 +1,24 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+# The analyzer that evaluates the rules in review-checklist.yaml and the evidence files
+# it reads. Workspace rules yield one finding per workspace; tenant-wide rules yield one
+# finding per review. Evidence that is absent or incomplete yields missing_evidence.
+schema_version: 1
+profile_id: far-architecture-v1
+analyzers:
+  - module: analyzers.far_review
+    output: findings_architecture.json
+    required_inputs: [workspace_inventory.json]
+    optional_inputs: [pipeline_definitions.json, semantic_model_definitions.json, git_integration.json,
+                      gateways.json, tenant_settings.json, scanner.json, capacity_metrics.json, deployment_pipelines.json,
+                      onelake_roles.json, workspace_network.json, far_evidence.json]
+    rule_ids: [
+      ARCH-001, ARCH-002, ARCH-003, ARCH-004, ARCH-005, ARCH-006, ARCH-007, ARCH-008, ARCH-009, ARCH-010, ARCH-011, ARCH-012, ARCH-013, ARCH-014, ARCH-015, ARCH-016, ARCH-017, ARCH-018, ARCH-019, ARCH-020,
+      GOV-001, GOV-002, GOV-003, GOV-004, GOV-005, GOV-006, GOV-007, GOV-008, GOV-009, GOV-010,
+      OPS-001, OPS-002, OPS-003, OPS-004, OPS-005, OPS-006, OPS-007, OPS-008, OPS-009, OPS-010,
+      REL-001, REL-002, REL-003,
+      SEC-001, SEC-002, SEC-003, SEC-004, SEC-005, SEC-006, SEC-007, SEC-008, SEC-009, SEC-010, SEC-011, SEC-012, SEC-013,
+      SEC-014, SEC-015, SEC-016, SEC-017, SEC-018, SEC-019, SEC-020, SEC-021, SEC-022, SEC-023,
+      SEC-024, SEC-025, SEC-026, SEC-027
+    ]

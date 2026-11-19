@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "FOS_Install_FAR",
+    "description": "Install native Architecture Review assets in the FOS workspace."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "3a9df8c0-f343-3c11-bf6c-de178ecd4e8f"
+  }
+}

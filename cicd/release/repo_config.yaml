@@ -1,4 +1,6 @@
-workspace: 'FOS#feature_20261014_3'
+# Configure these values for your deployment before running GitHub Actions.
+workspace: 'FOS'
 project_base_name: 'FOS'
-capacity: 'kethfabricsc'
-admin_group: '8b31359b-8267-46b7-8b16-d3673ffd4e17'
+capacity: 'your-fabric-capacity'
+# Entra security-group object ID; required for group-managed deployment.
+admin_group: ''
