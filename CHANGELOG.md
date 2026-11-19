@@ -36,9 +36,10 @@
 
 ### Changed
 
-- Manual deployment choices are `fuam`, `fca`, `far` and `all`. **Default/all now
-  includes FAR** as well as FUAM and FCA. Existing long module IDs and scripted
-  comma-separated selections remain supported; use `fuam,fca` for producers only.
+- Manual deployment choices retain `admin-monitoring` and `cost-analysis`, with
+  `far` and `all`. **Default/all now includes FAR** as well as FUAM and FCA.
+  Scripts also accept `fuam`/`fca` aliases, `architecture-review` and
+  comma-separated selections; use `fuam,fca` for producers only.
 - FAR source connections default off. Enable them only after the selected
   producers have populated fresh evidence.
 - Same-name FAR upgrades preserve item IDs, existing configuration and review

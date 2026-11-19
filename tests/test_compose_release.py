@@ -127,7 +127,7 @@ class ComposeReleaseTests(unittest.TestCase):
         workflow = yaml.safe_load((repo / ".github/workflows/deploy-fos-from-repo.yml").read_text(encoding="utf-8"))
         triggers = workflow.get("on", workflow.get(True))
         manual = triggers["workflow_dispatch"]["inputs"]
-        self.assertEqual(manual["module_id"]["options"], ["fuam", "fca", "far", "all"])
+        self.assertEqual(manual["module_id"]["options"], ["admin-monitoring", "cost-analysis", "far", "all"])
         self.assertNotIn("include_far", manual)
         self.assertNotIn("include_far", triggers["workflow_call"]["inputs"])
         self.assertNotIn("FOS_INCLUDE_FAR", workflow["env"])

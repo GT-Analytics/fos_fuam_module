@@ -11,8 +11,8 @@ Set the target workspace, capacity and Entra security-group object ID in
 required authentication secrets in your own repository. Do not copy another
 deployment's identifiers, credentials, Key Vault secrets or notebook outputs.
 
-Select `fuam`, `fca`, `far` or `all` in **Deploy FOS from Repo**. Default/all
-includes all three modules. Scripts also accept `fuam,fca` to deploy the
+Select `admin-monitoring`, `cost-analysis`, `far` or `all` in **Deploy FOS from Repo**.
+Default/all includes all three modules. Scripts also accept `fuam,fca` to deploy the
 producers without FAR. FAR alone requires an existing schema-enabled
 `FOS_Lakehouse`.
 

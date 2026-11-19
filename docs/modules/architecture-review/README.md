@@ -27,7 +27,7 @@ before scheduling or sharing. The `all` selection includes FUAM, FCA and FAR.
 ### Deploy from FOS
 
 1. Run **Deploy FOS from Repo**, selecting `far` for FAR only, or `all` for
-   FUAM, FCA and FAR together. The other choices are `fuam` and `fca`; there is
+   FUAM, FCA and FAR together. The other choices are `admin-monitoring` and `cost-analysis`; there is
    no separate FAR checkbox. Existing long module IDs remain accepted by
    scripts and reusable callers. To compose only the two producers
    programmatically, select `fuam,fca`.
