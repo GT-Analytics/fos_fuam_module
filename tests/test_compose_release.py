@@ -1,8 +1,14 @@
+import ast
 import json
+import os
+import shutil
 import tempfile
 import unittest
 import uuid
+import zipfile
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
 import yaml
 
@@ -20,6 +26,111 @@ class ComposeReleaseTests(unittest.TestCase):
 
     def tearDown(self):
         self.temp_dir.cleanup()
+
+    def test_airgapped_notebook_stages_and_reads_files_outside_resources(self):
+        repo = Path(__file__).resolve().parents[1]
+        notebook = json.loads((repo / "scripts/Deploy_FOS.ipynb").read_text(encoding="utf-8"))
+        cells = ["".join(cell["source"]) for cell in notebook["cells"]
+                 if cell["cell_type"] == "code"]
+        staging = next(cell for cell in cells if "def copy_deployment_files_from_lakehouse(" in cell)
+        definitions = ast.Module(
+            body=[node for node in ast.parse(staging).body
+                  if isinstance(node, (ast.FunctionDef, ast.Assign))],
+            type_ignores=[],
+        )
+        archives = self.root / "archives"
+        archives.mkdir()
+        payloads = {
+            "src.zip": {"src/Example.Notebook/notebook-content.ipynb": "{}"},
+            "config.zip": {"config/deployment_config.yaml": "workspace: FOS"},
+            "data.zip": {"data/far-runtime/orchestration/setup.py": "# runtime"},
+        }
+        for name, files in payloads.items():
+            with zipfile.ZipFile(archives / name, "w") as archive:
+                for path, content in files.items():
+                    archive.writestr(path, content)
+
+        def copy(source, destination):
+            target = Path(destination.removeprefix("file:"))
+            self.assertTrue(target.is_relative_to(Path(tempfile.gettempdir())))
+            self.assertNotIn("builtin", target.parts)
+            shutil.copyfile(archives / source.rsplit("/", 1)[1], target)
+
+        scope = dict(tempfile=tempfile, Path=Path, os=os, shutil=shutil, zipfile=zipfile,
+                     ZipFile=zipfile.ZipFile, fabric=SimpleNamespace(get_notebook_workspace_id=lambda: "ws"),
+                     notebookutils=SimpleNamespace(fs=SimpleNamespace(
+                         ls=lambda _: [SimpleNamespace(name=name) for name in payloads], cp=copy)))
+        exec(compile(definitions, "<deployment-staging>", "exec"), scope)
+        self.addCleanup(scope["deployment_workspace"].cleanup)
+        scope["_resolve_lakehouse_id"] = lambda *_: "lh"
+        scope["copy_deployment_files_from_lakehouse"]("LH_Temp")
+        root = scope["deployment_root"]
+        self.assertEqual((root / "config/deployment_config.yaml").read_text(), "workspace: FOS")
+        self.assertTrue((root / "data/far-runtime/orchestration/setup.py").is_file())
+        self.assertFalse((root / "data.zip").exists())
+        helpers = next(cell for cell in cells if "def copy_to_tmp(" in cell)
+        reader = next(node for node in ast.parse(helpers).body
+                      if isinstance(node, ast.FunctionDef) and node.name == "copy_to_tmp")
+        exec(compile(ast.Module(body=[reader], type_ignores=[]), "<deployment-reader>", "exec"), scope)
+        self.assertEqual(scope["copy_to_tmp"]("Example.Notebook"),
+                         {"src/Example.Notebook/notebook-content.ipynb": b"{}"})
+        (root / "data/stale.txt").write_text("old release")
+        scope["copy_deployment_files_from_lakehouse"]("LH_Temp")
+        self.assertFalse((root / "data/stale.txt").exists())
+
+    def test_far_only_installs_into_existing_lakehouse(self):
+        repo = Path(__file__).resolve().parents[1]
+        module = "architecture-review"
+        default_output = self.root / "default"
+        default_summary = compose_release(repo, default_output, selected_modules="fuam,fca")
+        self.assertEqual(default_summary["modules"], ["admin-monitoring", "cost-analysis"])
+        self.assertFalse((default_output / "data/far-runtime").exists())
+        output = self.root / "far"
+        summary = compose_release(repo, output, selected_modules=module)
+        self.assertEqual(summary["modules"], [module])
+        self.assertEqual(summary["source_items"], 1)
+        config = yaml.safe_load((output / "config/deployment_config.yaml").read_text())
+        self.assertEqual(config["existing_lakehouses"], ["FOS_Lakehouse.Lakehouse"])
+        self.assertEqual(config["post_deployment"]["jobs"], [{"item": "FOS_Install_FAR.Notebook"}])
+        installer = output / "src/FOS_Install_FAR.Notebook/notebook-content.ipynb"
+        metadata = json.loads(installer.read_text(encoding="utf-8"))["metadata"]
+        self.assertEqual(metadata["dependencies"]["lakehouse"]["default_lakehouse_name"], "FOS_Lakehouse")
+        runtime = output / "data" / "far-runtime"
+        for path in (
+            "LICENSE.TXT",
+            "config/sources.yaml",
+            "fabric/notebooks/01_collect.ipynb",
+            "reports/ontology/ontology.py",
+        ):
+            self.assertTrue((runtime / path).is_file(), path)
+        self.assertFalse((runtime / "fabric/app").exists())
+        self.assertFalse((runtime / "reports/app_contract.py").exists())
+        self.assertFalse((output / "src/far-runtime").exists())
+
+    def test_all_includes_all_three_and_aliases_preserve_single_selection(self):
+        repo = Path(__file__).resolve().parents[1]
+        summary = compose_release(repo, self.root / "combined", selected_modules="all")
+        self.assertEqual(summary["modules"], ["admin-monitoring", "cost-analysis", "architecture-review"])
+        config = yaml.safe_load((self.root / "combined/config/deployment_config.yaml").read_text())
+        self.assertNotIn("existing_lakehouses", config)
+        self.assertIn("far", config["lakehouse_schemas"]["FOS_Lakehouse.Lakehouse"])
+        summary = compose_release(repo, self.root / "single", selected_modules="far")
+        self.assertEqual(summary["modules"], ["architecture-review"])
+        summary = compose_release(repo, self.root / "default")
+        self.assertEqual(summary["modules"], ["admin-monitoring", "cost-analysis", "architecture-review"])
+        self.assertEqual(normalize_selected_modules("fuam,fca,far,architecture-review"),
+                         ["admin-monitoring", "cost-analysis", "architecture-review"])
+
+    def test_workflow_exposes_four_choices_without_an_extra_far_switch(self):
+        repo = Path(__file__).resolve().parents[1]
+        # PyYAML's YAML 1.1 loader interprets the GitHub Actions key "on" as True.
+        workflow = yaml.safe_load((repo / ".github/workflows/deploy-fos-from-repo.yml").read_text(encoding="utf-8"))
+        triggers = workflow.get("on", workflow.get(True))
+        manual = triggers["workflow_dispatch"]["inputs"]
+        self.assertEqual(manual["module_id"]["options"], ["fuam", "fca", "far", "all"])
+        self.assertNotIn("include_far", manual)
+        self.assertNotIn("include_far", triggers["workflow_call"]["inputs"])
+        self.assertNotIn("FOS_INCLUDE_FAR", workflow["env"])
 
     def add_module(self, module_id, item_name, source_content="content"):
         config_dir = self.root / "config" / "modules" / module_id
@@ -83,6 +194,18 @@ class ComposeReleaseTests(unittest.TestCase):
         release_path = self.root / "config" / "release.yaml"
         release_path.parent.mkdir(parents=True, exist_ok=True)
         release_path.write_text(yaml.safe_dump(config), encoding="utf-8")
+
+    def test_non_deployable_module_requires_local_preview(self):
+        self.add_module("preview", "Preview.Notebook")
+        self.write_release("preview")
+        release_path = self.root / "config" / "release.yaml"
+        release = yaml.safe_load(release_path.read_text())
+        release["modules"][0]["deployable"] = False
+        release_path.write_text(yaml.safe_dump(release), encoding="utf-8")
+        with self.assertRaisesRegex(CompositionError, "not ready for deployment"):
+            compose_release(self.root, self.root / "blocked")
+        summary = compose_release(self.root, self.root / "preview", preview=True)
+        self.assertEqual(summary["modules"], ["preview"])
 
     def test_composes_two_modules_with_fos_prefixed_ids(self):
         self.add_module("first", "First.Notebook")
